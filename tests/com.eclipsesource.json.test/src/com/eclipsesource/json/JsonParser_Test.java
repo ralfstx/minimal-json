@@ -15,9 +15,6 @@ import java.io.StringReader;
 
 import org.junit.Test;
 
-import com.eclipsesource.json.JsonParser;
-import com.eclipsesource.json.ParseException;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -38,22 +35,22 @@ public class JsonParser_Test {
 
   @Test
   public void parse_acceptsArrays() {
-    assertEquals( "[]", parse( "[]" ) );
+    assertEquals( "[]", parse( "[]" ).toString() );
   }
 
   @Test
   public void parse_acceptsObjects() {
-    assertEquals( "{}", parse( "{}" ) );
+    assertEquals( "{}", parse( "{}" ).toString() );
   }
 
   @Test
   public void parse_stripsPadding() {
-    assertEquals( "[]", parse( " [ ] " ) );
+    assertEquals( "[]", parse( " [ ] " ).toString() );
   }
 
   @Test
   public void parse_ignoresAllWhiteSpace() {
-    assertEquals( "[]", parse( "\t\r\n [\t\r\n ]\t\r\n " ) );
+    assertEquals( "[]", parse( "\t\r\n [\t\r\n ]\t\r\n " ).toString() );
   }
 
   @Test
@@ -68,27 +65,27 @@ public class JsonParser_Test {
 
   @Test
   public void arrays_empty() {
-    assertEquals( "[]", readValue( "[]" ) );
+    assertEquals( "[]", readValue( "[]" ).toString() );
   }
 
   @Test
   public void arrays_singleValue() {
-    assertEquals( "[23]", readValue( "[23]" ) );
+    assertEquals( "[23]", readValue( "[23]" ).toString() );
   }
 
   @Test
   public void arrays_multipleValues() {
-    assertEquals( "[23,42]", readValue( "[23,42]" ) );
+    assertEquals( "[23,42]", readValue( "[23,42]" ).toString() );
   }
 
   @Test
   public void arrays_withWhitespaces() {
-    assertEquals( "[23,42]", readValue( "[ 23 , 42 ]" ) );
+    assertEquals( "[23,42]", readValue( "[ 23 , 42 ]" ).toString() );
   }
 
   @Test
   public void arrays_nested() {
-    assertEquals( "[[23],42]", readValue( "[[23],42]" ) );
+    assertEquals( "[[23],42]", readValue( "[[23],42]" ).toString() );
   }
 
   @Test
@@ -110,27 +107,27 @@ public class JsonParser_Test {
 
   @Test
   public void objects_empty() {
-    assertEquals( "{}", readValue( "{}" ) );
+    assertEquals( "{}", readValue( "{}" ).toString() );
   }
 
   @Test
   public void objects_singleValue() {
-    assertEquals( "{\"foo\":23}", readValue( "{\"foo\":23}" ) );
+    assertEquals( "{\"foo\":23}", readValue( "{\"foo\":23}" ).toString() );
   }
 
   @Test
   public void objects_multipleValues() {
-    assertEquals( "{\"foo\":23,\"bar\":42}", readValue( "{\"foo\":23,\"bar\":42}" ) );
+    assertEquals( "{\"foo\":23,\"bar\":42}", readValue( "{\"foo\":23,\"bar\":42}" ).toString() );
   }
 
   @Test
   public void objects_whitespace() {
-    assertEquals( "{\"foo\":23,\"bar\":42}", readValue( "{ \"foo\" : 23, \"bar\" : 42 }" ) );
+    assertEquals( "{\"foo\":23,\"bar\":42}", readValue( "{ \"foo\" : 23, \"bar\" : 42 }" ).toString() );
   }
 
   @Test
   public void objects_nested() {
-    assertEquals( "{\"foo\":{\"bar\":42}}", readValue( "{\"foo\":{\"bar\":42}}" ) );
+    assertEquals( "{\"foo\":{\"bar\":42}}", readValue( "{\"foo\":{\"bar\":42}}" ).toString() );
   }
 
   @Test
@@ -162,42 +159,42 @@ public class JsonParser_Test {
 
   @Test
   public void strings_empty() {
-    assertEquals( "\"\"", readValue( "\"\"" ) );
+    assertEquals( "\"\"", readValue( "\"\"" ).toString() );
   }
 
   @Test
   public void strings_singleLetter() {
-    assertEquals( "\"a\"", readValue( "\"a\"" ) );
+    assertEquals( "\"a\"", readValue( "\"a\"" ).toString() );
   }
 
   @Test
   public void strings_escape() {
-    assertEquals( "\"\\\\\"", readValue( "\"\\\\\"" ) );
+    assertEquals( "\"\\\\\"", readValue( "\"\\\\\"" ).toString() );
   }
 
   @Test
   public void strings_escapedQuote() {
-    assertEquals( "\"\\\"\"", readValue( "\"\\\"\"" ) );
+    assertEquals( "\"\\\"\"", readValue( "\"\\\"\"" ).toString() );
   }
 
   @Test
   public void strings_withEscapedTabs() {
-    assertEquals( "\"foo\\t\\t\"", readValue( "\"foo\\t\\t\"" ) );
+    assertEquals( "\"foo\\t\\t\"", readValue( "\"foo\\t\\t\"" ).toString() );
   }
 
   @Test
   public void strings_withEscapedNewlines() {
-    assertEquals( "\"foo\\r\\nbar\\r\\n\"", readValue( "\"foo\\r\\nbar\\r\\n\"" ) );
+    assertEquals( "\"foo\\r\\nbar\\r\\n\"", readValue( "\"foo\\r\\nbar\\r\\n\"" ).toString() );
   }
 
   @Test
   public void strings_withEscapedBackspaceAndFormFeed() {
-    assertEquals( "\"foo\\u0008bar\\u000c\"", readValue( "\"foo\\bbar\\f\"" ) );
+    assertEquals( "\"foo\\u0008bar\\u000c\"", readValue( "\"foo\\bbar\\f\"" ).toString() );
   }
 
   @Test
   public void strings_withUnicodeEscapes() {
-    assertEquals( "\"\u4711\"", readValue( "\"\\u4711\"" ) );
+    assertEquals( "\"\u4711\"", readValue( "\"\\u4711\"" ).toString() );
   }
 
   @Test
@@ -221,30 +218,44 @@ public class JsonParser_Test {
 
   @Test
   public void numbers_integer() {
-    assertEquals( "0", readValue( "0" ) );
-    assertEquals( "1", readValue( "1" ) );
-    assertEquals( "-1", readValue( "-1" ) );
-    assertEquals( "23", readValue( "23" ) );
-    assertEquals( "-23", readValue( "-23" ) );
-    assertEquals( "1234567890", readValue( "1234567890" ) );
-    assertEquals( "123456789012345678901234567890", readValue( "123456789012345678901234567890" ) );
+    assertEquals( "0", readValue( "0" ).toString() );
+    assertEquals( "-0", readValue( "-0" ).toString() );
+    assertEquals( "1", readValue( "1" ).toString() );
+    assertEquals( "-1", readValue( "-1" ).toString() );
+    assertEquals( "23", readValue( "23" ).toString() );
+    assertEquals( "-23", readValue( "-23" ).toString() );
+    assertEquals( "1234567890", readValue( "1234567890" ).toString() );
+    assertEquals( "123456789012345678901234567890",
+                  readValue( "123456789012345678901234567890" ).toString() );
+  }
+
+  @Test
+  public void numbers_minusZero() {
+    // allowed by JSON, allowed by Java
+    JsonValue value = readValue( "-0" );
+
+    assertEquals( 0, value.intValue() );
+    assertEquals( 0l, value.longValue() );
+    assertEquals( 0f, value.floatValue(), 0 );
+    assertEquals( 0d, value.doubleValue(), 0 );
   }
 
   @Test
   public void numbers_decimal() {
-    assertEquals( "0.23", readValue( "0.23" ) );
-    assertEquals( "-0.23", readValue( "-0.23" ) );
-    assertEquals( "1234567890.12345678901234567890", readValue( "1234567890.12345678901234567890" ) );
+    assertEquals( "0.23", readValue( "0.23" ).toString() );
+    assertEquals( "-0.23", readValue( "-0.23" ).toString() );
+    assertEquals( "1234567890.12345678901234567890", readValue( "1234567890.12345678901234567890" ).toString() );
   }
 
   @Test
   public void numbers_withExponent() {
-    assertEquals( "0.1e9", readValue( "0.1e9" ) );
-    assertEquals( "0.1e9", readValue( "0.1e9" ) );
-    assertEquals( "-0.23e9", readValue( "-0.23e9" ) );
-    assertEquals( "0.23e9", readValue( "0.23e9" ) );
-    assertEquals( "0.23e9", readValue( "0.23e+9" ) );
-    assertEquals( "0.23e-9", readValue( "0.23e-9" ) );
+    assertEquals( "0.1e9", readValue( "0.1e9" ).toString() );
+    assertEquals( "0.1e9", readValue( "0.1e9" ).toString() );
+    assertEquals( "0.1E9", readValue( "0.1E9" ).toString() );
+    assertEquals( "-0.23e9", readValue( "-0.23e9" ).toString() );
+    assertEquals( "0.23e9", readValue( "0.23e9" ).toString() );
+    assertEquals( "0.23e+9", readValue( "0.23e+9" ).toString() );
+    assertEquals( "0.23e-9", readValue( "0.23e-9" ).toString() );
   }
 
   @Test
@@ -269,7 +280,7 @@ public class JsonParser_Test {
 
   @Test
   public void null_complete() {
-    assertEquals( "null", readValue( "null" ) );
+    assertEquals( "null", readValue( "null" ).toString() );
   }
 
   @Test
@@ -289,7 +300,7 @@ public class JsonParser_Test {
 
   @Test
   public void true_complete() {
-    assertEquals( "true", readValue( "true" ) );
+    assertEquals( "true", readValue( "true" ).toString() );
   }
 
   @Test
@@ -309,7 +320,7 @@ public class JsonParser_Test {
 
   @Test
   public void false_complete() {
-    assertEquals( "false", readValue( "false" ) );
+    assertEquals( "false", readValue( "false" ).toString() );
   }
 
   @Test
@@ -338,9 +349,9 @@ public class JsonParser_Test {
     }
   }
 
-  static String parse( String json ) {
+  static JsonValue parse( String json ) {
     try {
-      return new JsonParser( new StringReader( json ) ).parse().toString();
+      return new JsonParser( new StringReader( json ) ).parse();
     } catch( IOException exception ) {
       throw new RuntimeException( exception );
     }
@@ -355,9 +366,9 @@ public class JsonParser_Test {
     }
   }
 
-  static String readValue( String json ) {
+  static JsonValue readValue( String json ) {
     try {
-      return new JsonParser( new StringReader( json ) ).parseValue().toString();
+      return new JsonParser( new StringReader( json ) ).parseValue();
     } catch( IOException exception ) {
       throw new RuntimeException( exception );
     }

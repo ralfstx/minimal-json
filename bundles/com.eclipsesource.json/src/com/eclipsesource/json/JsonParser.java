@@ -224,15 +224,13 @@ public class JsonParser {
 
   private JsonValue readNumber() throws IOException {
     recorder.setLength( 0 );
-    if( readChar( '-' ) ) {
-      recorder.append( '-' );
-    }
+    readAndAppendChar( '-' );
     int firstDigit = current;
-    if( !readDigit() ) {
+    if( !readAndAppendDigit() ) {
       throw expected( "digit" );
     }
     if( firstDigit != '0' ) {
-      while( readDigit() ) {
+      while( readAndAppendDigit() ) {
       }
     }
     readFraction();
@@ -241,32 +239,28 @@ public class JsonParser {
   }
 
   private boolean readFraction() throws IOException {
-    if( !readChar( '.' ) ) {
+    if( !readAndAppendChar( '.' ) ) {
       return false;
     }
-    recorder.append( '.' );
-    if( !readDigit() ) {
+    if( !readAndAppendDigit() ) {
       throw expected( "digit" );
     }
-    while( readDigit() ) {
+    while( readAndAppendDigit() ) {
     }
     return true;
   }
 
   private boolean readExponent() throws IOException {
-    if( !readChar( 'e' ) && !readChar( 'E' ) ) {
+    if( !readAndAppendChar( 'e' ) && !readAndAppendChar( 'E' ) ) {
       return false;
     }
-    recorder.append( 'e' );
-    if( !readChar( '+' ) ) {
-      if( readChar( '-' ) ) {
-        recorder.append( '-' );
-      }
+    if( !readAndAppendChar( '+' ) ) {
+      readAndAppendChar( '-' );
     }
-    if( !readDigit() ) {
+    if( !readAndAppendDigit() ) {
       throw expected( "digit" );
     }
-    while( readDigit() ) {
+    while( readAndAppendDigit() ) {
     }
     return true;
   }
@@ -279,6 +273,15 @@ public class JsonParser {
     return recorder.toString();
   }
 
+  private boolean readAndAppendChar( char ch ) throws IOException {
+    if( current != ch ) {
+      return false;
+    }
+    recorder.append( ch );
+    read();
+    return true;
+  }
+
   private boolean readChar( char ch ) throws IOException {
     if( current != ch ) {
       return false;
@@ -287,7 +290,7 @@ public class JsonParser {
     return true;
   }
 
-  private boolean readDigit() throws IOException {
+  private boolean readAndAppendDigit() throws IOException {
     if( !isDigit( current ) ) {
       return false;
     }
