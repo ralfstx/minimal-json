@@ -126,7 +126,7 @@ public class JsonWriter_Test {
   @Test
   public void writeObjectParts() throws IOException {
     writer.writeBeginObject();
-    writer.writeKeyValueSeparator();
+    writer.writeNameValueSeparator();
     writer.writeObjectValueSeparator();
     writer.writeEndObject();
 

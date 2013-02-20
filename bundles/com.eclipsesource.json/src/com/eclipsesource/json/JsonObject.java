@@ -69,8 +69,8 @@ public final class JsonObject extends JsonValue implements Iterable<String> {
     return names.toArray( new String[ names.size() ] );
   }
 
-  public JsonValue getValue( String key ) {
-    int index = names.indexOf( key );
+  public JsonValue getValue( String name ) {
+    int index = names.indexOf( name );
     return index != -1 ? values.get( index ) : null;
   }
 
@@ -88,7 +88,7 @@ public final class JsonObject extends JsonValue implements Iterable<String> {
         writer.writeObjectValueSeparator();
       }
       writer.writeString( names[ i ] );
-      writer.writeKeyValueSeparator();
+      writer.writeNameValueSeparator();
       values[ i ].write( writer );
     }
     writer.writeEndObject();

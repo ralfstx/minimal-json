@@ -74,7 +74,7 @@ public class JsonWriter {
     writer.write( '}' );
   }
 
-  protected void writeKeyValueSeparator() throws IOException {
+  protected void writeNameValueSeparator() throws IOException {
     writer.write( ':' );
   }
 
