@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JSON Parser and Writer
+Bundle-SymbolicName: com.eclipsesource.json
+Bundle-Version: 0.9.0.qualifier
+Bundle-Vendor: EclipseSource
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: com.eclipsesource.json;version="0.9.0"
