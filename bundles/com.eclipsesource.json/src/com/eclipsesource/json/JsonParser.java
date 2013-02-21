@@ -173,6 +173,8 @@ public class JsonParser {
     while( current != '"' ) {
       if( current == '\\' ) {
         readEscape();
+      } else if( current < 0x20 ) {
+        throw expected( "valid string character" );
       } else {
         recorder.append( (char)current );
         read();
@@ -309,13 +311,13 @@ public class JsonParser {
     if( endOfText() ) {
       throw error( "Unexpected end of input" );
     }
-    current = reader.read();
     if( current == '\n' ) {
       line++;
       column = 0;
     } else {
       column++;
     }
+    current = reader.read();
   }
 
   private boolean endOfText() {

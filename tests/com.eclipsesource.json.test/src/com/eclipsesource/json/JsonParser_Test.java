@@ -158,54 +158,74 @@ public class JsonParser_Test {
   }
 
   @Test
-  public void strings_empty() {
-    assertEquals( "\"\"", readValue( "\"\"" ).toString() );
+  public void strings_emptyString_isAccepted() {
+    assertEquals( "", readValue( "\"\"" ).asString() );
   }
 
   @Test
-  public void strings_singleLetter() {
-    assertEquals( "\"a\"", readValue( "\"a\"" ).toString() );
+  public void strings_asciiCharacters_areAccepted() {
+    assertEquals( " ", readValue( "\" \"" ).asString() );
+    assertEquals( "a", readValue( "\"a\"" ).asString() );
+    assertEquals( "foo", readValue( "\"foo\"" ).asString() );
+    assertEquals( "A2-D2", readValue( "\"A2-D2\"" ).asString() );
+    assertEquals( "\u007f", readValue( "\"\u007f\"" ).asString() );
   }
 
   @Test
-  public void strings_escape() {
-    assertEquals( "\"\\\\\"", readValue( "\"\\\\\"" ).toString() );
+  public void strings_nonAsciiCharacters_areAccepted() {
+    assertEquals( "Русский", readValue( "\"Русский\"" ).asString() );
+    assertEquals( "العربية", readValue( "\"العربية\"" ).asString() );
+    assertEquals( "日本語", readValue( "\"日本語\"" ).asString() );
   }
 
   @Test
-  public void strings_escapedQuote() {
-    assertEquals( "\"\\\"\"", readValue( "\"\\\"\"" ).toString() );
+  public void strings_controlCharacters_areRejected() {
+    // JSON string must not contain characters < 0x20
+    assertParseExceptionInReadValue( "Expected valid string character at 1:3", "\"--\n--\"" );
+    assertParseExceptionInReadValue( "Expected valid string character at 1:3", "\"--\r\n--\"" );
+    assertParseExceptionInReadValue( "Expected valid string character at 1:3", "\"--\t--\"" );
+    assertParseExceptionInReadValue( "Expected valid string character at 1:3", "\"--\u0000--\"" );
+    assertParseExceptionInReadValue( "Expected valid string character at 1:3", "\"--\u001f--\"" );
   }
 
   @Test
-  public void strings_withEscapedTabs() {
-    assertEquals( "\"foo\\t\\t\"", readValue( "\"foo\\t\\t\"" ).toString() );
+  public void strings_validEscapes_areAccepted() {
+    // valid escapes are \" \\ \/ \b \f \n \r \t and unicode escapes
+    assertEquals( " \" ", readValue( "\" \\\" \"" ).asString() );
+    assertEquals( " \\ ", readValue( "\" \\\\ \"" ).asString() );
+    assertEquals( " / ", readValue( "\" \\/ \"" ).asString() );
+    assertEquals( " \u0008 ", readValue( "\" \\b \"" ).asString() );
+    assertEquals( " \u000c ", readValue( "\" \\f \"" ).asString() );
+    assertEquals( " \r ", readValue( "\" \\r \"" ).asString() );
+    assertEquals( " \n ", readValue( "\" \\n \"" ).asString() );
+    assertEquals( " \t ", readValue( "\" \\t \"" ).asString() );
   }
 
   @Test
-  public void strings_withEscapedNewlines() {
-    assertEquals( "\"foo\\r\\nbar\\r\\n\"", readValue( "\"foo\\r\\nbar\\r\\n\"" ).toString() );
-  }
-
-  @Test
-  public void strings_withEscapedBackspaceAndFormFeed() {
-    assertEquals( "\"foo\\u0008bar\\u000c\"", readValue( "\"foo\\bbar\\f\"" ).toString() );
-  }
-
-  @Test
-  public void strings_withUnicodeEscapes() {
-    assertEquals( "\"\u4711\"", readValue( "\"\\u4711\"" ).toString() );
-  }
-
-  @Test
-  public void strings_illegalEscapes() {
-    assertParseExceptionInReadValue( "Expected hexadecimal digit at 1:3", "\"\\ux\"" );
-    assertParseExceptionInReadValue( "Expected hexadecimal digit at 1:6", "\"\\u000x\"" );
+  public void strings_illegalEscapes_areRejected() {
+    assertParseExceptionInReadValue( "Expected valid escape sequence at 1:2", "\"\\a\"" );
     assertParseExceptionInReadValue( "Expected valid escape sequence at 1:2", "\"\\x\"" );
+    assertParseExceptionInReadValue( "Expected valid escape sequence at 1:2", "\"\\000\"" );
   }
 
   @Test
-  public void strings_incomplete() {
+  public void strings_validUnicodeEscapes_areAccepted() {
+    assertEquals( "\u0021", readValue( "\"\\u0021\"" ).asString() );
+    assertEquals( "\u4711", readValue( "\"\\u4711\"" ).asString() );
+    assertEquals( "\uffff", readValue( "\"\\uffff\"" ).asString() );
+    assertEquals( "\uabcdx", readValue( "\"\\uabcdx\"" ).asString() );
+  }
+
+  @Test
+  public void strings_illegalUnicodeEscapes_areRejected() {
+    assertParseExceptionInReadValue( "Expected hexadecimal digit at 1:3", "\"\\u \"" );
+    assertParseExceptionInReadValue( "Expected hexadecimal digit at 1:3", "\"\\ux\"" );
+    assertParseExceptionInReadValue( "Expected hexadecimal digit at 1:5", "\"\\u20 \"" );
+    assertParseExceptionInReadValue( "Expected hexadecimal digit at 1:6", "\"\\u000x\"" );
+  }
+
+  @Test
+  public void strings_incompleteStrings_areRejected() {
     assertParseExceptionInReadValue( "Unexpected end of input at 1:1", "\"" );
     assertParseExceptionInReadValue( "Unexpected end of input at 1:4", "\"foo" );
     assertParseExceptionInReadValue( "Unexpected end of input at 1:5", "\"foo\\" );
