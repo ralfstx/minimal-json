@@ -32,6 +32,11 @@ class JsonPrimitive extends JsonValue {
   }
 
   @Override
+  public boolean asBoolean() {
+    return isBoolean() ? isTrue() : super.asBoolean();
+  }
+
+  @Override
   public boolean isNull() {
     return this == NULL;
   }

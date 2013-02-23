@@ -16,9 +16,6 @@ import java.io.StringWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.eclipsesource.json.JsonValue;
-import com.eclipsesource.json.JsonWriter;
-
 import static org.junit.Assert.*;
 
 
@@ -67,6 +64,17 @@ public class JsonPrimitive_Test {
   @Test
   public void toString_FALSE() {
     assertEquals( "false", JsonValue.FALSE.toString() );
+  }
+
+  @Test
+  public void asBoolean() {
+    assertTrue( JsonValue.TRUE.asBoolean() );
+    assertFalse( JsonValue.FALSE.asBoolean() );
+  }
+
+  @Test( expected = UnsupportedOperationException.class )
+  public void asBoolean_failsIfNotBoolean() {
+    JsonValue.NULL.asBoolean();
   }
 
   @Test

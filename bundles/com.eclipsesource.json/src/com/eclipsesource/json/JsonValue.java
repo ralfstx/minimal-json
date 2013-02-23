@@ -82,6 +82,10 @@ public abstract class JsonValue {
     throw new UnsupportedOperationException( "Not a number: " + toString() );
   }
 
+  public boolean asBoolean() {
+    throw new UnsupportedOperationException( "Not a boolean: " + toString() );
+  }
+
   public boolean isArray() {
     return false;
   }

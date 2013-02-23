@@ -174,6 +174,15 @@ public class JsonValue_Test {
   }
 
   @Test
+  public void asBoolean_failsOnIncompatibleType() {
+    assertException( UnsupportedOperationException.class, "Not a boolean: null", new Runnable() {
+      public void run() {
+        JsonValue.NULL.asBoolean();
+      }
+    } );
+  }
+
+  @Test
   public void isXxx_returnsFalseForIncompatibleType() {
     JsonValue jsonValue = new JsonValue() {
       @Override
