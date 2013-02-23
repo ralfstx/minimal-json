@@ -197,6 +197,7 @@ public class JsonValue_Test {
     assertFalse( jsonValue.isBoolean() );
     assertFalse( jsonValue.isNull() );
     assertFalse( jsonValue.isTrue() );
+    assertFalse( jsonValue.isFalse() );
   }
 
 }

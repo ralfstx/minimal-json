@@ -98,4 +98,11 @@ public class JsonPrimitive_Test {
     assertFalse( JsonValue.FALSE.isTrue() );
   }
 
+  @Test
+  public void isFalse() {
+    assertFalse( JsonValue.NULL.isFalse() );
+    assertFalse( JsonValue.TRUE.isFalse() );
+    assertTrue( JsonValue.FALSE.isFalse() );
+  }
+
 }

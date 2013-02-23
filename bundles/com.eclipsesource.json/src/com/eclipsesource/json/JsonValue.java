@@ -114,6 +114,10 @@ public abstract class JsonValue {
     return false;
   }
 
+  public boolean isFalse() {
+    return false;
+  }
+
   @Override
   public String toString() {
     StringWriter stringWriter = new StringWriter();

@@ -51,4 +51,9 @@ class JsonPrimitive extends JsonValue {
     return this == TRUE;
   }
 
+  @Override
+  public boolean isFalse() {
+    return this == FALSE;
+  }
+
 }
