@@ -70,6 +70,9 @@ public final class JsonObject extends JsonValue implements Iterable<String> {
   }
 
   public JsonValue getValue( String name ) {
+    if( name == null ) {
+      throw new NullPointerException( "name is null" );
+    }
     int index = names.indexOf( name );
     return index != -1 ? values.get( index ) : null;
   }

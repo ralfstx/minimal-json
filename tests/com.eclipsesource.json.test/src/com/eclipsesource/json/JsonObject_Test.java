@@ -17,11 +17,7 @@ import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-import com.eclipsesource.json.JsonWriter;
-
+import static com.eclipsesource.json.TestUtil.assertException;
 import static org.junit.Assert.*;
 
 
@@ -101,9 +97,34 @@ public class JsonObject_Test {
     assertEquals( "foo", names[ 0 ] );
   }
 
-  @Test( expected = NullPointerException.class )
+  @Test
+  public void getValue_failsWithNullName() {
+    assertException( NullPointerException.class, "name is null", new Runnable() {
+      public void run() {
+        object.getValue( null );
+      }
+    } );
+  }
+
+  @Test
+  public void getValue_returnsExistingValue() {
+    object.append( "foo", true );
+
+    assertSame( JsonValue.TRUE, object.getValue( "foo" ) );
+  }
+
+  @Test
+  public void getValue_returnsNullForNonExistingValue() {
+    assertSame( null, object.getValue( "foo" ) );
+  }
+
+  @Test
   public void append_failsWithNullName() {
-    object.append( null, 23 );
+    assertException( NullPointerException.class, "name is null", new Runnable() {
+      public void run() {
+        object.append( null, 23 );
+      }
+    } );
   }
 
   @Test
@@ -169,9 +190,13 @@ public class JsonObject_Test {
     assertEquals( "{\"a\":{}}", object.toString() );
   }
 
-  @Test( expected = NullPointerException.class )
+  @Test
   public void append_json_failsWithNull() {
-    object.append( "a", (JsonValue)null );
+    assertException( NullPointerException.class, "value is null", new Runnable() {
+      public void run() {
+        object.append( "a", (JsonValue)null );
+      }
+    } );
   }
 
   @Test
