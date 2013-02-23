@@ -35,6 +35,32 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void copyConstructor_failsWithNull() {
+    assertException( NullPointerException.class, "object is null", new Runnable() {
+      public void run() {
+        new JsonObject( null );
+      }
+    } );
+  }
+
+  @Test
+  public void copyConstructor_hasSameValues() {
+    object.append( "foo", 23 );
+    JsonObject copy = new JsonObject( object );
+
+    assertArrayEquals( object.getNames(), copy.getNames() );
+    assertSame( object.getValue( "foo" ), copy.getValue( "foo" ) );
+  }
+
+  @Test
+  public void copyConstructor_worksOnSafeCopy() {
+    JsonObject copy = new JsonObject( object );
+    object.append( "foo", 23 );
+
+    assertTrue( copy.isEmpty() );
+  }
+
+  @Test
   public void unmodifiableArray_hasSameValues() {
     object.append( "foo", 23 );
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );

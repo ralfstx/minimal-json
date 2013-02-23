@@ -23,7 +23,16 @@ public final class JsonObject extends JsonValue implements Iterable<String> {
   private final List<JsonValue> values;
 
   public JsonObject() {
-    this( new ArrayList<String>(), new ArrayList<JsonValue>() );
+    this.names = new ArrayList<String>();
+    this.values = new ArrayList<JsonValue>();
+  }
+
+  public JsonObject( JsonObject object ) {
+    if( object == null ) {
+      throw new NullPointerException( "object is null" );
+    }
+    this.names = new ArrayList<String>( object.names );
+    this.values = new ArrayList<JsonValue>( object.values );
   }
 
   private JsonObject( List<String> names, List<JsonValue> values ) {

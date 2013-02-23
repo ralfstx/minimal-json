@@ -17,6 +17,7 @@ import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.eclipsesource.json.TestUtil.assertException;
 import static org.junit.Assert.*;
 
 
@@ -31,6 +32,31 @@ public class JsonArray_Test {
     array = new JsonArray();
     output = new StringWriter();
     writer = new JsonWriter( output );
+  }
+
+  @Test
+  public void copyConstructor_failsWithNull() {
+    assertException( NullPointerException.class, "array is null", new Runnable() {
+      public void run() {
+        new JsonArray( null );
+      }
+    } );
+  }
+
+  @Test
+  public void copyConstructor_hasSameValues() {
+    array.append( 23 );
+    JsonArray copy = new JsonArray( array );
+
+    assertArrayEquals( array.getValues(), copy.getValues() );
+  }
+
+  @Test
+  public void copyConstructor_worksOnSafeCopy() {
+    JsonArray copy = new JsonArray( array );
+    array.append( 23 );
+
+    assertTrue( copy.isEmpty() );
   }
 
   @Test
