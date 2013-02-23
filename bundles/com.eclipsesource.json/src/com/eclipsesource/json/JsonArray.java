@@ -103,7 +103,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   @Override
-  public void write( JsonWriter writer ) throws IOException {
+  protected void write( JsonWriter writer ) throws IOException {
     writer.writeBeginArray();
     JsonValue[] elements = getValues();
     for( int i = 0; i < elements.length; i++ ) {

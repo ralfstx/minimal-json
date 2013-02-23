@@ -116,7 +116,7 @@ public class JsonObject extends JsonValue implements Iterable<String> {
   }
 
   @Override
-  public void write( JsonWriter writer ) throws IOException {
+  protected void write( JsonWriter writer ) throws IOException {
     writer.writeBeginObject();
     String[] names = getNames();
     JsonValue[] values = getValues();

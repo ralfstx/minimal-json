@@ -22,12 +22,12 @@ class JsonParser {
   private int line;
   private int column;
 
-  public JsonParser( Reader reader ) {
+  JsonParser( Reader reader ) {
     this.reader = reader;
     recorder = new StringBuilder();
   }
 
-  public JsonValue parse() throws IOException {
+  JsonValue parse() throws IOException {
     start();
     skipWhiteSpace();
     JsonValue result = readValue();

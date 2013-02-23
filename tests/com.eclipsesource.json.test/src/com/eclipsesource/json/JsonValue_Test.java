@@ -12,6 +12,7 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import org.junit.Test;
 
@@ -130,6 +131,16 @@ public class JsonValue_Test {
   }
 
   @Test
+  public void writeTo() throws IOException {
+    JsonArray array = new JsonArray();
+    StringWriter writer = new StringWriter();
+
+    array.writeTo( writer );
+
+    assertEquals( "[]", writer.toString() );
+  }
+
+  @Test
   public void asObject_failsOnIncompatibleType() {
     assertException( UnsupportedOperationException.class, "Not an object: null", new Runnable() {
       public void run() {
@@ -205,7 +216,7 @@ public class JsonValue_Test {
   public void isXxx_returnsFalseForIncompatibleType() {
     JsonValue jsonValue = new JsonValue() {
       @Override
-      public void write( JsonWriter writer ) throws IOException {
+      protected void write( JsonWriter writer ) throws IOException {
       }
     };
 

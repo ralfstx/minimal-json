@@ -16,7 +16,6 @@ import org.mockito.Mockito;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.eclipsesource.json.JsonWriter;
 
 
 /**
@@ -37,11 +36,6 @@ public class Mocking_Test {
   @Test
   public void mockValue() {
     Mockito.mock( JsonValue.class );
-  }
-
-  @Test
-  public void mockWriter() {
-    Mockito.mock( JsonWriter.class );
   }
 
 }

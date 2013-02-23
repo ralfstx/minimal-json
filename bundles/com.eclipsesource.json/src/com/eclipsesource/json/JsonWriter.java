@@ -14,14 +14,14 @@ import java.io.IOException;
 import java.io.Writer;
 
 
-public class JsonWriter {
+class JsonWriter {
 
   private static final int CONTROL_CHARACTERS_START = 0x0000;
   private static final int CONTROL_CHARACTERS_END = 0x001f;
 
   protected final Writer writer;
 
-  public JsonWriter( Writer writer ) {
+  JsonWriter( Writer writer ) {
     this.writer = writer;
   }
 

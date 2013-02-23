@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.Writer;
 
 
 /**
@@ -162,6 +163,10 @@ public abstract class JsonValue {
     return super.equals( object );
   }
 
-  public abstract void write( JsonWriter writer ) throws IOException;
+  public void writeTo( Writer writer ) throws IOException {
+    write( new JsonWriter( writer ) );
+  }
+
+  protected abstract void write( JsonWriter writer ) throws IOException;
 
 }

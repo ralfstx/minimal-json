@@ -25,7 +25,7 @@ class JsonString extends JsonValue {
   }
 
   @Override
-  public void write( JsonWriter writer ) throws IOException {
+  protected void write( JsonWriter writer ) throws IOException {
     writer.writeString( string );
   }
 
