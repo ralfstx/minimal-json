@@ -35,6 +35,31 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void unmodifiableArray_hasSameValues() {
+    object.append( "foo", 23 );
+    JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
+
+    assertArrayEquals( object.getNames(), unmodifiableObject.getNames() );
+    assertSame( object.getValue( "foo" ), unmodifiableObject.getValue( "foo" ) );
+  }
+
+  @Test
+  public void unmodifiableArray_followsChanges() {
+    JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
+    object.append( "foo", 23 );
+
+    assertArrayEquals( object.getNames(), unmodifiableObject.getNames() );
+    assertSame( object.getValue( "foo" ), unmodifiableObject.getValue( "foo" ) );
+  }
+
+  @Test( expected = UnsupportedOperationException.class )
+  public void unmodifiableArray_preventsModification() {
+    JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
+
+    unmodifiableObject.append( "foo", 23 );
+  }
+
+  @Test
   public void isEmpty_trueAfterCreation() {
     assertTrue( object.isEmpty() );
   }

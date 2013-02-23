@@ -22,7 +22,15 @@ public final class JsonArray extends JsonValue implements Iterable<JsonValue> {
   private final List<JsonValue> values;
 
   public JsonArray() {
-    values = new ArrayList<JsonValue>();
+    this( new ArrayList<JsonValue>() );
+  }
+
+  private JsonArray( List<JsonValue> values ) {
+    this.values = values;
+  }
+
+  public static JsonArray unmodifiableArray( JsonArray array ) {
+    return new JsonArray( Collections.unmodifiableList( array.values ) );
   }
 
   public void append( long value ) {

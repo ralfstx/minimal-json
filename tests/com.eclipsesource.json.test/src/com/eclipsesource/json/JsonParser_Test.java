@@ -104,6 +104,11 @@ public class JsonParser_Test {
     assertParseExceptionInReadValue( "Unexpected end of input at 1:5", "[23, " );
   }
 
+  @Test( expected = UnsupportedOperationException.class )
+  public void arrays_returnsImmutableArrays() {
+    readValue( "[ 23 ]" ).asArray().append( 42 );
+  }
+
   @Test
   public void objects_empty() {
     assertEquals( "{}", readValue( "{}" ).toString() );
@@ -154,6 +159,11 @@ public class JsonParser_Test {
     assertParseExceptionInReadValue( "Unexpected end of input at 1:8", "{\"a\":23 " );
     assertParseExceptionInReadValue( "Unexpected end of input at 1:8", "{\"a\":23," );
     assertParseExceptionInReadValue( "Unexpected end of input at 1:9", "{\"a\":23, " );
+  }
+
+  @Test( expected = UnsupportedOperationException.class )
+  public void objects_returnsImmutableObjects() {
+    readValue( "{ \"foo\": 23 }" ).asObject().append( "bar", 42 );
   }
 
   @Test

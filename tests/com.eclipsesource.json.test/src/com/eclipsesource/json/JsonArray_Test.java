@@ -34,6 +34,29 @@ public class JsonArray_Test {
   }
 
   @Test
+  public void unmodifiableArray_hasSameValues() {
+    array.append( 23 );
+    JsonArray unmodifiableArray = JsonArray.unmodifiableArray( array );
+
+    assertArrayEquals( array.getValues(), unmodifiableArray.getValues() );
+  }
+
+  @Test
+  public void unmodifiableArray_followsChanges() {
+    JsonArray unmodifiableArray = JsonArray.unmodifiableArray( array );
+    array.append( 23 );
+
+    assertArrayEquals( array.getValues(), unmodifiableArray.getValues() );
+  }
+
+  @Test( expected = UnsupportedOperationException.class )
+  public void unmodifiableArray_preventsModification() {
+    JsonArray unmodifiableArray = JsonArray.unmodifiableArray( array );
+
+    unmodifiableArray.append( 23 );
+  }
+
+  @Test
   public void isEmpty_isTrueAfterCreation() {
     assertTrue( array.isEmpty() );
   }

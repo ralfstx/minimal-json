@@ -23,8 +23,17 @@ public final class JsonObject extends JsonValue implements Iterable<String> {
   private final List<JsonValue> values;
 
   public JsonObject() {
-    names = new ArrayList<String>();
-    values = new ArrayList<JsonValue>();
+    this( new ArrayList<String>(), new ArrayList<JsonValue>() );
+  }
+
+  private JsonObject( List<String> names, List<JsonValue> values ) {
+    this.names = names;
+    this.values = values;
+  }
+
+  public static JsonObject unmodifiableObject( JsonObject object ) {
+    return new JsonObject( Collections.unmodifiableList( object.names ),
+                           Collections.unmodifiableList( object.values ) );
   }
 
   public void append( String name, long value ) {

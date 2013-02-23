@@ -109,7 +109,7 @@ public class JsonParser {
     if( !readChar( ']' ) ) {
       throw expected( "',' or ']'" );
     }
-    return array;
+    return JsonArray.unmodifiableArray( array );
   }
 
   private JsonObject readObject() throws IOException {
@@ -133,7 +133,7 @@ public class JsonParser {
     if( !readChar( '}' ) ) {
       throw expected( "',' or '}'" );
     }
-    return object;
+    return JsonObject.unmodifiableObject( object );
   }
 
   private JsonValue readNull() throws IOException {
