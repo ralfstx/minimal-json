@@ -85,6 +85,10 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
     return values.toArray( new JsonValue[ values.size() ] );
   }
 
+  public JsonValue getValue( int index ) {
+    return values.get( index );
+  }
+
   public Iterator<JsonValue> iterator() {
     return Collections.unmodifiableList( values ).iterator();
   }

@@ -152,6 +152,20 @@ public class JsonArray_Test {
   }
 
   @Test
+  public void getValue_returnsValue() {
+    array.append( 23 );
+
+    JsonValue value = array.getValue( 0 );
+
+    assertEquals( JsonValue.valueOf( 23 ), value );
+  }
+
+  @Test( expected = IndexOutOfBoundsException.class )
+  public void getValue_failsWithInvalidIndex() {
+    array.getValue( 0 );
+  }
+
+  @Test
   public void append_int() {
     array.append( 23 );
 
