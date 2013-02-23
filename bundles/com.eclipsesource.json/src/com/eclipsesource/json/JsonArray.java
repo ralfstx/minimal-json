@@ -12,6 +12,7 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public final class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   public Iterator<JsonValue> iterator() {
-    return values.iterator();
+    return Collections.unmodifiableList( values ).iterator();
   }
 
   @Override

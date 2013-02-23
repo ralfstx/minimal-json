@@ -17,11 +17,6 @@ import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-import com.eclipsesource.json.JsonWriter;
-
 import static org.junit.Assert.*;
 
 
@@ -75,6 +70,14 @@ public class JsonArray_Test {
     assertTrue( iterator.hasNext() );
     assertEquals( JsonValue.TRUE, iterator.next() );
     assertFalse( iterator.hasNext() );
+  }
+
+  @Test( expected = UnsupportedOperationException.class )
+  public void iterator_doesNotAllowModification() {
+    array.append( 23 );
+    Iterator<JsonValue> iterator = array.iterator();
+    iterator.next();
+    iterator.remove();
   }
 
   @Test

@@ -73,6 +73,14 @@ public class JsonObject_Test {
     assertFalse( iterator.hasNext() );
   }
 
+  @Test( expected = UnsupportedOperationException.class )
+  public void iterator_doesNotAllowModification() {
+    object.append( "foo", true );
+    Iterator<String> iterator = object.iterator();
+    iterator.next();
+    iterator.remove();
+  }
+
   @Test
   public void getNames_emptyAfterCreation() {
     assertEquals( 0, object.getNames().length );

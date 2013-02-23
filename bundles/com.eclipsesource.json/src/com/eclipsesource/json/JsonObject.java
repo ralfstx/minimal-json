@@ -12,6 +12,7 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public final class JsonObject extends JsonValue implements Iterable<String> {
   }
 
   public Iterator<String> iterator() {
-    return names.iterator();
+    return Collections.unmodifiableList( names ).iterator();
   }
 
   @Override
