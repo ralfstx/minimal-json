@@ -129,6 +129,24 @@ public abstract class JsonValue {
     return stringWriter.toString();
   }
 
+  /**
+   * Indicates whether some other object is "equal to" this one according to the contract specified
+   * in {@link Object#equals(Object)}.
+   * <p>
+   * Two JsonValues are considered equal if and only if they represent the same JSON text. As a
+   * consequence, two given JsonObjects may be different even though they contain the same set of
+   * names with the same values, but in a different order.
+   * </p>
+   *
+   * @param object
+   *          the reference object with which to compare
+   * @return true if this object is the same as the obj argument; false otherwise
+   */
+  @Override
+  public boolean equals( Object object ) {
+    return super.equals( object );
+  }
+
   public abstract void write( JsonWriter jsonWriter ) throws IOException;
 
 }

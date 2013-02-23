@@ -338,4 +338,55 @@ public class JsonObject_Test {
     assertSame( object, object.asObject() );
   }
 
+  @Test
+  public void equals_trueForSameInstance() {
+    assertTrue( object.equals( object ) );
+  }
+
+  @Test
+  public void equals_trueForEqualObjects() {
+    assertTrue( object().equals( object() ) );
+    assertTrue( object( "a", "1", "b", "2" ).equals( object( "a", "1", "b", "2" ) ) );
+  }
+
+  @Test
+  public void equals_falseForDifferentObjects() {
+    assertFalse( object( "a", "1" ).equals( object( "a", "2" ) ) );
+    assertFalse( object( "a", "1" ).equals( object( "b", "1" ) ) );
+    assertFalse( object( "a", "1", "b", "2" ).equals( object( "b", "2", "a", "1" ) ) );
+  }
+
+  @Test
+  public void equals_falseForNull() {
+    assertFalse( new JsonObject().equals( null ) );
+  }
+
+  @Test
+  public void equals_falseForSubclass() {
+    JsonObject jsonObject = new JsonObject();
+
+    assertFalse( jsonObject.equals( new JsonObject( jsonObject ) {} ) );
+  }
+
+  @Test
+  public void hashCode_equalsForEqualObjects() {
+    assertTrue( object().hashCode() == object().hashCode() );
+    assertTrue( object( "a", "1" ).hashCode() == object( "a", "1" ).hashCode() );
+  }
+
+  @Test
+  public void hashCode_differsForDifferentObjects() {
+    assertFalse( object().hashCode() == object( "a", "1" ).hashCode() );
+    assertFalse( object( "a", "1" ).hashCode() == object( "a", "2" ).hashCode() );
+    assertFalse( object( "a", "1" ).hashCode() == object( "b", "1" ).hashCode() );
+  }
+
+  private static JsonObject object( String... namesAndValues ) {
+    JsonObject object = new JsonObject();
+    for( int i = 0; i < namesAndValues.length; i += 2 ) {
+      object.append( namesAndValues[i], namesAndValues[i + 1] );
+    }
+    return object;
+  }
+
 }

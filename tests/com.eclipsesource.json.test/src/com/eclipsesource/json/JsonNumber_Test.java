@@ -16,8 +16,7 @@ import java.io.StringWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class JsonNumber_Test {
@@ -110,6 +109,44 @@ public class JsonNumber_Test {
   public void asDouble_returnsInfinityForExceedingValues() {
     assertEquals( Double.POSITIVE_INFINITY, new JsonNumber( "1e500" ).asDouble(), 0 );
     assertEquals( Double.NEGATIVE_INFINITY, new JsonNumber( "-1e500" ).asDouble(), 0 );
+  }
+
+  @Test
+  public void equals_trueForSameInstance() {
+    JsonNumber number = new JsonNumber( "23" );
+
+    assertTrue( number.equals( number ) );
+  }
+
+  @Test
+  public void equals_trueForEqualNumberStrings() {
+    assertTrue( new JsonNumber( "23" ).equals( new JsonNumber( "23" ) ) );
+  }
+
+  @Test
+  public void equals_falseForDifferentNumberStrings() {
+    assertFalse( new JsonNumber( "23" ).equals( new JsonNumber( "42" ) ) );
+    assertFalse( new JsonNumber( "1e+5" ).equals( new JsonNumber( "1e5" ) ) );
+  }
+
+  @Test
+  public void equals_falseForNull() {
+    assertFalse( new JsonNumber( "23" ).equals( null ) );
+  }
+
+  @Test
+  public void equals_falseForSubclass() {
+    assertFalse( new JsonNumber( "23" ).equals( new JsonNumber( "23" ) {} ) );
+  }
+
+  @Test
+  public void hashCode_equalsForEqualStrings() {
+    assertTrue( new JsonNumber( "23" ).hashCode() == new JsonNumber( "23" ).hashCode() );
+  }
+
+  @Test
+  public void hashCode_differsForDifferentStrings() {
+    assertFalse( new JsonNumber( "23" ).hashCode() == new JsonNumber( "42" ).hashCode() );
   }
 
 }

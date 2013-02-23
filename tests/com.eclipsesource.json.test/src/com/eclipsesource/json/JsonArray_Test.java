@@ -303,4 +303,51 @@ public class JsonArray_Test {
     assertSame( array, array.asArray() );
   }
 
+  @Test
+  public void equals_trueForSameInstance() {
+    assertTrue( array.equals( array ) );
+  }
+
+  @Test
+  public void equals_trueForEqualArrays() {
+    assertTrue( array().equals( array() ) );
+    assertTrue( array( "foo", "bar" ).equals( array( "foo", "bar" ) ) );
+  }
+
+  @Test
+  public void equals_falseForDifferentArrays() {
+    assertFalse( array( "foo", "bar" ).equals( array( "foo", "bar", "baz" ) ) );
+    assertFalse( array( "foo", "bar" ).equals( array( "bar", "foo" ) ) );
+  }
+
+  @Test
+  public void equals_falseForNull() {
+    assertFalse( array.equals( null ) );
+  }
+
+  @Test
+  public void equals_falseForSubclass() {
+    assertFalse( array.equals( new JsonArray( array ) {} ) );
+  }
+
+  @Test
+  public void hashCode_equalsForEqualArrays() {
+    assertTrue( array().hashCode() == array().hashCode() );
+    assertTrue( array( "foo" ).hashCode() == array( "foo" ).hashCode() );
+  }
+
+  @Test
+  public void hashCode_differsForDifferentArrays() {
+    assertFalse( array().hashCode() == array( "bar" ).hashCode() );
+    assertFalse( array( "foo" ).hashCode() == array( "bar" ).hashCode() );
+  }
+
+  private static JsonArray array( String... values ) {
+    JsonArray array = new JsonArray();
+    for( String value : values ) {
+      array.append( value );
+    }
+    return array;
+  }
+
 }

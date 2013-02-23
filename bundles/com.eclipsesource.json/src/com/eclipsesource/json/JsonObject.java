@@ -132,6 +132,29 @@ public class JsonObject extends JsonValue implements Iterable<String> {
     return this;
   }
 
+  @Override
+  public int hashCode() {
+    int result = 1;
+    result = 31 * result + names.hashCode();
+    result = 31 * result + values.hashCode();
+    return result;
+  }
+
+  @Override
+  public boolean equals( Object obj ) {
+    if( this == obj ) {
+      return true;
+    }
+    if( obj == null ) {
+      return false;
+    }
+    if( getClass() != obj.getClass() ) {
+      return false;
+    }
+    JsonObject other = (JsonObject)obj;
+    return names.equals( other.names ) && values.equals( other.values );
+  }
+
   private JsonValue[] getValues() {
     return values.toArray( new JsonValue[ values.size() ] );
   }

@@ -16,11 +16,7 @@ import java.io.StringWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.eclipsesource.json.JsonString;
-import com.eclipsesource.json.JsonWriter;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class JsonString_Test {
@@ -56,6 +52,45 @@ public class JsonString_Test {
   @Test
   public void asString() {
     assertEquals( "foo", new JsonString( "foo" ).asString() );
+  }
+
+  @Test
+  public void equals_trueForSameInstance() {
+    JsonString string = new JsonString( "foo" );
+
+    assertTrue( string.equals( string ) );
+  }
+
+  @Test
+  public void equals_trueForEqualStrings() {
+    assertTrue( new JsonString( "foo" ).equals( new JsonString( "foo" ) ) );
+  }
+
+  @Test
+  public void equals_falseForDifferentStrings() {
+    assertFalse( new JsonString( "" ).equals( new JsonString( "foo" ) ) );
+    assertFalse( new JsonString( "foo" ).equals( new JsonString( "bar" ) ) );
+  }
+
+  @Test
+  public void equals_falseForNull() {
+    assertFalse( new JsonString( "foo" ).equals( null ) );
+  }
+
+  @Test
+  public void equals_falseForSubclass() {
+    assertFalse( new JsonString( "foo" ).equals( new JsonString( "foo" ) {} ) );
+  }
+
+  @Test
+  public void hashCode_equalsForEqualStrings() {
+    assertTrue( new JsonString( "foo" ).hashCode() == new JsonString( "foo" ).hashCode() );
+  }
+
+  @Test
+  public void hashCode_differsForDifferentStrings() {
+    assertFalse( new JsonString( "" ).hashCode() == new JsonString( "foo" ).hashCode() );
+    assertFalse( new JsonString( "foo" ).hashCode() == new JsonString( "bar" ).hashCode() );
   }
 
 }
