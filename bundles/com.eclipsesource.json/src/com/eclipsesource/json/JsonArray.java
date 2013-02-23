@@ -17,7 +17,13 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public final class JsonArray extends JsonValue implements Iterable<JsonValue> {
+/**
+ * Represents a JSON array.
+ * <p>
+ * <strong>Note:</strong> This class is not supposed to be extended by clients.
+ * </p>
+ */
+public class JsonArray extends JsonValue implements Iterable<JsonValue> {
 
   private final List<JsonValue> values;
 

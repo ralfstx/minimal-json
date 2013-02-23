@@ -17,7 +17,13 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public final class JsonObject extends JsonValue implements Iterable<String> {
+/**
+ * Represents a JSON object.
+ * <p>
+ * <strong>Note:</strong> This class is not supposed to be extended by clients.
+ * </p>
+ */
+public class JsonObject extends JsonValue implements Iterable<String> {
 
   private final List<String> names;
   private final List<JsonValue> values;

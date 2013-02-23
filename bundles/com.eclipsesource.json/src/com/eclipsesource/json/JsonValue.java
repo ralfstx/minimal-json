@@ -15,18 +15,16 @@ import java.io.StringWriter;
 
 
 /**
- * Represents a JSON value. Can be a <code>JsonArray</code>, a <code>JsonObject</code>, or a
- * primitive value. Primitive values can be created using one of the <code>valueOf()</code> methods.
+ * Represents a JSON value.
+ * <p>
+ * <strong>Note:</strong> This class is not supposed to be extended by clients.
+ * </p>
  */
 public abstract class JsonValue {
 
   public static final JsonValue NULL = new JsonPrimitive( "null" );
   public static final JsonValue TRUE = new JsonPrimitive( "true" );
   public static final JsonValue FALSE = new JsonPrimitive( "false" );
-
-  JsonValue() {
-    // prevent subclasses from outside this package
-  }
 
   public static JsonValue valueOf( long value ) {
     return new JsonNumber( Long.toString( value, 10 ) );
