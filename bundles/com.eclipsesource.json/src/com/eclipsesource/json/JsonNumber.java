@@ -37,22 +37,22 @@ class JsonNumber extends JsonValue {
   }
 
   @Override
-  public int intValue() {
+  public int asInt() {
     return Integer.parseInt( string, 10 );
   }
 
   @Override
-  public long longValue() {
+  public long asLong() {
     return Long.parseLong( string, 10 );
   }
 
   @Override
-  public float floatValue() {
+  public float asFloat() {
     return Float.parseFloat( string );
   }
 
   @Override
-  public double doubleValue() {
+  public double asDouble() {
     return Double.parseDouble( string );
   }
 

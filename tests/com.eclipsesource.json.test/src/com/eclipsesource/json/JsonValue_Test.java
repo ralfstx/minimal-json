@@ -14,9 +14,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.eclipsesource.json.JsonValue;
-import com.eclipsesource.json.JsonWriter;
-
+import static com.eclipsesource.json.TestUtil.assertException;
 import static org.junit.Assert.*;
 
 
@@ -47,14 +45,24 @@ public class JsonValue_Test {
     assertEquals( "-1.23E7", JsonValue.valueOf( -12300000f ).toString() );
   }
 
-  @Test( expected = IllegalArgumentException.class )
+  @Test
   public void valueOf_float_failsWithInfinity() {
-    JsonValue.valueOf( Float.POSITIVE_INFINITY );
+    String message = "Infinite and NaN values not permitted in JSON";
+    assertException( IllegalArgumentException.class, message, new Runnable() {
+      public void run() {
+        JsonValue.valueOf( Float.POSITIVE_INFINITY );
+      }
+    } );
   }
 
-  @Test( expected = IllegalArgumentException.class )
+  @Test
   public void valueOf_float_failsWithNaN() {
-    JsonValue.valueOf( Float.NaN );
+    String message = "Infinite and NaN values not permitted in JSON";
+    assertException( IllegalArgumentException.class, message, new Runnable() {
+      public void run() {
+        JsonValue.valueOf( Float.NaN );
+      }
+    } );
   }
 
   @Test
@@ -64,14 +72,24 @@ public class JsonValue_Test {
     assertEquals( "1.7976931348623157E308", JsonValue.valueOf( 1.7976931348623157E308d ).toString() );
   }
 
-  @Test( expected = IllegalArgumentException.class )
+  @Test
   public void valueOf_double_failsWithInfinity() {
-    JsonValue.valueOf( Double.POSITIVE_INFINITY );
+    String message = "Infinite and NaN values not permitted in JSON";
+    assertException( IllegalArgumentException.class, message, new Runnable() {
+      public void run() {
+        JsonValue.valueOf( Double.POSITIVE_INFINITY );
+      }
+    } );
   }
 
-  @Test( expected = IllegalArgumentException.class )
+  @Test
   public void valueOf_double_failsWithNaN() {
-    JsonValue.valueOf( Double.NaN );
+    String message = "Infinite and NaN values not permitted in JSON";
+    assertException( IllegalArgumentException.class, message, new Runnable() {
+      public void run() {
+        JsonValue.valueOf( Double.NaN );
+      }
+    } );
   }
 
   @Test
@@ -88,47 +106,75 @@ public class JsonValue_Test {
   }
 
   @Test
-  public void valueOf_string_withNull() {
+  public void valueOf_string_toleratesNull() {
     assertSame( JsonValue.NULL, JsonValue.valueOf( null ) );
   }
 
-  @Test( expected = UnsupportedOperationException.class )
-  public void asObject() {
-    JsonValue.NULL.asObject();
-  }
-
-  @Test( expected = UnsupportedOperationException.class )
-  public void asArray() {
-    JsonValue.NULL.asArray();
-  }
-
-  @Test( expected = UnsupportedOperationException.class )
-  public void asString() {
-    JsonValue.NULL.asString();
-  }
-
-  @Test( expected = UnsupportedOperationException.class )
-  public void intValue() {
-    JsonValue.NULL.intValue();
-  }
-
-  @Test( expected = UnsupportedOperationException.class )
-  public void longValue() {
-    JsonValue.NULL.longValue();
-  }
-
-  @Test( expected = UnsupportedOperationException.class )
-  public void floatValue() {
-    JsonValue.NULL.floatValue();
-  }
-
-  @Test( expected = UnsupportedOperationException.class )
-  public void doubleValue() {
-    JsonValue.NULL.doubleValue();
+  @Test
+  public void asObject_failsOnIncompatibleType() {
+    assertException( UnsupportedOperationException.class, "Not an object: null", new Runnable() {
+      public void run() {
+        JsonValue.NULL.asObject();
+      }
+    } );
   }
 
   @Test
-  public void isXxx_returnsFalseForAllTypes() {
+  public void asArray_failsOnIncompatibleType() {
+    assertException( UnsupportedOperationException.class, "Not an array: null", new Runnable() {
+      public void run() {
+        JsonValue.NULL.asArray();
+      }
+    } );
+  }
+
+  @Test
+  public void asString_failsOnIncompatibleType() {
+    assertException( UnsupportedOperationException.class, "Not a string: null", new Runnable() {
+      public void run() {
+        JsonValue.NULL.asString();
+      }
+    } );
+  }
+
+  @Test
+  public void asInt_failsOnIncompatibleType() {
+    assertException( UnsupportedOperationException.class, "Not a number: null", new Runnable() {
+      public void run() {
+        JsonValue.NULL.asInt();
+      }
+    } );
+  }
+
+  @Test
+  public void asLong_failsOnIncompatibleType() {
+    assertException( UnsupportedOperationException.class, "Not a number: null", new Runnable() {
+      public void run() {
+        JsonValue.NULL.asLong();
+      }
+    } );
+  }
+
+  @Test
+  public void asFloat_failsOnIncompatibleType() {
+    assertException( UnsupportedOperationException.class, "Not a number: null", new Runnable() {
+      public void run() {
+        JsonValue.NULL.asFloat();
+      }
+    } );
+  }
+
+  @Test
+  public void asDouble_failsOnIncompatibleType() {
+    assertException( UnsupportedOperationException.class, "Not a number: null", new Runnable() {
+      public void run() {
+        JsonValue.NULL.asDouble();
+      }
+    } );
+  }
+
+  @Test
+  public void isXxx_returnsFalseForIncompatibleType() {
     JsonValue jsonValue = new JsonValue() {
       @Override
       public void write( JsonWriter jsonWriter ) throws IOException {

@@ -16,9 +16,6 @@ import java.io.StringWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.eclipsesource.json.JsonNumber;
-import com.eclipsesource.json.JsonWriter;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -52,67 +49,67 @@ public class JsonNumber_Test {
   }
 
   @Test
-  public void intValue() {
-    assertEquals( 23, new JsonNumber( "23" ).intValue() );
+  public void asInt() {
+    assertEquals( 23, new JsonNumber( "23" ).asInt() );
   }
 
   @Test( expected = NumberFormatException.class )
-  public void intValue_failsWithExceedingValues() {
-    new JsonNumber( "10000000000" ).intValue();
+  public void asInt_failsWithExceedingValues() {
+    new JsonNumber( "10000000000" ).asInt();
   }
 
   @Test( expected = NumberFormatException.class )
-  public void intValue_failsWithExponent() {
-    new JsonNumber( "1e5" ).intValue();
+  public void asInt_failsWithExponent() {
+    new JsonNumber( "1e5" ).asInt();
   }
 
   @Test( expected = NumberFormatException.class )
-  public void intValue_failsWithFractional() {
-    new JsonNumber( "23.5" ).intValue();
+  public void asInt_failsWithFractional() {
+    new JsonNumber( "23.5" ).asInt();
   }
 
   @Test
-  public void longValue() {
-    assertEquals( 23, new JsonNumber( "23" ).longValue() );
+  public void asLong() {
+    assertEquals( 23, new JsonNumber( "23" ).asLong() );
   }
 
   @Test( expected = NumberFormatException.class )
-  public void longValue_failsWithExceedingValues() {
-    new JsonNumber( "10000000000000000000" ).longValue();
+  public void asLong_failsWithExceedingValues() {
+    new JsonNumber( "10000000000000000000" ).asLong();
   }
 
   @Test( expected = NumberFormatException.class )
-  public void longValue_failsWithExponent() {
-    new JsonNumber( "1e5" ).longValue();
+  public void asLong_failsWithExponent() {
+    new JsonNumber( "1e5" ).asLong();
   }
 
   @Test( expected = NumberFormatException.class )
-  public void longValue_failsWithFractional() {
-    new JsonNumber( "23.5" ).longValue();
+  public void asLong_failsWithFractional() {
+    new JsonNumber( "23.5" ).asLong();
   }
 
   @Test
-  public void floatValue() {
-    assertEquals( 23.05f, new JsonNumber( "23.05" ).floatValue(), 0 );
+  public void asFloat() {
+    assertEquals( 23.05f, new JsonNumber( "23.05" ).asFloat(), 0 );
   }
 
   @Test
-  public void floatValue_returnsInfinityForExceedingValues() {
-    assertEquals( Float.POSITIVE_INFINITY, new JsonNumber( "1e50" ).floatValue(), 0 );
-    assertEquals( Float.NEGATIVE_INFINITY, new JsonNumber( "-1e50" ).floatValue(), 0 );
+  public void asFloat_returnsInfinityForExceedingValues() {
+    assertEquals( Float.POSITIVE_INFINITY, new JsonNumber( "1e50" ).asFloat(), 0 );
+    assertEquals( Float.NEGATIVE_INFINITY, new JsonNumber( "-1e50" ).asFloat(), 0 );
   }
 
   @Test
-  public void doubleValue() {
-    double result = new JsonNumber( "23.05" ).doubleValue();
+  public void asDouble() {
+    double result = new JsonNumber( "23.05" ).asDouble();
 
     assertEquals( 23.05, result, 0 );
   }
 
   @Test
-  public void doubleValue_returnsInfinityForExceedingValues() {
-    assertEquals( Double.POSITIVE_INFINITY, new JsonNumber( "1e500" ).doubleValue(), 0 );
-    assertEquals( Double.NEGATIVE_INFINITY, new JsonNumber( "-1e500" ).doubleValue(), 0 );
+  public void asDouble_returnsInfinityForExceedingValues() {
+    assertEquals( Double.POSITIVE_INFINITY, new JsonNumber( "1e500" ).asDouble(), 0 );
+    assertEquals( Double.NEGATIVE_INFINITY, new JsonNumber( "-1e500" ).asDouble(), 0 );
   }
 
 }

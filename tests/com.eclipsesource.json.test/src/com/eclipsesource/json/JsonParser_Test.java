@@ -16,7 +16,6 @@ import java.io.StringReader;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 public class JsonParser_Test {
@@ -254,10 +253,10 @@ public class JsonParser_Test {
     // allowed by JSON, allowed by Java
     JsonValue value = readValue( "-0" );
 
-    assertEquals( 0, value.intValue() );
-    assertEquals( 0l, value.longValue() );
-    assertEquals( 0f, value.floatValue(), 0 );
-    assertEquals( 0d, value.doubleValue(), 0 );
+    assertEquals( 0, value.asInt() );
+    assertEquals( 0l, value.asLong() );
+    assertEquals( 0f, value.asFloat(), 0 );
+    assertEquals( 0d, value.asDouble(), 0 );
   }
 
   @Test
@@ -360,16 +359,15 @@ public class JsonParser_Test {
     assertParseExceptionInReadValue( "Unexpected character at 1:5", "falsex" );
   }
 
-  static void assertParseException( String expectedMessage, String json ) {
-    try {
-      parse( json );
-      fail( "ParseException expected" );
-    } catch( ParseException exception ) {
-      assertEquals( "message", expectedMessage, exception.getMessage() );
-    }
+  private static void assertParseException( String expectedMessage, final String json ) {
+    TestUtil.assertException( ParseException.class, expectedMessage, new Runnable() {
+      public void run() {
+        parse( json );
+      }
+    } );
   }
 
-  static JsonValue parse( String json ) {
+  private static JsonValue parse( String json ) {
     try {
       return new JsonParser( new StringReader( json ) ).parse();
     } catch( IOException exception ) {
@@ -377,16 +375,15 @@ public class JsonParser_Test {
     }
   }
 
-  static void assertParseExceptionInReadValue( String expectedMessage, String json ) {
-    try {
-      readValue( json );
-      fail( "ParseException expected" );
-    } catch( ParseException exception ) {
-      assertEquals( "message", expectedMessage, exception.getMessage() );
-    }
+  private static void assertParseExceptionInReadValue( String expectedMessage, final String json ) {
+    TestUtil.assertException( ParseException.class, expectedMessage, new Runnable() {
+      public void run() {
+        readValue( json );
+      }
+    } );
   }
 
-  static JsonValue readValue( String json ) {
+  private static JsonValue readValue( String json ) {
     try {
       return new JsonParser( new StringReader( json ) ).parseValue();
     } catch( IOException exception ) {

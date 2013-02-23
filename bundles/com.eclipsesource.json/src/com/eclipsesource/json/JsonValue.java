@@ -55,31 +55,31 @@ public abstract class JsonValue {
   }
 
   public JsonObject asObject() {
-    throw new UnsupportedOperationException( "Not an object" );
+    throw new UnsupportedOperationException( "Not an object: " + toString() );
   }
 
   public JsonArray asArray() {
-    throw new UnsupportedOperationException( "Not an array" );
+    throw new UnsupportedOperationException( "Not an array: " + toString() );
   }
 
   public String asString() {
-    throw new UnsupportedOperationException( "Not a string" );
+    throw new UnsupportedOperationException( "Not a string: " + toString() );
   }
 
-  public int intValue() {
-    throw new UnsupportedOperationException( "Not a number" );
+  public int asInt() {
+    throw new UnsupportedOperationException( "Not a number: " + toString() );
   }
 
-  public long longValue() {
-    throw new UnsupportedOperationException( "Not a number" );
+  public long asLong() {
+    throw new UnsupportedOperationException( "Not a number: " + toString() );
   }
 
-  public float floatValue() {
-    throw new UnsupportedOperationException( "Not a number" );
+  public float asFloat() {
+    throw new UnsupportedOperationException( "Not a number: " + toString() );
   }
 
-  public double doubleValue() {
-    throw new UnsupportedOperationException( "Not a number" );
+  public double asDouble() {
+    throw new UnsupportedOperationException( "Not a number: " + toString() );
   }
 
   public boolean isArray() {
