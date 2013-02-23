@@ -11,6 +11,7 @@
 package com.eclipsesource.json;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -40,6 +41,14 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
 
   private JsonArray( List<JsonValue> values ) {
     this.values = values;
+  }
+
+  public static JsonArray readFrom( Reader reader ) throws IOException {
+    return JsonValue.readFrom( reader ).asArray();
+  }
+
+  public static JsonArray readFrom( String text ) {
+    return JsonValue.readFrom( text ).asArray();
   }
 
   public static JsonArray unmodifiableArray( JsonArray array ) {

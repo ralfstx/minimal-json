@@ -16,7 +16,7 @@ import com.eclipsesource.json.performancetest.jsonrunners.GsonRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JacksonRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JsonOrgRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JsonRunner;
-import com.eclipsesource.json.performancetest.jsonrunners.MiniJsonRunner;
+import com.eclipsesource.json.performancetest.jsonrunners.MinimalJsonRunner;
 import com.google.caliper.Param;
 import com.google.caliper.SimpleBenchmark;
 
@@ -41,7 +41,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     } else if( "jackson".equals( variant ) ) {
       jsonImpl = new JacksonRunner();
     } else if( "mini".equals( variant ) ) {
-      jsonImpl = new MiniJsonRunner();
+      jsonImpl = new MinimalJsonRunner();
     } else {
       throw new IllegalArgumentException( "Unknown variant: " + variant );
     }

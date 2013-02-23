@@ -11,6 +11,7 @@
 package com.eclipsesource.json;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -44,6 +45,14 @@ public class JsonObject extends JsonValue implements Iterable<String> {
   private JsonObject( List<String> names, List<JsonValue> values ) {
     this.names = names;
     this.values = values;
+  }
+
+  public static JsonObject readFrom( Reader reader ) throws IOException {
+    return JsonValue.readFrom( reader ).asObject();
+  }
+
+  public static JsonObject readFrom( String text ) {
+    return JsonValue.readFrom( text ).asObject();
   }
 
   public static JsonObject unmodifiableObject( JsonObject object ) {

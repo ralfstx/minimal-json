@@ -11,6 +11,8 @@
 package com.eclipsesource.json;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 
@@ -50,6 +52,19 @@ public abstract class JsonValue {
 
   public static JsonValue valueOf( String value ) {
     return value == null ? NULL : new JsonString( value );
+  }
+
+  public static JsonValue readFrom( Reader reader ) throws IOException {
+    return new JsonParser( reader ).parse();
+  }
+
+  public static JsonValue readFrom( String text ) {
+    try {
+      return new JsonParser( new StringReader( text ) ).parse();
+    } catch( IOException exception ) {
+      // StringReader does not throw IOException
+      throw new RuntimeException( exception );
+    }
   }
 
   public JsonObject asObject() {
@@ -147,6 +162,6 @@ public abstract class JsonValue {
     return super.equals( object );
   }
 
-  public abstract void write( JsonWriter jsonWriter ) throws IOException;
+  public abstract void write( JsonWriter writer ) throws IOException;
 
 }

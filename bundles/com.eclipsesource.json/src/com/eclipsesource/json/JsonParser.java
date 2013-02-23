@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 
-public class JsonParser {
+class JsonParser {
 
   private final Reader reader;
   private final StringBuilder recorder;
@@ -28,17 +28,9 @@ public class JsonParser {
   }
 
   public JsonValue parse() throws IOException {
-    return parse( false );
-  }
-
-  public JsonValue parseValue() throws IOException {
-    return parse( true );
-  }
-
-  private JsonValue parse( boolean acceptAnyValue ) throws IOException {
     start();
     skipWhiteSpace();
-    JsonValue result = acceptAnyValue ? readValue() : readArrayOrObject();
+    JsonValue result = readValue();
     skipWhiteSpace();
     if( !endOfText() ) {
       throw error( "Unexpected character" );
@@ -50,17 +42,6 @@ public class JsonParser {
     line = 1;
     column = -1;
     read();
-  }
-
-  private JsonValue readArrayOrObject() throws IOException {
-    switch( current ) {
-    case '[':
-      return readArray();
-    case '{':
-      return readObject();
-    default:
-      throw expected( "'{' or '['" );
-    }
   }
 
   private JsonValue readValue() throws IOException {

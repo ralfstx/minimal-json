@@ -11,6 +11,7 @@
 package com.eclipsesource.json;
 
 import java.io.IOException;
+import java.io.StringReader;
 
 import org.junit.Test;
 
@@ -111,6 +112,24 @@ public class JsonValue_Test {
   }
 
   @Test
+  public void readFrom_reader() throws IOException {
+    assertEquals( new JsonArray(), JsonValue.readFrom( new StringReader( "[]" ) ) );
+    assertEquals( new JsonObject(), JsonValue.readFrom( new StringReader( "{}" ) ) );
+    assertEquals( JsonValue.valueOf( "foo" ), JsonValue.readFrom( new StringReader( "\"foo\"" ) ) );
+    assertEquals( JsonValue.valueOf( 23 ), JsonValue.readFrom( new StringReader( "23" ) ) );
+    assertSame( JsonValue.NULL, JsonValue.readFrom( new StringReader( "null" ) ) );
+  }
+
+  @Test
+  public void readFrom_string() {
+    assertEquals( new JsonArray(), JsonValue.readFrom( "[]" ) );
+    assertEquals( new JsonObject(), JsonValue.readFrom( "{}" ) );
+    assertEquals( JsonValue.valueOf( "foo" ), JsonValue.readFrom( "\"foo\"" ) );
+    assertEquals( JsonValue.valueOf( 23 ), JsonValue.readFrom( "23" ) );
+    assertSame( JsonValue.NULL, JsonValue.readFrom( "null" ) );
+  }
+
+  @Test
   public void asObject_failsOnIncompatibleType() {
     assertException( UnsupportedOperationException.class, "Not an object: null", new Runnable() {
       public void run() {
@@ -186,7 +205,7 @@ public class JsonValue_Test {
   public void isXxx_returnsFalseForIncompatibleType() {
     JsonValue jsonValue = new JsonValue() {
       @Override
-      public void write( JsonWriter jsonWriter ) throws IOException {
+      public void write( JsonWriter writer ) throws IOException {
       }
     };
 
