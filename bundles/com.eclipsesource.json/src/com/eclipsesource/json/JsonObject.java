@@ -103,7 +103,7 @@ public class JsonObject extends JsonValue implements Iterable<String> {
     return names.toArray( new String[ names.size() ] );
   }
 
-  public JsonValue getValue( String name ) {
+  public JsonValue get( String name ) {
     if( name == null ) {
       throw new NullPointerException( "name is null" );
     }

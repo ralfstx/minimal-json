@@ -7,8 +7,8 @@ Reading JSON from a Reader
 --------------------------
 
     JsonObject object = JsonObject.readFrom( reader );
-    String name = object.getValue( "name" ).asString();
-    int age = object.getValue( "age" ).asInt();
+    String name = object.get( "name" ).asString();
+    int age = object.get( "age" ).asInt();
 
 Reading JSON from a String
 --------------------------
@@ -19,7 +19,7 @@ Accessing nested arrays
 -----------------------
 
     JsonArray results = object.getValue( "results" ).asArray();
-    double first = results.getValue( 0 ).asDouble();
+    double first = results.get( 0 ).asDouble();
 
 Writing JSON to a Writer
 ------------------------

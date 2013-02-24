@@ -94,7 +94,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
     return values.toArray( new JsonValue[ values.size() ] );
   }
 
-  public JsonValue getValue( int index ) {
+  public JsonValue get( int index ) {
     return values.get( index );
   }
 

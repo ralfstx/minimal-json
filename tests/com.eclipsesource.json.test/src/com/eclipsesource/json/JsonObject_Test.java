@@ -49,7 +49,7 @@ public class JsonObject_Test {
     JsonObject copy = new JsonObject( object );
 
     assertArrayEquals( object.getNames(), copy.getNames() );
-    assertSame( object.getValue( "foo" ), copy.getValue( "foo" ) );
+    assertSame( object.get( "foo" ), copy.get( "foo" ) );
   }
 
   @Test
@@ -66,7 +66,7 @@ public class JsonObject_Test {
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
 
     assertArrayEquals( object.getNames(), unmodifiableObject.getNames() );
-    assertSame( object.getValue( "foo" ), unmodifiableObject.getValue( "foo" ) );
+    assertSame( object.get( "foo" ), unmodifiableObject.get( "foo" ) );
   }
 
   @Test
@@ -75,7 +75,7 @@ public class JsonObject_Test {
     object.append( "foo", 23 );
 
     assertArrayEquals( object.getNames(), unmodifiableObject.getNames() );
-    assertSame( object.getValue( "foo" ), unmodifiableObject.getValue( "foo" ) );
+    assertSame( object.get( "foo" ), unmodifiableObject.get( "foo" ) );
   }
 
   @Test( expected = UnsupportedOperationException.class )
@@ -157,24 +157,24 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void getValue_failsWithNullName() {
+  public void get_failsWithNullName() {
     assertException( NullPointerException.class, "name is null", new Runnable() {
       public void run() {
-        object.getValue( null );
+        object.get( null );
       }
     } );
   }
 
   @Test
-  public void getValue_returnsExistingValue() {
+  public void get_returnsExistingValue() {
     object.append( "foo", true );
 
-    assertSame( JsonValue.TRUE, object.getValue( "foo" ) );
+    assertSame( JsonValue.TRUE, object.get( "foo" ) );
   }
 
   @Test
-  public void getValue_returnsNullForNonExistingValue() {
-    assertSame( null, object.getValue( "foo" ) );
+  public void get_returnsNullForNonExistingValue() {
+    assertSame( null, object.get( "foo" ) );
   }
 
   @Test
