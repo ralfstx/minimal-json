@@ -173,10 +173,20 @@ public class JsonArray_Test {
   }
 
   @Test
+  public void append_int_enablesChaining() {
+    assertSame( array, array.append( 23 ) );
+  }
+
+  @Test
   public void append_long() {
     array.append( 23l );
 
     assertEquals( "[23]", array.toString() );
+  }
+
+  @Test
+  public void append_long_enablesChaining() {
+    assertSame( array, array.append( 23l ) );
   }
 
   @Test
@@ -187,6 +197,11 @@ public class JsonArray_Test {
   }
 
   @Test
+  public void append_float_enablesChaining() {
+    assertSame( array, array.append( 3.14f ) );
+  }
+
+  @Test
   public void append_double() {
     array.append( 3.14d );
 
@@ -194,10 +209,20 @@ public class JsonArray_Test {
   }
 
   @Test
-  public void append_boolean() {
-    array.append( false );
+  public void append_double_enablesChaining() {
+    assertSame( array, array.append( 3.14d ) );
+  }
 
-    assertEquals( "[false]", array.toString() );
+  @Test
+  public void append_boolean() {
+    array.append( true );
+
+    assertEquals( "[true]", array.toString() );
+  }
+
+  @Test
+  public void append_boolean_enablesChaining() {
+    assertSame( array, array.append( true ) );
   }
 
   @Test
@@ -205,6 +230,11 @@ public class JsonArray_Test {
     array.append( "foo" );
 
     assertEquals( "[\"foo\"]", array.toString() );
+  }
+
+  @Test
+  public void append_string_enablesChaining() {
+    assertSame( array, array.append( "foo" ) );
   }
 
   @Test
@@ -233,6 +263,11 @@ public class JsonArray_Test {
     array.append( new JsonObject() );
 
     assertEquals( "[{}]", array.toString() );
+  }
+
+  @Test
+  public void append_json_enablesChaining() {
+    assertSame( array, array.append( JsonValue.NULL ) );
   }
 
   @Test( expected = NullPointerException.class )

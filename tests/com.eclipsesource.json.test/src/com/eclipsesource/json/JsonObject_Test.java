@@ -187,10 +187,27 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void append_int() {
+    object.append( "a", 23 );
+
+    assertEquals( "{\"a\":23}", object.toString() );
+  }
+
+  @Test
+  public void append_int_enablesChaining() {
+    assertSame( object, object.append( "a", 23 ) );
+  }
+
+  @Test
   public void append_long() {
     object.append( "a", 23l );
 
     assertEquals( "{\"a\":23}", object.toString() );
+  }
+
+  @Test
+  public void append_long_enablesChaining() {
+    assertSame( object, object.append( "a", 23l ) );
   }
 
   @Test
@@ -201,6 +218,11 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void append_float_enablesChaining() {
+    assertSame( object, object.append( "a", 3.14f ) );
+  }
+
+  @Test
   public void append_double() {
     object.append( "a", 3.14d );
 
@@ -208,10 +230,20 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void append_boolean() {
-    object.append( "a", false );
+  public void append_double_enablesChaining() {
+    assertSame( object, object.append( "a", 3.14d ) );
+  }
 
-    assertEquals( "{\"a\":false}", object.toString() );
+  @Test
+  public void append_boolean() {
+    object.append( "a", true );
+
+    assertEquals( "{\"a\":true}", object.toString() );
+  }
+
+  @Test
+  public void append_boolean_enablesChaining() {
+    assertSame( object, object.append( "a", true ) );
   }
 
   @Test
@@ -226,6 +258,11 @@ public class JsonObject_Test {
     object.append( "a", (String)null );
 
     assertEquals( "{\"a\":null}", object.toString() );
+  }
+
+  @Test
+  public void append_string_enablesChaining() {
+    assertSame( object, object.append( "a", "foo" ) );
   }
 
   @Test
@@ -247,6 +284,11 @@ public class JsonObject_Test {
     object.append( "a", new JsonObject() );
 
     assertEquals( "{\"a\":{}}", object.toString() );
+  }
+
+  @Test
+  public void append_json_enablesChaining() {
+    assertSame( object, object.append( "a", JsonValue.NULL ) );
   }
 
   @Test

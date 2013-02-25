@@ -55,31 +55,37 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
     return new JsonArray( Collections.unmodifiableList( array.values ) );
   }
 
-  public void append( long value ) {
+  public JsonArray append( long value ) {
     values.add( valueOf( value ) );
+    return this;
   }
 
-  public void append( float value ) {
+  public JsonArray append( float value ) {
     values.add( valueOf( value ) );
+    return this;
   }
 
-  public void append( double value ) {
+  public JsonArray append( double value ) {
     values.add( valueOf( value ) );
+    return this;
   }
 
-  public void append( boolean value ) {
+  public JsonArray append( boolean value ) {
     values.add( valueOf( value ) );
+    return this;
   }
 
-  public void append( String value ) {
+  public JsonArray append( String value ) {
     values.add( valueOf( value ) );
+    return this;
   }
 
-  public void append( JsonValue value ) {
+  public JsonArray append( JsonValue value ) {
     if( value == null ) {
       throw new NullPointerException( "value is null" );
     }
     values.add( value );
+    return this;
   }
 
   public int size() {
