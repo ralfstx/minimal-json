@@ -13,6 +13,7 @@ package com.eclipsesource.json;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Iterator;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class JsonObject_Test {
     object.append( "foo", 23 );
     JsonObject copy = new JsonObject( object );
 
-    assertArrayEquals( object.getNames(), copy.getNames() );
+    assertEquals( object.names(), copy.names() );
     assertSame( object.get( "foo" ), copy.get( "foo" ) );
   }
 
@@ -65,16 +66,16 @@ public class JsonObject_Test {
     object.append( "foo", 23 );
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
 
-    assertArrayEquals( object.getNames(), unmodifiableObject.getNames() );
+    assertEquals( object.names(), unmodifiableObject.names() );
     assertSame( object.get( "foo" ), unmodifiableObject.get( "foo" ) );
   }
 
   @Test
-  public void unmodifiableArray_followsChanges() {
+  public void unmodifiableArray_reflectsChanges() {
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
     object.append( "foo", 23 );
 
-    assertArrayEquals( object.getNames(), unmodifiableObject.getNames() );
+    assertEquals( object.names(), unmodifiableObject.names() );
     assertSame( object.get( "foo" ), unmodifiableObject.get( "foo" ) );
   }
 
@@ -133,27 +134,34 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void getNames_emptyAfterCreation() {
-    assertEquals( 0, object.getNames().length );
+  public void names_emptyAfterCreation() {
+    assertTrue( object.names().isEmpty() );
   }
 
   @Test
-  public void getNames_afterAppend() {
+  public void names_containsNameAfterAppend() {
     object.append( "foo", true );
 
-    assertEquals( 1, object.getNames().length );
-    assertEquals( "foo", object.getNames()[ 0 ] );
+    List<String> names = object.names();
+    assertEquals( 1, names.size() );
+    assertEquals( "foo", names.get( 0 ) );
   }
 
   @Test
-  public void getNames_createsCopy() {
+  public void names_reflectsChanges() {
+    List<String> names = object.names();
+
     object.append( "foo", true );
-    String[] names = object.getNames();
 
-    object.append( "bar", false );
+    assertEquals( 1, names.size() );
+    assertEquals( "foo", names.get( 0 ) );
+  }
 
-    assertEquals( 1, names.length );
-    assertEquals( "foo", names[ 0 ] );
+  @Test( expected = UnsupportedOperationException.class )
+  public void names_preventsModification() {
+    List<String> names = object.names();
+
+    names.add( "foo" );
   }
 
   @Test

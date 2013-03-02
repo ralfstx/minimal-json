@@ -96,12 +96,12 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
     return values.isEmpty();
   }
 
-  public JsonValue[] getValues() {
-    return values.toArray( new JsonValue[ values.size() ] );
-  }
-
   public JsonValue get( int index ) {
     return values.get( index );
+  }
+
+  public List<JsonValue> values() {
+    return Collections.unmodifiableList( values );
   }
 
   public Iterator<JsonValue> iterator() {
@@ -111,7 +111,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   @Override
   protected void write( JsonWriter writer ) throws IOException {
     writer.writeBeginArray();
-    JsonValue[] elements = getValues();
+    JsonValue[] elements = values.toArray( new JsonValue[ values.size() ] );
     for( int i = 0; i < elements.length; i++ ) {
       if( i != 0 ) {
         writer.writeArrayValueSeparator();

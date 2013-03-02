@@ -105,16 +105,16 @@ public class JsonObject extends JsonValue implements Iterable<String> {
     return names.isEmpty();
   }
 
-  public String[] getNames() {
-    return names.toArray( new String[ names.size() ] );
-  }
-
   public JsonValue get( String name ) {
     if( name == null ) {
       throw new NullPointerException( "name is null" );
     }
     int index = names.indexOf( name );
     return index != -1 ? values.get( index ) : null;
+  }
+
+  public List<String> names() {
+    return Collections.unmodifiableList( names );
   }
 
   public Iterator<String> iterator() {
@@ -168,6 +168,10 @@ public class JsonObject extends JsonValue implements Iterable<String> {
     }
     JsonObject other = (JsonObject)obj;
     return names.equals( other.names ) && values.equals( other.values );
+  }
+
+  private String[] getNames() {
+    return names.toArray( new String[ names.size() ] );
   }
 
   private JsonValue[] getValues() {

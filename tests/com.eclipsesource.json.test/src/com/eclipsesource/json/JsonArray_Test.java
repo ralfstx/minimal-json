@@ -13,6 +13,7 @@ package com.eclipsesource.json;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Iterator;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class JsonArray_Test {
     array.append( 23 );
     JsonArray copy = new JsonArray( array );
 
-    assertArrayEquals( array.getValues(), copy.getValues() );
+    assertEquals( array.values(), copy.values() );
   }
 
   @Test
@@ -64,15 +65,15 @@ public class JsonArray_Test {
     array.append( 23 );
     JsonArray unmodifiableArray = JsonArray.unmodifiableArray( array );
 
-    assertArrayEquals( array.getValues(), unmodifiableArray.getValues() );
+    assertEquals( array.values(), unmodifiableArray.values() );
   }
 
   @Test
-  public void unmodifiableArray_followsChanges() {
+  public void unmodifiableArray_reflectsChanges() {
     JsonArray unmodifiableArray = JsonArray.unmodifiableArray( array );
     array.append( 23 );
 
-    assertArrayEquals( array.getValues(), unmodifiableArray.getValues() );
+    assertEquals( array.values(), unmodifiableArray.values() );
   }
 
   @Test( expected = UnsupportedOperationException.class )
@@ -130,25 +131,32 @@ public class JsonArray_Test {
   }
 
   @Test
-  public void getValues_isEmptyAfterCreation() {
-    assertEquals( 0, array.getValues().length );
+  public void values_isEmptyAfterCreation() {
+    assertTrue( array.values().isEmpty() );
   }
 
   @Test
-  public void getValues_containsValueAfterAppend() {
+  public void values_containsValueAfterAppend() {
     array.append( true );
 
-    assertEquals( 1, array.getValues().length );
-    assertEquals( JsonValue.TRUE, array.getValues()[ 0 ] );
+    assertEquals( 1, array.values().size() );
+    assertEquals( JsonValue.TRUE, array.values().get( 0 ) );
   }
 
   @Test
-  public void getValues_createsSafeCopy() {
-    JsonValue[] values = array.getValues();
+  public void values_reflectsChanges() {
+    List<JsonValue> values = array.values();
 
     array.append( true );
 
-    assertEquals( 0, values.length );
+    assertEquals( array.values(), values );
+  }
+
+  @Test( expected = UnsupportedOperationException.class )
+  public void values_preventsModification() {
+    List<JsonValue> values = array.values();
+
+    values.add( JsonValue.TRUE );
   }
 
   @Test
