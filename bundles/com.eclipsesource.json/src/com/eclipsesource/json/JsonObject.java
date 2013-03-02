@@ -124,15 +124,15 @@ public class JsonObject extends JsonValue implements Iterable<String> {
   @Override
   protected void write( JsonWriter writer ) throws IOException {
     writer.writeBeginObject();
-    String[] names = getNames();
-    JsonValue[] values = getValues();
+    Object[] names = this.names.toArray();
+    Object[] values = this.values.toArray();
     for( int i = 0; i < names.length; i++ ) {
       if( i != 0 ) {
         writer.writeObjectValueSeparator();
       }
-      writer.writeString( names[ i ] );
+      writer.writeString( (String)names[ i ] );
       writer.writeNameValueSeparator();
-      values[ i ].write( writer );
+      ( (JsonValue)values[ i ] ).write( writer );
     }
     writer.writeEndObject();
   }
@@ -168,14 +168,6 @@ public class JsonObject extends JsonValue implements Iterable<String> {
     }
     JsonObject other = (JsonObject)obj;
     return names.equals( other.names ) && values.equals( other.values );
-  }
-
-  private String[] getNames() {
-    return names.toArray( new String[ names.size() ] );
-  }
-
-  private JsonValue[] getValues() {
-    return values.toArray( new JsonValue[ values.size() ] );
   }
 
 }
