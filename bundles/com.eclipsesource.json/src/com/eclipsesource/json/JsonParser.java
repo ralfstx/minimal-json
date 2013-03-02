@@ -84,7 +84,7 @@ class JsonParser {
     }
     do {
       skipWhiteSpace();
-      array.append( readValue() );
+      array.add( readValue() );
       skipWhiteSpace();
     } while( readChar( ',' ) );
     if( !readChar( ']' ) ) {
@@ -108,7 +108,7 @@ class JsonParser {
         throw expected( "':'" );
       }
       skipWhiteSpace();
-      object.append( name, readValue() );
+      object.add( name, readValue() );
       skipWhiteSpace();
     } while( readChar( ',' ) );
     if( !readChar( '}' ) ) {

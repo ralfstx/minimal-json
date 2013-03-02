@@ -104,7 +104,7 @@ public class JsonParser_Test {
 
   @Test( expected = UnsupportedOperationException.class )
   public void arrays_returnsImmutableArrays() {
-    parse( "[ 23 ]" ).asArray().append( 42 );
+    parse( "[ 23 ]" ).asArray().add( 42 );
   }
 
   @Test
@@ -161,7 +161,7 @@ public class JsonParser_Test {
 
   @Test( expected = UnsupportedOperationException.class )
   public void objects_returnsImmutableObjects() {
-    parse( "{ \"foo\": 23 }" ).asObject().append( "bar", 42 );
+    parse( "{ \"foo\": 23 }" ).asObject().add( "bar", 42 );
   }
 
   @Test

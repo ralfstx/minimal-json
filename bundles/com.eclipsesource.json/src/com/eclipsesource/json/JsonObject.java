@@ -60,32 +60,32 @@ public class JsonObject extends JsonValue implements Iterable<String> {
                            Collections.unmodifiableList( object.values ) );
   }
 
-  public JsonObject append( String name, long value ) {
-    append( name, valueOf( value ) );
+  public JsonObject add( String name, long value ) {
+    add( name, valueOf( value ) );
     return this;
   }
 
-  public JsonObject append( String name, float value ) {
-    append( name, valueOf( value ) );
+  public JsonObject add( String name, float value ) {
+    add( name, valueOf( value ) );
     return this;
   }
 
-  public JsonObject append( String name, double value ) {
-    append( name, valueOf( value ) );
+  public JsonObject add( String name, double value ) {
+    add( name, valueOf( value ) );
     return this;
   }
 
-  public JsonObject append( String name, boolean value ) {
-    append( name, valueOf( value ) );
+  public JsonObject add( String name, boolean value ) {
+    add( name, valueOf( value ) );
     return this;
   }
 
-  public JsonObject append( String name, String value ) {
-    append( name, valueOf( value ) );
+  public JsonObject add( String name, String value ) {
+    add( name, valueOf( value ) );
     return this;
   }
 
-  public JsonObject append( String name, JsonValue value ) {
+  public JsonObject add( String name, JsonValue value ) {
     if( name == null ) {
       throw new NullPointerException( "name is null" );
     }

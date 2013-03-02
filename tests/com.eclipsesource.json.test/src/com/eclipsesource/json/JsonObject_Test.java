@@ -46,7 +46,7 @@ public class JsonObject_Test {
 
   @Test
   public void copyConstructor_hasSameValues() {
-    object.append( "foo", 23 );
+    object.add( "foo", 23 );
     JsonObject copy = new JsonObject( object );
 
     assertEquals( object.names(), copy.names() );
@@ -56,14 +56,14 @@ public class JsonObject_Test {
   @Test
   public void copyConstructor_worksOnSafeCopy() {
     JsonObject copy = new JsonObject( object );
-    object.append( "foo", 23 );
+    object.add( "foo", 23 );
 
     assertTrue( copy.isEmpty() );
   }
 
   @Test
   public void unmodifiableArray_hasSameValues() {
-    object.append( "foo", 23 );
+    object.add( "foo", 23 );
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
 
     assertEquals( object.names(), unmodifiableObject.names() );
@@ -73,7 +73,7 @@ public class JsonObject_Test {
   @Test
   public void unmodifiableArray_reflectsChanges() {
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
-    object.append( "foo", 23 );
+    object.add( "foo", 23 );
 
     assertEquals( object.names(), unmodifiableObject.names() );
     assertSame( object.get( "foo" ), unmodifiableObject.get( "foo" ) );
@@ -83,7 +83,7 @@ public class JsonObject_Test {
   public void unmodifiableArray_preventsModification() {
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
 
-    unmodifiableObject.append( "foo", 23 );
+    unmodifiableObject.add( "foo", 23 );
   }
 
   @Test
@@ -92,8 +92,8 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void isEmpty_falseAfterAppend() {
-    object.append( "a", true );
+  public void isEmpty_falseAfterAdd() {
+    object.add( "a", true );
 
     assertFalse( object.isEmpty() );
   }
@@ -104,8 +104,8 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void size_oneAfterAppend() {
-    object.append( "a", true );
+  public void size_oneAfterAdd() {
+    object.add( "a", true );
 
     assertEquals( 1, object.size() );
   }
@@ -116,8 +116,8 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void iterator_afterAppend() {
-    object.append( "foo", true );
+  public void iterator_afterAdd() {
+    object.add( "foo", true );
 
     Iterator<String> iterator = object.iterator();
     assertTrue( iterator.hasNext() );
@@ -127,7 +127,7 @@ public class JsonObject_Test {
 
   @Test( expected = UnsupportedOperationException.class )
   public void iterator_doesNotAllowModification() {
-    object.append( "foo", true );
+    object.add( "foo", true );
     Iterator<String> iterator = object.iterator();
     iterator.next();
     iterator.remove();
@@ -139,8 +139,8 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void names_containsNameAfterAppend() {
-    object.append( "foo", true );
+  public void names_containsNameAfterAdd() {
+    object.add( "foo", true );
 
     List<String> names = object.names();
     assertEquals( 1, names.size() );
@@ -151,7 +151,7 @@ public class JsonObject_Test {
   public void names_reflectsChanges() {
     List<String> names = object.names();
 
-    object.append( "foo", true );
+    object.add( "foo", true );
 
     assertEquals( 1, names.size() );
     assertEquals( "foo", names.get( 0 ) );
@@ -175,7 +175,7 @@ public class JsonObject_Test {
 
   @Test
   public void get_returnsExistingValue() {
-    object.append( "foo", true );
+    object.add( "foo", true );
 
     assertSame( JsonValue.TRUE, object.get( "foo" ) );
   }
@@ -186,164 +186,164 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void append_failsWithNullName() {
+  public void add_failsWithNullName() {
     assertException( NullPointerException.class, "name is null", new Runnable() {
       public void run() {
-        object.append( null, 23 );
+        object.add( null, 23 );
       }
     } );
   }
 
   @Test
-  public void append_int() {
-    object.append( "a", 23 );
+  public void add_int() {
+    object.add( "a", 23 );
 
     assertEquals( "{\"a\":23}", object.toString() );
   }
 
   @Test
-  public void append_int_enablesChaining() {
-    assertSame( object, object.append( "a", 23 ) );
+  public void add_int_enablesChaining() {
+    assertSame( object, object.add( "a", 23 ) );
   }
 
   @Test
-  public void append_long() {
-    object.append( "a", 23l );
+  public void add_long() {
+    object.add( "a", 23l );
 
     assertEquals( "{\"a\":23}", object.toString() );
   }
 
   @Test
-  public void append_long_enablesChaining() {
-    assertSame( object, object.append( "a", 23l ) );
+  public void add_long_enablesChaining() {
+    assertSame( object, object.add( "a", 23l ) );
   }
 
   @Test
-  public void append_float() {
-    object.append( "a", 3.14f );
+  public void add_float() {
+    object.add( "a", 3.14f );
 
     assertEquals( "{\"a\":3.14}", object.toString() );
   }
 
   @Test
-  public void append_float_enablesChaining() {
-    assertSame( object, object.append( "a", 3.14f ) );
+  public void add_float_enablesChaining() {
+    assertSame( object, object.add( "a", 3.14f ) );
   }
 
   @Test
-  public void append_double() {
-    object.append( "a", 3.14d );
+  public void add_double() {
+    object.add( "a", 3.14d );
 
     assertEquals( "{\"a\":3.14}", object.toString() );
   }
 
   @Test
-  public void append_double_enablesChaining() {
-    assertSame( object, object.append( "a", 3.14d ) );
+  public void add_double_enablesChaining() {
+    assertSame( object, object.add( "a", 3.14d ) );
   }
 
   @Test
-  public void append_boolean() {
-    object.append( "a", true );
+  public void add_boolean() {
+    object.add( "a", true );
 
     assertEquals( "{\"a\":true}", object.toString() );
   }
 
   @Test
-  public void append_boolean_enablesChaining() {
-    assertSame( object, object.append( "a", true ) );
+  public void add_boolean_enablesChaining() {
+    assertSame( object, object.add( "a", true ) );
   }
 
   @Test
-  public void append_string() {
-    object.append( "a", "foo" );
+  public void add_string() {
+    object.add( "a", "foo" );
 
     assertEquals( "{\"a\":\"foo\"}", object.toString() );
   }
 
   @Test
-  public void append_string_toleratesNull() {
-    object.append( "a", (String)null );
+  public void add_string_toleratesNull() {
+    object.add( "a", (String)null );
 
     assertEquals( "{\"a\":null}", object.toString() );
   }
 
   @Test
-  public void append_string_enablesChaining() {
-    assertSame( object, object.append( "a", "foo" ) );
+  public void add_string_enablesChaining() {
+    assertSame( object, object.add( "a", "foo" ) );
   }
 
   @Test
-  public void append_jsonNull() {
-    object.append( "a", JsonValue.NULL );
+  public void add_jsonNull() {
+    object.add( "a", JsonValue.NULL );
 
     assertEquals( "{\"a\":null}", object.toString() );
   }
 
   @Test
-  public void append_jsonArray() {
-    object.append( "a", new JsonArray() );
+  public void add_jsonArray() {
+    object.add( "a", new JsonArray() );
 
     assertEquals( "{\"a\":[]}", object.toString() );
   }
 
   @Test
-  public void append_jsonObject() {
-    object.append( "a", new JsonObject() );
+  public void add_jsonObject() {
+    object.add( "a", new JsonObject() );
 
     assertEquals( "{\"a\":{}}", object.toString() );
   }
 
   @Test
-  public void append_json_enablesChaining() {
-    assertSame( object, object.append( "a", JsonValue.NULL ) );
+  public void add_json_enablesChaining() {
+    assertSame( object, object.add( "a", JsonValue.NULL ) );
   }
 
   @Test
-  public void append_json_failsWithNull() {
+  public void add_json_failsWithNull() {
     assertException( NullPointerException.class, "value is null", new Runnable() {
       public void run() {
-        object.append( "a", (JsonValue)null );
+        object.add( "a", (JsonValue)null );
       }
     } );
   }
 
   @Test
-  public void append_json_nestedArray() {
+  public void add_json_nestedArray() {
     JsonArray innerArray = new JsonArray();
-    innerArray.append( 23 );
+    innerArray.add( 23 );
 
-    object.append( "a", innerArray );
+    object.add( "a", innerArray );
 
     assertEquals( "{\"a\":[23]}", object.toString() );
   }
 
   @Test
-  public void append_json_nestedArray_modifiedAfterAppend() {
+  public void add_json_nestedArray_modifiedAfterAdd() {
     JsonArray innerArray = new JsonArray();
-    object.append( "a", innerArray );
+    object.add( "a", innerArray );
 
-    innerArray.append( 23 );
+    innerArray.add( 23 );
 
     assertEquals( "{\"a\":[23]}", object.toString() );
   }
 
   @Test
-  public void append_json_nestedObject() {
+  public void add_json_nestedObject() {
     JsonObject innerObject = new JsonObject();
-    innerObject.append( "a", 23 );
+    innerObject.add( "a", 23 );
 
-    object.append( "a", innerObject );
+    object.add( "a", innerObject );
 
     assertEquals( "{\"a\":{\"a\":23}}", object.toString() );
   }
 
   @Test
-  public void append_json_nestedObject_modifiedAfterAppend() {
+  public void add_json_nestedObject_modifiedAfterAdd() {
     JsonObject innerObject = new JsonObject();
-    object.append( "a", innerObject );
+    object.add( "a", innerObject );
 
-    innerObject.append( "a", 23 );
+    innerObject.add( "a", 23 );
 
     assertEquals( "{\"a\":{\"a\":23}}", object.toString() );
   }
@@ -357,7 +357,7 @@ public class JsonObject_Test {
 
   @Test
   public void write_withSingleValue() throws IOException {
-    object.append( "a", 23 );
+    object.add( "a", 23 );
 
     object.write( writer );
 
@@ -366,11 +366,11 @@ public class JsonObject_Test {
 
   @Test
   public void write_withMultipleValues() throws IOException {
-    object.append( "a", 23 );
-    object.append( "b", 3.14f );
-    object.append( "c", "foo" );
-    object.append( "d", true );
-    object.append( "e", ( String )null );
+    object.add( "a", 23 );
+    object.add( "b", 3.14f );
+    object.add( "c", "foo" );
+    object.add( "d", true );
+    object.add( "e", ( String )null );
 
     object.write( writer );
 
@@ -434,7 +434,7 @@ public class JsonObject_Test {
   private static JsonObject object( String... namesAndValues ) {
     JsonObject object = new JsonObject();
     for( int i = 0; i < namesAndValues.length; i += 2 ) {
-      object.append( namesAndValues[i], namesAndValues[i + 1] );
+      object.add( namesAndValues[i], namesAndValues[i + 1] );
     }
     return object;
   }

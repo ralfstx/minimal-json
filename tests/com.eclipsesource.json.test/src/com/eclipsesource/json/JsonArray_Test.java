@@ -46,7 +46,7 @@ public class JsonArray_Test {
 
   @Test
   public void copyConstructor_hasSameValues() {
-    array.append( 23 );
+    array.add( 23 );
     JsonArray copy = new JsonArray( array );
 
     assertEquals( array.values(), copy.values() );
@@ -55,14 +55,14 @@ public class JsonArray_Test {
   @Test
   public void copyConstructor_worksOnSafeCopy() {
     JsonArray copy = new JsonArray( array );
-    array.append( 23 );
+    array.add( 23 );
 
     assertTrue( copy.isEmpty() );
   }
 
   @Test
   public void unmodifiableArray_hasSameValues() {
-    array.append( 23 );
+    array.add( 23 );
     JsonArray unmodifiableArray = JsonArray.unmodifiableArray( array );
 
     assertEquals( array.values(), unmodifiableArray.values() );
@@ -71,7 +71,7 @@ public class JsonArray_Test {
   @Test
   public void unmodifiableArray_reflectsChanges() {
     JsonArray unmodifiableArray = JsonArray.unmodifiableArray( array );
-    array.append( 23 );
+    array.add( 23 );
 
     assertEquals( array.values(), unmodifiableArray.values() );
   }
@@ -80,7 +80,7 @@ public class JsonArray_Test {
   public void unmodifiableArray_preventsModification() {
     JsonArray unmodifiableArray = JsonArray.unmodifiableArray( array );
 
-    unmodifiableArray.append( 23 );
+    unmodifiableArray.add( 23 );
   }
 
   @Test
@@ -89,8 +89,8 @@ public class JsonArray_Test {
   }
 
   @Test
-  public void isEmpty_isFalseAfterAppend() {
-    array.append( true );
+  public void isEmpty_isFalseAfterAdd() {
+    array.add( true );
 
     assertFalse( array.isEmpty() );
   }
@@ -101,8 +101,8 @@ public class JsonArray_Test {
   }
 
   @Test
-  public void size_isOneAfterAppend() {
-    array.append( true );
+  public void size_isOneAfterAdd() {
+    array.add( true );
 
     assertEquals( 1, array.size() );
   }
@@ -113,8 +113,8 @@ public class JsonArray_Test {
   }
 
   @Test
-  public void iterator_hasNextAfterAppend() {
-    array.append( true );
+  public void iterator_hasNextAfterAdd() {
+    array.add( true );
 
     Iterator<JsonValue> iterator = array.iterator();
     assertTrue( iterator.hasNext() );
@@ -124,7 +124,7 @@ public class JsonArray_Test {
 
   @Test( expected = UnsupportedOperationException.class )
   public void iterator_doesNotAllowModification() {
-    array.append( 23 );
+    array.add( 23 );
     Iterator<JsonValue> iterator = array.iterator();
     iterator.next();
     iterator.remove();
@@ -136,8 +136,8 @@ public class JsonArray_Test {
   }
 
   @Test
-  public void values_containsValueAfterAppend() {
-    array.append( true );
+  public void values_containsValueAfterAdd() {
+    array.add( true );
 
     assertEquals( 1, array.values().size() );
     assertEquals( JsonValue.TRUE, array.values().get( 0 ) );
@@ -147,7 +147,7 @@ public class JsonArray_Test {
   public void values_reflectsChanges() {
     List<JsonValue> values = array.values();
 
-    array.append( true );
+    array.add( true );
 
     assertEquals( array.values(), values );
   }
@@ -161,7 +161,7 @@ public class JsonArray_Test {
 
   @Test
   public void get_returnsValue() {
-    array.append( 23 );
+    array.add( 23 );
 
     JsonValue value = array.get( 0 );
 
@@ -174,151 +174,151 @@ public class JsonArray_Test {
   }
 
   @Test
-  public void append_int() {
-    array.append( 23 );
+  public void add_int() {
+    array.add( 23 );
 
     assertEquals( "[23]", array.toString() );
   }
 
   @Test
-  public void append_int_enablesChaining() {
-    assertSame( array, array.append( 23 ) );
+  public void add_int_enablesChaining() {
+    assertSame( array, array.add( 23 ) );
   }
 
   @Test
-  public void append_long() {
-    array.append( 23l );
+  public void add_long() {
+    array.add( 23l );
 
     assertEquals( "[23]", array.toString() );
   }
 
   @Test
-  public void append_long_enablesChaining() {
-    assertSame( array, array.append( 23l ) );
+  public void add_long_enablesChaining() {
+    assertSame( array, array.add( 23l ) );
   }
 
   @Test
-  public void append_float() {
-    array.append( 3.14f );
+  public void add_float() {
+    array.add( 3.14f );
 
     assertEquals( "[3.14]", array.toString() );
   }
 
   @Test
-  public void append_float_enablesChaining() {
-    assertSame( array, array.append( 3.14f ) );
+  public void add_float_enablesChaining() {
+    assertSame( array, array.add( 3.14f ) );
   }
 
   @Test
-  public void append_double() {
-    array.append( 3.14d );
+  public void add_double() {
+    array.add( 3.14d );
 
     assertEquals( "[3.14]", array.toString() );
   }
 
   @Test
-  public void append_double_enablesChaining() {
-    assertSame( array, array.append( 3.14d ) );
+  public void add_double_enablesChaining() {
+    assertSame( array, array.add( 3.14d ) );
   }
 
   @Test
-  public void append_boolean() {
-    array.append( true );
+  public void add_boolean() {
+    array.add( true );
 
     assertEquals( "[true]", array.toString() );
   }
 
   @Test
-  public void append_boolean_enablesChaining() {
-    assertSame( array, array.append( true ) );
+  public void add_boolean_enablesChaining() {
+    assertSame( array, array.add( true ) );
   }
 
   @Test
-  public void append_string() {
-    array.append( "foo" );
+  public void add_string() {
+    array.add( "foo" );
 
     assertEquals( "[\"foo\"]", array.toString() );
   }
 
   @Test
-  public void append_string_enablesChaining() {
-    assertSame( array, array.append( "foo" ) );
+  public void add_string_enablesChaining() {
+    assertSame( array, array.add( "foo" ) );
   }
 
   @Test
-  public void append_string_toleratesNull() {
-    array.append( (String)null );
+  public void add_string_toleratesNull() {
+    array.add( (String)null );
 
     assertEquals( "[null]", array.toString() );
   }
 
   @Test
-  public void append_jsonNull() {
-    array.append( JsonValue.NULL );
+  public void add_jsonNull() {
+    array.add( JsonValue.NULL );
 
     assertEquals( "[null]", array.toString() );
   }
 
   @Test
-  public void append_jsonArray() {
-    array.append( new JsonArray() );
+  public void add_jsonArray() {
+    array.add( new JsonArray() );
 
     assertEquals( "[[]]", array.toString() );
   }
 
   @Test
-  public void append_jsonObject() {
-    array.append( new JsonObject() );
+  public void add_jsonObject() {
+    array.add( new JsonObject() );
 
     assertEquals( "[{}]", array.toString() );
   }
 
   @Test
-  public void append_json_enablesChaining() {
-    assertSame( array, array.append( JsonValue.NULL ) );
+  public void add_json_enablesChaining() {
+    assertSame( array, array.add( JsonValue.NULL ) );
   }
 
   @Test( expected = NullPointerException.class )
-  public void append_json_failsWithNull() {
-    array.append( (JsonValue)null );
+  public void add_json_failsWithNull() {
+    array.add( (JsonValue)null );
   }
 
   @Test
-  public void append_json_nestedArray() {
+  public void add_json_nestedArray() {
     JsonArray innerArray = new JsonArray();
-    innerArray.append( 23 );
+    innerArray.add( 23 );
 
-    array.append( innerArray );
+    array.add( innerArray );
 
     assertEquals( "[[23]]", array.toString() );
   }
 
   @Test
-  public void append_json_nestedArray_modifiedAfterAppend() {
+  public void add_json_nestedArray_modifiedAfterAdd() {
     JsonArray innerArray = new JsonArray();
-    array.append( innerArray );
+    array.add( innerArray );
 
-    innerArray.append( 23 );
+    innerArray.add( 23 );
 
     assertEquals( "[[23]]", array.toString() );
   }
 
   @Test
-  public void append_json_nestedObject() {
+  public void add_json_nestedObject() {
     JsonObject innerObject = new JsonObject();
-    innerObject.append( "a", 23 );
+    innerObject.add( "a", 23 );
 
-    array.append( innerObject );
+    array.add( innerObject );
 
     assertEquals( "[{\"a\":23}]", array.toString() );
   }
 
   @Test
-  public void append_json_nestedObject_modifiedAfterAppend() {
+  public void add_json_nestedObject_modifiedAfterAdd() {
     JsonObject innerObject = new JsonObject();
-    array.append( innerObject );
+    array.add( innerObject );
 
-    innerObject.append( "a", 23 );
+    innerObject.add( "a", 23 );
 
     assertEquals( "[{\"a\":23}]", array.toString() );
   }
@@ -332,7 +332,7 @@ public class JsonArray_Test {
 
   @Test
   public void write_withSingleValue() throws IOException {
-    array.append( 23 );
+    array.add( 23 );
 
     array.write( writer );
 
@@ -341,9 +341,9 @@ public class JsonArray_Test {
 
   @Test
   public void write_withMultipleValues() throws IOException {
-    array.append( 23 );
-    array.append( "foo" );
-    array.append( false );
+    array.add( 23 );
+    array.add( "foo" );
+    array.add( false );
 
     array.write( writer );
 
@@ -402,7 +402,7 @@ public class JsonArray_Test {
   private static JsonArray array( String... values ) {
     JsonArray array = new JsonArray();
     for( String value : values ) {
-      array.append( value );
+      array.add( value );
     }
     return array;
   }
