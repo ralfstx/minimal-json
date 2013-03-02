@@ -3,33 +3,54 @@ minimal-json
 
 A minimal, but complete JSON parser and writer for Java.
 
-Reading JSON from a Reader
---------------------------
+Reading JSON
+------------
 
-    JsonObject object = JsonObject.readFrom( reader );
-    String name = object.get( "name" ).asString();
-    int age = object.get( "age" ).asInt();
+Read a JSON object or array from a Reader or a String:
+```java
+JsonObject jsonObject = JsonObject.readFrom( jsonString );
+```
+```java
+JsonArray jsonArray = JsonArray.readFrom( jsonReader );
+```
 
-Reading JSON from a String
---------------------------
+Access the contents of a JSON object:
 
-    JsonObject object = JsonObject.readFrom( json );
+```java
+String name = jsonObject.get( "name" ).asString();
+int age = jsonObject.get( "age" ).asInt(); // asLong(), asFloat(), asDouble(), ...
+```
 
-Accessing nested arrays
------------------------
+Access the contents of a JSON array:
 
-    JsonArray results = object.getValue( "results" ).asArray();
-    double first = results.get( 0 ).asDouble();
+```java
+String name = jsonArray.get( 0 ).asString();
+int age = jsonArray.get( 1 ).asInt(); // asLong(), asFloat(), asDouble(), ...
+```
 
-Writing JSON to a Writer
-------------------------
+Writing JSON
+------------
 
-    JsonArray array = new JsonArray();
-    array.append( 23 );
-    array.append( "foo" );
-    array.writeTo( writer );
+Create a JSON object and add some values:
 
-Writing JSON to a String
-------------------------
+```java
+new JsonObject().add( "name", "John" ).add( "age", 23 );
+```
 
-    String json = array.toString();
+Create a JSON array and add some values:
+
+```java
+new JsonArray().add( "John" ).add( 23 );
+```
+
+Write JSON to a Writer:
+
+```java
+jsonObject.writeTo( writer );
+```
+
+Create JSON as a String:
+
+```java
+jsonArray.toString();
+```
