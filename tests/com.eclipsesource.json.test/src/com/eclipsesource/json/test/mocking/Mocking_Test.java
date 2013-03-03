@@ -16,6 +16,9 @@ import org.mockito.Mockito;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.ParseException;
+
+import static org.junit.Assert.assertNotNull;
 
 
 /**
@@ -24,18 +27,29 @@ import com.eclipsesource.json.JsonValue;
 public class Mocking_Test {
 
   @Test
+  public void mockValue() {
+    JsonValue jsonValue = Mockito.mock( JsonValue.class );
+
+    assertNotNull( jsonValue );
+  }
+
+  @Test
   public void mockObject() {
-    Mockito.mock( JsonObject.class );
+    JsonObject jsonObject = Mockito.mock( JsonObject.class );
+
+    assertNotNull( jsonObject );
   }
 
   @Test
   public void mockArray() {
-    Mockito.mock( JsonArray.class );
+    JsonArray jsonArray = Mockito.mock( JsonArray.class );
+
+    assertNotNull( jsonArray );
   }
 
   @Test
-  public void mockValue() {
-    Mockito.mock( JsonValue.class );
+  public void mockParseException() {
+    Mockito.mock( ParseException.class );
   }
 
 }

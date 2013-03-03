@@ -66,6 +66,10 @@ public abstract class JsonValue {
    */
   public static final JsonValue NULL = new JsonLiteral( "null" );
 
+  JsonValue() {
+    // prevent subclasses outside of this package
+  }
+
   /**
    * Reads a JSON value from the given reader.
    *
