@@ -12,7 +12,6 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
@@ -108,29 +107,6 @@ public class JsonObject_Test {
     object.add( "a", true );
 
     assertEquals( 1, object.size() );
-  }
-
-  @Test
-  public void iterator_emptyAfterCreation() {
-    assertFalse( object.iterator().hasNext() );
-  }
-
-  @Test
-  public void iterator_afterAdd() {
-    object.add( "foo", true );
-
-    Iterator<String> iterator = object.iterator();
-    assertTrue( iterator.hasNext() );
-    assertEquals( "foo", iterator.next() );
-    assertFalse( iterator.hasNext() );
-  }
-
-  @Test( expected = UnsupportedOperationException.class )
-  public void iterator_doesNotAllowModification() {
-    object.add( "foo", true );
-    Iterator<String> iterator = object.iterator();
-    iterator.next();
-    iterator.remove();
   }
 
   @Test

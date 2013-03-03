@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -40,7 +39,7 @@ import java.util.List;
  * This class is <strong>not supposed to be extended</strong> by clients.
  * </p>
  */
-public class JsonObject extends JsonValue implements Iterable<String> {
+public class JsonObject extends JsonValue {
 
   private final List<String> names;
   private final List<JsonValue> values;
@@ -285,16 +284,6 @@ public class JsonObject extends JsonValue implements Iterable<String> {
    */
   public List<String> names() {
     return Collections.unmodifiableList( names );
-  }
-
-  /**
-   * Returns an iterator over the names in this object in document order. The returned iterator
-   * cannot be used to modify this object.
-   *
-   * @return an iterator over the names in this object
-   */
-  public Iterator<String> iterator() {
-    return Collections.unmodifiableList( names ).iterator();
   }
 
   @Override
