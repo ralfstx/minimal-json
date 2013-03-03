@@ -40,7 +40,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
       jsonImpl = new GsonRunner();
     } else if( "jackson".equals( variant ) ) {
       jsonImpl = new JacksonRunner();
-    } else if( "mini".equals( variant ) ) {
+    } else if( "minimal".equals( variant ) ) {
       jsonImpl = new MinimalJsonRunner();
     } else {
       throw new IllegalArgumentException( "Unknown variant: " + variant );

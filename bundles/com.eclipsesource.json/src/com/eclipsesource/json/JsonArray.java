@@ -255,12 +255,12 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   @Override
   protected void write( JsonWriter writer ) throws IOException {
     writer.writeBeginArray();
-    Object[] elements = values.toArray();
-    for( int i = 0; i < elements.length; i++ ) {
+    int length = values.size();
+    for( int i = 0; i < length; i++ ) {
       if( i != 0 ) {
         writer.writeArrayValueSeparator();
       }
-      ( (JsonValue)elements[ i ] ).write( writer );
+      values.get( i ).write( writer );
     }
     writer.writeEndArray();
   }

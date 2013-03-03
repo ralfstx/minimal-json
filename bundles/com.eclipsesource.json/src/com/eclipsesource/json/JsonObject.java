@@ -289,15 +289,14 @@ public class JsonObject extends JsonValue {
   @Override
   protected void write( JsonWriter writer ) throws IOException {
     writer.writeBeginObject();
-    Object[] names = this.names.toArray();
-    Object[] values = this.values.toArray();
-    for( int i = 0; i < names.length; i++ ) {
+    int length = names.size();
+    for( int i = 0; i < length; i++ ) {
       if( i != 0 ) {
         writer.writeObjectValueSeparator();
       }
-      writer.writeString( (String)names[ i ] );
+      writer.writeString( names.get( i ) );
       writer.writeNameValueSeparator();
-      ( (JsonValue)values[ i ] ).write( writer );
+      values.get( i ).write( writer );
     }
     writer.writeEndObject();
   }
