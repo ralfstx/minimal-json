@@ -19,7 +19,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-public class JsonPrimitive_Test {
+public class JsonLiteral_Test {
 
   private StringWriter stringWriter;
   private JsonWriter jsonWriter;

@@ -41,7 +41,7 @@ public class JsonParser_Test {
     assertEquals( new JsonString( "" ), parse( "\"\"" ) );
   }
   @Test
-  public void parse_acceptsPrimitives() {
+  public void parse_acceptsLiterals() {
     assertSame( JsonValue.NULL, parse( "null" ) );
   }
 

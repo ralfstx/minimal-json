@@ -54,17 +54,17 @@ public abstract class JsonValue {
   /**
    * Represents the JSON literal <code>true</code>.
    */
-  public static final JsonValue TRUE = new JsonPrimitive( "true" );
+  public static final JsonValue TRUE = new JsonLiteral( "true" );
 
   /**
    * Represents the JSON literal <code>false</code>.
    */
-  public static final JsonValue FALSE = new JsonPrimitive( "false" );
+  public static final JsonValue FALSE = new JsonLiteral( "false" );
 
   /**
    * The JSON literal <code>null</code>.
    */
-  public static final JsonValue NULL = new JsonPrimitive( "null" );
+  public static final JsonValue NULL = new JsonLiteral( "null" );
 
   /**
    * Reads a JSON value from the given reader.

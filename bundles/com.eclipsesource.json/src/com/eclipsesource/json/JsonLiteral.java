@@ -13,11 +13,11 @@ package com.eclipsesource.json;
 import java.io.IOException;
 
 
-class JsonPrimitive extends JsonValue {
+class JsonLiteral extends JsonValue {
 
   private final String value;
 
-  JsonPrimitive( String value ) {
+  JsonLiteral( String value ) {
     this.value = value;
   }
 
