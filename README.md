@@ -54,3 +54,15 @@ Create JSON as a String:
 ```java
 jsonArray.toString();
 ```
+
+Performance
+-----------
+
+This implementation is used to read a complete JSON text into an object model and to create a JSON text from such a model.
+Below is the result of a rough performance comparison with other parsers.
+In this benchmark, an example JSON text (~30kB) is read into a JsonObject and then serialized again.
+The purpose of this benchmark is only to ensure a reasonable reading and writing performance compared to other state-of-the-art parsers.
+
+It seems that reading performance is good average, while writing performance is very good.
+
+![Read/Write performance compared to other parsers](https://raw.github.com/ralfstx/minimal-json/master/tests/com.eclipsesource.json.performancetest/performance.png "Read/Write performance compared to other parsers")
