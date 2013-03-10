@@ -58,11 +58,22 @@ jsonArray.toString();
 Performance
 -----------
 
-This implementation is used to read a complete JSON text into an object model and to create a JSON text from such a model.
-Below is the result of a rough performance comparison with other parsers.
-In this benchmark, an example JSON text (~30kB) is read into a JsonObject and then serialized again.
+Below is the result of a rough performance comparison with other parsers, namely
+[Douglas Crockford's JSON.org parser](http://www.json.org/java/index.html),
+[Google's gson](http://code.google.com/p/google-gson/), and
+[Jackson](http://wiki.fasterxml.com/JacksonHome).
+In this benchmark, an example JSON text (~30kB) is parsed and turned into a JsonObject and then serialized to JSON again.
+
 The purpose of this benchmark is only to ensure a reasonable reading and writing performance compared to other state-of-the-art parsers.
+Only the use cases of reading an entire JSON text into memory and serializing a model to JSON text are considered.
+Most JSON parsers have more advanced functions and may be more suitable for other use cases.
 
 It seems that reading performance is good average, while writing performance is very good.
 
 ![Read/Write performance compared to other parsers](https://raw.github.com/ralfstx/minimal-json/master/tests/com.eclipsesource.json.performancetest/performance.png "Read/Write performance compared to other parsers")
+
+License
+-------
+
+The code is available under the terms of the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html).
+
