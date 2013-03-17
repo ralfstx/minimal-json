@@ -325,6 +325,54 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void remove_failsWithNullName() {
+    assertException( NullPointerException.class, "name is null", new Runnable() {
+      public void run() {
+        object.remove( null );
+      }
+    } );
+  }
+
+  @Test
+  public void remove_removesMatchingMember() {
+    object.add( "a", 23 );
+
+    object.remove( "a" );
+
+    assertEquals( "{}", object.toString() );
+  }
+
+  @Test
+  public void remove_removesOnlyMatchingMember() {
+    object.add( "a", 23 );
+    object.add( "b", 42 );
+    object.add( "c", true );
+
+    object.remove( "b" );
+
+    assertEquals( "{\"a\":23,\"c\":true}", object.toString() );
+  }
+
+  @Test
+  public void remove_removesOnlyFirstMatchingMember() {
+    object.add( "a", 23 );
+    object.add( "a", 42 );
+
+    object.remove( "a" );
+
+    assertEquals( "{\"a\":42}", object.toString() );
+  }
+
+  @Test
+  public void remove_doesNotModifyObjectWithoutMatchingMember() {
+    object.add( "a", 23 );
+
+    object.remove( "b" );
+
+    assertEquals( "{\"a\":23}", object.toString() );
+  }
+
+  @Test
   public void write_whenEmpty() throws IOException {
     object.write( writer );
 

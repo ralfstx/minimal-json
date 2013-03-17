@@ -126,7 +126,10 @@ public class JsonObject extends JsonValue {
    * specified <code>long</code> value.
    * <p>
    * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * is already contained in the object will add another member with the same name.
+   * is already contained in the object will add another member with the same name. In order to
+   * ensure that the names are unique, the method <code>remove( String )</code> can be called before
+   * calling this method. However, this practice incurs a performance penalty and should only be
+   * used when the calling code can not ensure that same name won't be added more than once.
    * </p>
    *
    * @param name
@@ -145,7 +148,10 @@ public class JsonObject extends JsonValue {
    * specified <code>float</code> value.
    * <p>
    * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * is already contained in the object will add another member with the same name.
+   * is already contained in the object will add another member with the same name. In order to
+   * ensure that the names are unique, the method <code>remove( String )</code> can be called before
+   * calling this method. However, this practice incurs a performance penalty and should only be
+   * used when the calling code can not ensure that same name won't be added more than once.
    * </p>
    *
    * @param name
@@ -164,7 +170,10 @@ public class JsonObject extends JsonValue {
    * specified <code>double</code> value.
    * <p>
    * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * is already contained in the object will add another member with the same name.
+   * is already contained in the object will add another member with the same name. In order to
+   * ensure that the names are unique, the method <code>remove( String )</code> can be called before
+   * calling this method. However, this practice incurs a performance penalty and should only be
+   * used when the calling code can not ensure that same name won't be added more than once.
    * </p>
    *
    * @param name
@@ -183,7 +192,10 @@ public class JsonObject extends JsonValue {
    * specified <code>boolean</code> value.
    * <p>
    * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * is already contained in the object will add another member with the same name.
+   * is already contained in the object will add another member with the same name. In order to
+   * ensure that the names are unique, the method <code>remove( String )</code> can be called before
+   * calling this method. However, this practice incurs a performance penalty and should only be
+   * used when the calling code can not ensure that same name won't be added more than once.
    * </p>
    *
    * @param name
@@ -202,7 +214,10 @@ public class JsonObject extends JsonValue {
    * specified string.
    * <p>
    * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * is already contained in the object will add another member with the same name.
+   * is already contained in the object will add another member with the same name. In order to
+   * ensure that the names are unique, the method <code>remove( String )</code> can be called before
+   * calling this method. However, this practice incurs a performance penalty and should only be
+   * used when the calling code can not ensure that same name won't be added more than once.
    * </p>
    *
    * @param name
@@ -220,7 +235,10 @@ public class JsonObject extends JsonValue {
    * Adds a new member to this object, with the specified name and JSON value.
    * <p>
    * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * is already contained in the object will add another member with the same name.
+   * is already contained in the object will add another member with the same name. In order to
+   * ensure that the names are unique, the method <code>remove( String )</code> can be called before
+   * calling this method. However, this practice incurs a performance penalty and should only be
+   * used when the calling code can not ensure that same name won't be added more than once.
    * </p>
    *
    * @param name
@@ -242,21 +260,24 @@ public class JsonObject extends JsonValue {
   }
 
   /**
-   * Returns the number of members (i.e. name/value pairs) in this object.
+   * Removes a member with the specified name from this object. If this object contains multiple
+   * members with the given name, only the first one is removed. If this object does not contain a
+   * member with the specified name, the object is not modified.
    *
-   * @return the number of members in this object
+   * @param name
+   *          the name of the member to remove
+   * @return the object itself, to enable method chaining
    */
-  public int size() {
-    return names.size();
-  }
-
-  /**
-   * Returns <code>true</code> if this object contains no members.
-   *
-   * @return <code>true</code> if this object contains no members
-   */
-  public boolean isEmpty() {
-    return names.isEmpty();
+  public JsonObject remove( String name ) {
+    if( name == null ) {
+      throw new NullPointerException( "name is null" );
+    }
+    int index = names.indexOf( name );
+    if( index != -1 ) {
+      names.remove( index );
+      values.remove( index );
+    }
+    return this;
   }
 
   /**
@@ -273,6 +294,24 @@ public class JsonObject extends JsonValue {
     }
     int index = names.indexOf( name );
     return index != -1 ? values.get( index ) : null;
+  }
+
+  /**
+   * Returns the number of members (i.e. name/value pairs) in this object.
+   *
+   * @return the number of members in this object
+   */
+  public int size() {
+    return names.size();
+  }
+
+  /**
+   * Returns <code>true</code> if this object contains no members.
+   *
+   * @return <code>true</code> if this object contains no members
+   */
+  public boolean isEmpty() {
+    return names.isEmpty();
   }
 
   /**
