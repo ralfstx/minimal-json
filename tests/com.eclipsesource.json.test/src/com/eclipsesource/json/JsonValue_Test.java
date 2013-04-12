@@ -40,11 +40,17 @@ public class JsonValue_Test {
 
   @Test
   public void valueOf_float() {
-    assertEquals( "0.0", JsonValue.valueOf( 0f ).toString() );
-    assertEquals( "-1.0", JsonValue.valueOf( -1f ).toString() );
-    assertEquals( "10.0", JsonValue.valueOf( 10f ).toString() );
+    assertEquals( "23.5", JsonValue.valueOf( 23.5f ).toString() );
+    assertEquals( "-3.1416", JsonValue.valueOf( -3.1416f ).toString() );
     assertEquals( "1.23E-6", JsonValue.valueOf( 0.00000123f ).toString() );
     assertEquals( "-1.23E7", JsonValue.valueOf( -12300000f ).toString() );
+  }
+
+  @Test
+  public void valueOf_float_cutsOffPointZero() {
+    assertEquals( "0", JsonValue.valueOf( 0f ).toString() );
+    assertEquals( "-1", JsonValue.valueOf( -1f ).toString() );
+    assertEquals( "10", JsonValue.valueOf( 10f ).toString() );
   }
 
   @Test
@@ -69,9 +75,17 @@ public class JsonValue_Test {
 
   @Test
   public void valueOf_double() {
-    assertEquals( "10.0", JsonValue.valueOf( 10d ).toString() );
+    assertEquals( "23.5", JsonValue.valueOf( 23.5d ).toString() );
+    assertEquals( "3.1416", JsonValue.valueOf( 3.1416d ).toString() );
     assertEquals( "1.23E-6", JsonValue.valueOf( 0.00000123d ).toString() );
     assertEquals( "1.7976931348623157E308", JsonValue.valueOf( 1.7976931348623157E308d ).toString() );
+  }
+
+  @Test
+  public void valueOf_double_cutsOffPointZero() {
+    assertEquals( "0", JsonValue.valueOf( 0d ).toString() );
+    assertEquals( "-1", JsonValue.valueOf( -1d ).toString() );
+    assertEquals( "10", JsonValue.valueOf( 10d ).toString() );
   }
 
   @Test

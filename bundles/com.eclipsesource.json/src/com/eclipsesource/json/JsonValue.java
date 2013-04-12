@@ -125,7 +125,7 @@ public abstract class JsonValue {
     if( Float.isInfinite( value ) || Float.isNaN( value ) ) {
       throw new IllegalArgumentException( "Infinite and NaN values not permitted in JSON" );
     }
-    return new JsonNumber( Float.toString( value ) );
+    return new JsonNumber( cutOffPointZero( Float.toString( value ) ) );
   }
 
   /**
@@ -139,7 +139,7 @@ public abstract class JsonValue {
     if( Double.isInfinite( value ) || Double.isNaN( value ) ) {
       throw new IllegalArgumentException( "Infinite and NaN values not permitted in JSON" );
     }
-    return new JsonNumber( Double.toString( value ) );
+    return new JsonNumber( cutOffPointZero( Double.toString( value ) ) );
   }
 
   /**
@@ -416,5 +416,12 @@ public abstract class JsonValue {
   }
 
   protected abstract void write( JsonWriter writer ) throws IOException;
+
+  private static String cutOffPointZero( String string ) {
+    if( string.endsWith( ".0" ) ) {
+      return string.substring( 0, string.length() - 2 );
+    }
+    return string;
+  }
 
 }
