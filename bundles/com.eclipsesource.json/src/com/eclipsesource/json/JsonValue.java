@@ -73,8 +73,8 @@ public abstract class JsonValue {
   /**
    * Reads a JSON value from the given reader.
    *
-   * @param the
-   *          reader to read the JSON value from
+   * @param reader
+   *          the reader to read the JSON value from
    * @return the JSON value that has been read
    * @throws IOException
    *           if an I/O error occurs in the reader
@@ -88,7 +88,7 @@ public abstract class JsonValue {
   /**
    * Reads a JSON value from the given string.
    *
-   * @param string
+   * @param text
    *          the string that contains the JSON value
    * @return the JSON value that has been read
    * @throws ParseException
@@ -408,6 +408,11 @@ public abstract class JsonValue {
   @Override
   public boolean equals( Object object ) {
     return super.equals( object );
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
   }
 
   protected abstract void write( JsonWriter writer ) throws IOException;

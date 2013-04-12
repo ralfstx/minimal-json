@@ -12,8 +12,6 @@ package com.eclipsesource.json;
 
 import org.junit.Test;
 
-import com.eclipsesource.json.ParseException;
-
 import static org.junit.Assert.assertEquals;
 
 

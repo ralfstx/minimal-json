@@ -16,8 +16,6 @@ import java.io.StringWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.eclipsesource.json.JsonWriter;
-
 import static org.junit.Assert.assertEquals;
 
 
