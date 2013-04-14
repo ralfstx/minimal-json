@@ -102,11 +102,6 @@ public class JsonParser_Test {
     assertParseException( "Unexpected end of input at 1:5", "[23, " );
   }
 
-  @Test( expected = UnsupportedOperationException.class )
-  public void arrays_returnsImmutableArrays() {
-    parse( "[ 23 ]" ).asArray().add( 42 );
-  }
-
   @Test
   public void objects_empty() {
     assertEquals( "{}", parse( "{}" ).toString() );
@@ -157,11 +152,6 @@ public class JsonParser_Test {
     assertParseException( "Unexpected end of input at 1:8", "{\"a\":23 " );
     assertParseException( "Unexpected end of input at 1:8", "{\"a\":23," );
     assertParseException( "Unexpected end of input at 1:9", "{\"a\":23, " );
-  }
-
-  @Test( expected = UnsupportedOperationException.class )
-  public void objects_returnsImmutableObjects() {
-    parse( "{ \"foo\": 23 }" ).asObject().add( "bar", 42 );
   }
 
   @Test
