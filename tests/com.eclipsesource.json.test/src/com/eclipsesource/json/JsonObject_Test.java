@@ -17,6 +17,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.eclipsesource.json.JsonObject.HashIndexTable;
+
 import static com.eclipsesource.json.TestUtil.assertException;
 import static org.junit.Assert.*;
 
@@ -364,6 +366,18 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void remove_removesOnlyFirstMatchingMember_afterRemove() {
+    object.add( "a", 23 );
+    object.remove( "a" );
+    object.add( "a", 42 );
+    object.add( "a", 47 );
+
+    object.remove( "a" );
+
+    assertEquals( "{\"a\":47}", object.toString() );
+  }
+
+  @Test
   public void remove_doesNotModifyObjectWithoutMatchingMember() {
     object.add( "a", 23 );
 
@@ -453,6 +467,41 @@ public class JsonObject_Test {
     assertFalse( object().hashCode() == object( "a", "1" ).hashCode() );
     assertFalse( object( "a", "1" ).hashCode() == object( "a", "2" ).hashCode() );
     assertFalse( object( "a", "1" ).hashCode() == object( "b", "1" ).hashCode() );
+  }
+
+  @Test
+  public void hashIndexTable_add() {
+    HashIndexTable indexTable = new HashIndexTable();
+
+    indexTable.add( "name-0", 0 );
+    indexTable.add( "name-1", 1 );
+    indexTable.add( "name-fe", 0xfe );
+    indexTable.add( "name-ff", 0xff );
+
+    assertEquals( 0, indexTable.get( "name-0" ) );
+    assertEquals( 1, indexTable.get( "name-1" ) );
+    assertEquals( 0xfe, indexTable.get( "name-fe" ) );
+    assertEquals( -1, indexTable.get( "name-ff" ) );
+  }
+
+  @Test
+  public void hashIndexTable_add_doesNotOverwrite() {
+    HashIndexTable indexTable = new HashIndexTable();
+
+    indexTable.add( "name", 23 );
+    indexTable.add( "name", 42 );
+
+    assertEquals( 23, indexTable.get( "name" ) );
+  }
+
+  @Test
+  public void hashIndexTable_remove() {
+    HashIndexTable indexTable = new HashIndexTable();
+
+    indexTable.add( "name", 23 );
+    indexTable.remove( "name" );
+
+    assertEquals( -1, indexTable.get( "name" ) );
   }
 
   private static JsonObject object( String... namesAndValues ) {

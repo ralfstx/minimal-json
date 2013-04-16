@@ -15,17 +15,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.caliper.Param;
 import com.google.caliper.SimpleBenchmark;
 
 
 public class ListVsArrayBenchmark extends SimpleBenchmark {
 
+  @Param int size; // set by -Dsize
+
   private List<String> list;
 
   @Override
   protected void setUp() throws IOException {
-    list = new ArrayList<String>();
-    for( int i = 0; i < 1000; i++ ) {
+    list = new ArrayList<String>( size );
+    for( int i = 0; i < size; i++ ) {
       list.add( "item" + i );
     }
   }
@@ -54,12 +57,14 @@ public class ListVsArrayBenchmark extends SimpleBenchmark {
     }
   }
 
+  /* prevent compiler from inlining */
   void checkList( List<?> copy ) {
-    assert copy.size() == 1000;
+    assert copy.size() == size;
   }
 
+  /* prevent compiler from inlining */
   void checkArray( Object[] array ) {
-    assert array.length == 1000;
+    assert array.length == size;
   }
 
 }

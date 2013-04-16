@@ -43,13 +43,15 @@ public class JsonObject extends JsonValue {
 
   private final List<String> names;
   private final List<JsonValue> values;
+  private final HashIndexTable table;
 
   /**
    * Creates a new empty JsonObject.
    */
   public JsonObject() {
-    this.names = new ArrayList<String>();
-    this.values = new ArrayList<JsonValue>();
+    names = new ArrayList<String>();
+    values = new ArrayList<JsonValue>();
+    table = new HashIndexTable();
   }
 
   /**
@@ -62,13 +64,15 @@ public class JsonObject extends JsonValue {
     if( object == null ) {
       throw new NullPointerException( "object is null" );
     }
-    this.names = new ArrayList<String>( object.names );
-    this.values = new ArrayList<JsonValue>( object.values );
+    names = new ArrayList<String>( object.names );
+    values = new ArrayList<JsonValue>( object.values );
+    table = new HashIndexTable();
   }
 
   private JsonObject( List<String> names, List<JsonValue> values ) {
     this.names = names;
     this.values = values;
+    table = new HashIndexTable();
   }
 
   /**
@@ -254,6 +258,7 @@ public class JsonObject extends JsonValue {
     if( value == null ) {
       throw new NullPointerException( "value is null" );
     }
+    table.add( name, names.size() );
     names.add( name );
     values.add( value );
     return this;
@@ -272,8 +277,9 @@ public class JsonObject extends JsonValue {
     if( name == null ) {
       throw new NullPointerException( "name is null" );
     }
-    int index = names.indexOf( name );
+    int index = indexOf( name );
     if( index != -1 ) {
+      table.remove( name );
       names.remove( index );
       values.remove( index );
     }
@@ -292,7 +298,7 @@ public class JsonObject extends JsonValue {
     if( name == null ) {
       throw new NullPointerException( "name is null" );
     }
-    int index = names.indexOf( name );
+    int index = indexOf( name );
     return index != -1 ? values.get( index ) : null;
   }
 
@@ -371,6 +377,45 @@ public class JsonObject extends JsonValue {
     }
     JsonObject other = (JsonObject)obj;
     return names.equals( other.names ) && values.equals( other.values );
+  }
+
+  private int indexOf( String name ) {
+    int index = table.get( name );
+    if( index != -1 && name.equals( names.get( index ) ) ) {
+      return index;
+    }
+    return names.indexOf( name );
+  }
+
+  static class HashIndexTable {
+
+    private final byte[] hashTable = new byte[ 32 ]; // must be a power of two
+
+    void add( String name, int index ) {
+      if( index < 0xff ) {
+        int slot = hashSlotFor( name );
+        if( hashTable[slot] == 0 ) {
+          // increment by 1, 0 stands for empty
+          hashTable[slot] = (byte)( index + 1 );
+        }
+      }
+    }
+
+    void remove( String name ) {
+      int slot = hashSlotFor( name );
+      hashTable[slot] = 0;
+    }
+
+    int get( Object name ) {
+      int slot = hashSlotFor( name );
+      // subtract 1, 0 stands for empty
+      return ( hashTable[slot] & 0xff ) - 1;
+    }
+
+    private int hashSlotFor( Object element ) {
+      return element.hashCode() & hashTable.length - 1;
+    }
+
   }
 
 }
