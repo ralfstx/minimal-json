@@ -35,15 +35,15 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
   @Override
   protected void setUp() throws IOException {
     json = readResource( "rap.json" );
-    if( "json".equals( variant ) ) {
+    if( "org-json".equals( variant ) ) {
       jsonImpl = new JsonOrgRunner();
     } else if( "gson".equals( variant ) ) {
       jsonImpl = new GsonRunner();
     } else if( "jackson".equals( variant ) ) {
       jsonImpl = new JacksonRunner();
-    } else if( "simple".equals( variant ) ) {
+    } else if( "json-simple".equals( variant ) ) {
       jsonImpl = new SimpleRunner();
-    } else if( "minimal".equals( variant ) ) {
+    } else if( "minimal-json".equals( variant ) ) {
       jsonImpl = new MinimalJsonRunner();
     } else {
       throw new IllegalArgumentException( "Unknown variant: " + variant );
