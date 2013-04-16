@@ -8,6 +8,7 @@
 	<classpathentry kind="lib" path="lib/jackson-core-asl-1.9.12.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-mapper-asl-1.9.12.jar"/>
 	<classpathentry kind="lib" path="lib/json-20090211.jar"/>
+	<classpathentry kind="lib" path="lib/json-simple-1.1.1.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.eclipsesource.json"/>
 	<classpathentry kind="output" path="bin"/>
