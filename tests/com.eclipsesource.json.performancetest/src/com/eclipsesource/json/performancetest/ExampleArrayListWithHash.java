@@ -8,7 +8,7 @@
  * Contributors:
  *    Ralf Sternberg - initial implementation and API
  ******************************************************************************/
-package com.eclipsesource.json.internal;
+package com.eclipsesource.json.performancetest;
 
 import java.util.ArrayList;
 
