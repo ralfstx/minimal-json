@@ -470,6 +470,16 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void hashIndexTable_copyConstructor() {
+    HashIndexTable original = new HashIndexTable();
+    original.add( "name", 23 );
+
+    HashIndexTable copy = new HashIndexTable( original );
+
+    assertEquals( 23, copy.get( "name" ) );
+  }
+
+  @Test
   public void hashIndexTable_add() {
     HashIndexTable indexTable = new HashIndexTable();
 

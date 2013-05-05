@@ -66,13 +66,13 @@ public class JsonObject extends JsonValue {
     }
     names = new ArrayList<String>( object.names );
     values = new ArrayList<JsonValue>( object.values );
-    table = new HashIndexTable();
+    table = new HashIndexTable( object.table );
   }
 
-  private JsonObject( List<String> names, List<JsonValue> values ) {
-    this.names = names;
-    this.values = values;
-    table = new HashIndexTable();
+  private JsonObject( JsonObject object, boolean unmodifiable ) {
+    names = Collections.unmodifiableList( object.names );
+    values = Collections.unmodifiableList( object.values );
+    table = new HashIndexTable( object.table );
   }
 
   /**
@@ -121,8 +121,7 @@ public class JsonObject extends JsonValue {
    * @return an unmodifiable view of the specified JsonObject
    */
   public static JsonObject unmodifiableObject( JsonObject object ) {
-    return new JsonObject( Collections.unmodifiableList( object.names ),
-                           Collections.unmodifiableList( object.values ) );
+    return new JsonObject( object, true );
   }
 
   /**
@@ -390,6 +389,13 @@ public class JsonObject extends JsonValue {
   static class HashIndexTable {
 
     private final byte[] hashTable = new byte[ 32 ]; // must be a power of two
+
+    public HashIndexTable() {
+    }
+
+    public HashIndexTable( HashIndexTable original ) {
+      System.arraycopy( original.hashTable, 0, hashTable, 0, hashTable.length );
+    }
 
     void add( String name, int index ) {
       if( index < 0xff ) {

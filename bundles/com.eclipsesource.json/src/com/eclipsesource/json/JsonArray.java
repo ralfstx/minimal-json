@@ -57,7 +57,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    * Creates a new empty JsonArray.
    */
   public JsonArray() {
-    this.values = new ArrayList<JsonValue>();
+    values = new ArrayList<JsonValue>();
   }
 
   /**
@@ -70,11 +70,11 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
     if( array == null ) {
       throw new NullPointerException( "array is null" );
     }
-    this.values = new ArrayList<JsonValue>( array.values );
+    values = new ArrayList<JsonValue>( array.values );
   }
 
-  private JsonArray( List<JsonValue> values ) {
-    this.values = values;
+  private JsonArray( JsonArray array, boolean unmodifiable ) {
+    values = Collections.unmodifiableList( array.values );
   }
 
   /**
@@ -122,7 +122,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    * @return an unmodifiable view of the specified JsonArray
    */
   public static JsonArray unmodifiableArray( JsonArray array ) {
-    return new JsonArray( Collections.unmodifiableList( array.values ) );
+    return new JsonArray( array, true );
   }
 
   /**
