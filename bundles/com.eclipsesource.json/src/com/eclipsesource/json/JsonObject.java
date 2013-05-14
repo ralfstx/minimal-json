@@ -61,17 +61,20 @@ public class JsonObject extends JsonValue {
    *          the JSON object to get the initial contents from, must not be <code>null</code>
    */
   public JsonObject( JsonObject object ) {
-    if( object == null ) {
-      throw new NullPointerException( "object is null" );
-    }
-    names = new ArrayList<String>( object.names );
-    values = new ArrayList<JsonValue>( object.values );
-    table = new HashIndexTable( object.table );
+    this( object, false );
   }
 
   private JsonObject( JsonObject object, boolean unmodifiable ) {
-    names = Collections.unmodifiableList( object.names );
-    values = Collections.unmodifiableList( object.values );
+    if( object == null ) {
+      throw new NullPointerException( "object is null" );
+    }
+    if( unmodifiable ) {
+      names = Collections.unmodifiableList( object.names );
+      values = Collections.unmodifiableList( object.values );
+    } else {
+      names = new ArrayList<String>( object.names );
+      values = new ArrayList<JsonValue>( object.values );
+    }
     table = new HashIndexTable( object.table );
   }
 
@@ -114,7 +117,7 @@ public class JsonObject extends JsonValue {
    * The returned JsonObject is backed by the given object and reflect changes that happen to it.
    * Attempts to modify the returned JsonObject result in an
    * <code>UnsupportedOperationException</code>.
-   * <p>
+   * </p>
    *
    * @param object
    *          the JsonObject for which an unmodifiable JsonObject is to be returned

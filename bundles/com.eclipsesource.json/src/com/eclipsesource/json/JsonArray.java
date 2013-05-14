@@ -67,14 +67,18 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the JsonArray to get the initial contents from, must not be <code>null</code>
    */
   public JsonArray( JsonArray array ) {
-    if( array == null ) {
-      throw new NullPointerException( "array is null" );
-    }
-    values = new ArrayList<JsonValue>( array.values );
+    this( array, false );
   }
 
   private JsonArray( JsonArray array, boolean unmodifiable ) {
-    values = Collections.unmodifiableList( array.values );
+    if( array == null ) {
+      throw new NullPointerException( "array is null" );
+    }
+    if( unmodifiable ) {
+      values = Collections.unmodifiableList( array.values );
+    } else {
+      values = new ArrayList<JsonValue>( array.values );
+    }
   }
 
   /**
@@ -115,7 +119,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    * <p>
    * The returned JsonArray is backed by the given array and reflects subsequent changes. Attempts
    * to modify the returned JsonArray result in an <code>UnsupportedOperationException</code>.
-   * <p>
+   * </p>
    *
    * @param array
    *          the JsonArray for which an unmodifiable JsonArray is to be returned
