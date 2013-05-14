@@ -10,12 +10,15 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.StringWriter;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
 
 
@@ -147,6 +150,25 @@ public class JsonNumber_Test {
   @Test
   public void hashCode_differsForDifferentStrings() {
     assertFalse( new JsonNumber( "23" ).hashCode() == new JsonNumber( "42" ).hashCode() );
+  }
+
+  @Test
+  public void canBeSerializedAndDeserialized() throws Exception {
+    JsonValue jsonValue = JsonValue.valueOf( 23 );
+
+    assertEquals( jsonValue, serializeAndDeserialize( jsonValue ) );
+  }
+
+  @Test
+  public void isDeserializable() throws Exception {
+    JsonValue jsonValue = JsonValue.valueOf( 23 );
+    String file = "/tmp/serialized";
+    ObjectOutputStream objectOutputStream = new ObjectOutputStream( new FileOutputStream( file ) );
+    try {
+      objectOutputStream.writeObject( jsonValue );
+    } finally {
+      objectOutputStream.close();
+    }
   }
 
 }

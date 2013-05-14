@@ -13,6 +13,7 @@ package com.eclipsesource.json;
 import java.io.IOException;
 
 
+@SuppressWarnings( "serial" ) // use default serial UID
 class JsonLiteral extends JsonValue {
 
   private final String value;
@@ -54,6 +55,26 @@ class JsonLiteral extends JsonValue {
   @Override
   public boolean isFalse() {
     return this == FALSE;
+  }
+
+  @Override
+  public int hashCode() {
+    return value.hashCode();
+  }
+
+  @Override
+  public boolean equals( Object object ) {
+    if( this == object ) {
+      return true;
+    }
+    if( object == null ) {
+      return false;
+    }
+    if( getClass() != object.getClass() ) {
+      return false;
+    }
+    JsonLiteral other = (JsonLiteral)object;
+    return value.equals( other.value );
   }
 
 }

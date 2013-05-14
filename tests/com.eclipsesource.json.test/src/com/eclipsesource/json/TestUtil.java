@@ -10,6 +10,12 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import static org.junit.Assert.*;
 
 
@@ -26,6 +32,22 @@ public class TestUtil {
       assertSame( "type", type, exception.getClass() );
       assertEquals( "message", message, exception.getMessage() );
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> T serializeAndDeserialize( T instance ) throws Exception {
+    return ( T )deserialize( serialize( instance ) );
+  }
+
+  public static byte[] serialize( Object object ) throws IOException {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    new ObjectOutputStream( outputStream ).writeObject( object );
+    return outputStream.toByteArray();
+  }
+
+  public static Object deserialize( byte[] bytes ) throws IOException, ClassNotFoundException {
+    ByteArrayInputStream inputStream = new ByteArrayInputStream( bytes );
+    return new ObjectInputStream( inputStream ).readObject();
   }
 
 }

@@ -20,6 +20,7 @@ import org.junit.Test;
 import com.eclipsesource.json.JsonObject.HashIndexTable;
 
 import static com.eclipsesource.json.TestUtil.assertException;
+import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
 
 
@@ -63,7 +64,7 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void unmodifiableArray_hasSameValues() {
+  public void unmodifiableObject_hasSameValues() {
     object.add( "foo", 23 );
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
 
@@ -72,7 +73,7 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void unmodifiableArray_reflectsChanges() {
+  public void unmodifiableObject_reflectsChanges() {
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
     object.add( "foo", 23 );
 
@@ -81,7 +82,7 @@ public class JsonObject_Test {
   }
 
   @Test( expected = UnsupportedOperationException.class )
-  public void unmodifiableArray_preventsModification() {
+  public void unmodifiableObject_preventsModification() {
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
 
     unmodifiableObject.add( "foo", 23 );
@@ -512,6 +513,22 @@ public class JsonObject_Test {
     indexTable.remove( "name" );
 
     assertEquals( -1, indexTable.get( "name" ) );
+  }
+
+  @Test
+  public void canBeSerializedAndDeserialized() throws Exception {
+    object.add( "foo", 23 ).add( "bar", new JsonObject().add( "a", 3.14d ).add( "b", true ) );
+
+    assertEquals( object, serializeAndDeserialize( object ) );
+  }
+
+  @Test
+  public void deserializedObjectCanBeAccessed() throws Exception {
+    object.add( "foo", 23 );
+
+    JsonObject deserializedObject = serializeAndDeserialize( object );
+
+    assertEquals( 23, deserializedObject.get( "foo" ).asInt() );
   }
 
   private static JsonObject object( String... namesAndValues ) {

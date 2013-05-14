@@ -14,9 +14,8 @@ package com.eclipsesource.json;
 /**
  * An unchecked exception to indicate that an input does not qualify as valid JSON.
  */
+@SuppressWarnings( "serial" ) // use default serial UID
 public class ParseException extends RuntimeException {
-
-  private static final long serialVersionUID = -6149508717475857439L;
 
   private final int line;
   private final int column;

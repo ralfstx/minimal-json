@@ -12,6 +12,7 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -49,7 +50,8 @@ import java.io.Writer;
  * This class is <strong>not supposed to be extended</strong> by clients.
  * </p>
  */
-public abstract class JsonValue {
+@SuppressWarnings( "serial" ) // use default serial UID
+public abstract class JsonValue implements Serializable {
 
   /**
    * Represents the JSON literal <code>true</code>.

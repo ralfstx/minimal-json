@@ -16,6 +16,7 @@ import java.io.StringWriter;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
 
 
@@ -103,6 +104,13 @@ public class JsonLiteral_Test {
     assertFalse( JsonValue.NULL.isFalse() );
     assertFalse( JsonValue.TRUE.isFalse() );
     assertTrue( JsonValue.FALSE.isFalse() );
+  }
+
+  @Test
+  public void canBeSerializedAndDeserialized() throws Exception {
+    assertEquals( JsonValue.NULL, serializeAndDeserialize( JsonValue.NULL ) );
+    assertEquals( JsonValue.TRUE, serializeAndDeserialize( JsonValue.TRUE ) );
+    assertEquals( JsonValue.FALSE, serializeAndDeserialize( JsonValue.FALSE ) );
   }
 
 }

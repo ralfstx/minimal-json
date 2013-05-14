@@ -16,6 +16,7 @@ import java.io.StringWriter;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
 
 
@@ -91,6 +92,13 @@ public class JsonString_Test {
   public void hashCode_differsForDifferentStrings() {
     assertFalse( new JsonString( "" ).hashCode() == new JsonString( "foo" ).hashCode() );
     assertFalse( new JsonString( "foo" ).hashCode() == new JsonString( "bar" ).hashCode() );
+  }
+
+  @Test
+  public void canBeSerializedAndDeserialized() throws Exception {
+    JsonValue jsonValue = JsonValue.valueOf( "foo" );
+
+    assertEquals( jsonValue, serializeAndDeserialize( jsonValue ) );
   }
 
 }

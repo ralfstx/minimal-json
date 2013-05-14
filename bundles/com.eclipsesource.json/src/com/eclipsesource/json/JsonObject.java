@@ -11,6 +11,7 @@
 package com.eclipsesource.json;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,11 +40,12 @@ import java.util.List;
  * This class is <strong>not supposed to be extended</strong> by clients.
  * </p>
  */
+@SuppressWarnings( "serial" ) // use default serial UID
 public class JsonObject extends JsonValue {
 
   private final List<String> names;
   private final List<JsonValue> values;
-  private final HashIndexTable table;
+  private transient HashIndexTable table;
 
   /**
    * Creates a new empty JsonObject.
@@ -75,7 +77,8 @@ public class JsonObject extends JsonValue {
       names = new ArrayList<String>( object.names );
       values = new ArrayList<JsonValue>( object.values );
     }
-    table = new HashIndexTable( object.table );
+    table = new HashIndexTable();
+    updateHashIndex();
   }
 
   /**
@@ -387,6 +390,21 @@ public class JsonObject extends JsonValue {
       return index;
     }
     return names.indexOf( name );
+  }
+
+  private synchronized void readObject( ObjectInputStream inputStream ) throws IOException,
+      ClassNotFoundException
+  {
+    inputStream.defaultReadObject();
+    table = new HashIndexTable();
+    updateHashIndex();
+  }
+
+  private void updateHashIndex() {
+    int size = names.size();
+    for( int i = 0; i < size; i++ ) {
+      table.add( names.get( i ), i );
+    }
   }
 
   static class HashIndexTable {
