@@ -96,9 +96,9 @@ public class JsonString_Test {
 
   @Test
   public void canBeSerializedAndDeserialized() throws Exception {
-    JsonValue jsonValue = JsonValue.valueOf( "foo" );
+    JsonString string = new JsonString( "foo" );
 
-    assertEquals( jsonValue, serializeAndDeserialize( jsonValue ) );
+    assertEquals( string, serializeAndDeserialize( string ) );
   }
 
 }

@@ -10,9 +10,7 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.StringWriter;
 
 import org.junit.Before;
@@ -154,21 +152,9 @@ public class JsonNumber_Test {
 
   @Test
   public void canBeSerializedAndDeserialized() throws Exception {
-    JsonValue jsonValue = JsonValue.valueOf( 23 );
+    JsonNumber number = new JsonNumber( "3.14" );
 
-    assertEquals( jsonValue, serializeAndDeserialize( jsonValue ) );
-  }
-
-  @Test
-  public void isDeserializable() throws Exception {
-    JsonValue jsonValue = JsonValue.valueOf( 23 );
-    String file = "/tmp/serialized";
-    ObjectOutputStream objectOutputStream = new ObjectOutputStream( new FileOutputStream( file ) );
-    try {
-      objectOutputStream.writeObject( jsonValue );
-    } finally {
-      objectOutputStream.close();
-    }
+    assertEquals( number, serializeAndDeserialize( number ) );
   }
 
 }
