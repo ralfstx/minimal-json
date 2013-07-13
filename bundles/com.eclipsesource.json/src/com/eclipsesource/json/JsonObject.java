@@ -32,8 +32,16 @@ import com.eclipsesource.json.JsonObject.Member;
  * </p>
  * <p>
  * Members can be accessed by their name using {@link #get(String)}. A list of all names can be
- * obtained from the method {@link #names()}.
+ * obtained from the method {@link #names()}. This class also supports iterating over the members in
+ * document order using an {@link #iterator()} or an enhanced for loop:
  * </p>
+ * <pre>
+ * for( Member member : jsonObject ) {
+ *   String name = member.getName();
+ *   JsonValue value = member.getValue();
+ *   ...
+ * }
+ * </pre>
  * <p>
  * Note that this class is <strong>not thread-safe</strong>. If multiple threads access a
  * <code>JsonObject</code> instance concurrently, while at least one of these threads modifies the
@@ -340,6 +348,12 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     return Collections.unmodifiableList( names );
   }
 
+  /**
+   * Returns an iterator over the members of this object in document order. The returned iterator
+   * cannot be used to modify this object.
+   *
+   * @return an iterator over the members of this object
+   */
   public Iterator<Member> iterator() {
     return new MemberIterator();
   }
@@ -430,6 +444,9 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
 
   }
 
+  /**
+   * Represents a member of a JSON object, i.e. a pair of name and value.
+   */
   public static class Member {
 
     private final String name;
@@ -440,10 +457,20 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
       this.value = value;
     }
 
+    /**
+     * Returns the name of this member.
+     *
+     * @return the name of this member, never <code>null</code>
+     */
     public String getName() {
       return name;
     }
 
+    /**
+     * Returns the value of this member.
+     *
+     * @return the value of this member, never <code>null</code>
+     */
     public JsonValue getValue() {
       return value;
     }
