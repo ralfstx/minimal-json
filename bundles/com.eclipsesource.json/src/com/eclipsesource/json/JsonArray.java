@@ -205,6 +205,115 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
     return this;
   }
 
+
+  /**
+   * Replaces the JSON representation of the specified <code>long</code> with the value at the specified index of the array.
+   *
+   * @param value
+   *          the new value to add at the specified index of the array
+   * @param index
+   *          the specified index of the array to replace a JsonValue
+   * @return the array itself, to enable method chaining
+   *
+   */
+  public JsonArray replace(int index, long value){
+	  values.remove(index);
+	  values.add(index, valueOf( value ));
+
+	return this;
+  }
+
+  /**
+   * Replaces the JSON representation of the specified <code>float</code> with the value at the specified index of the array.
+   *
+   * @param value
+   *          the new value to add at the specified index of the array
+   * @param index
+   *          the specified index of the array to replace a JsonValue
+   * @return the array itself, to enable method chaining
+   *
+   */
+  public JsonArray replace(int index, float value){
+	  values.remove(index);
+	  values.add(index, valueOf( value ));
+
+	return this;
+  }
+
+  /**
+   * Replaces the JSON representation of the specified <code>double</code> with the value at the specified index of the array.
+   *
+   * @param value
+   *          the new value to add at the specified index of the array
+   * @param index
+   *          the specified index of the array to replace a JsonValue
+   * @return the array itself, to enable method chaining
+   *
+   */
+  public JsonArray replace(int index, double value){
+	  values.remove(index);
+	  values.add(index, valueOf( value ));
+
+	return this;
+  }
+
+  /**
+   * Replaces the JSON representation of the specified <code>boolean</code> with the value at the specified index of the array.
+   *
+   * @param value
+   *          the new value to add at the specified index of the array
+   * @param index
+   *          the specified index of the array to replace a JsonValue
+   * @return the array itself, to enable method chaining
+   *
+   */
+  public JsonArray replace(int index, boolean value){
+	  values.remove(index);
+	  values.add(index, valueOf( value ));
+
+	return this;
+  }
+
+  /**
+   * Replaces the JSON representation of the specified string with the value at the specified index of the array.
+   *
+   * @param value
+   *          the new string to add at the specified index of the array
+   * @param index
+   *          the specified index of the array to replace a JsonValue
+   * @return the array itself, to enable method chaining
+   *
+   */
+  public JsonArray replace(int index, String value){
+	  values.remove(index);
+	  values.add(index, valueOf( value ));
+
+	return this;
+  }
+
+  /**
+   * Replaces the specified JsonValue at the specified index of the array.
+   *
+   * @param value
+   *          the new JsonValue to add at the specified index of the array
+   * @param index
+   *          the specified index of the array to replace a JsonValue
+   * @return the array itself, to enable method chaining
+   *
+   */
+  public JsonArray replace(int index, JsonValue value){
+	  if( value == null ) {
+	      throw new NullPointerException( "value is null" );
+	  }
+	  values.remove(index);
+	  values.add(index, value );
+
+	return this;
+  }
+
+
+
+
   /**
    * Returns the number of elements in this array.
    *
