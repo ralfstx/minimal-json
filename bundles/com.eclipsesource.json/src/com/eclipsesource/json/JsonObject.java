@@ -15,7 +15,11 @@ import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import com.eclipsesource.json.JsonObject.Member;
 
 
 /**
@@ -41,7 +45,7 @@ import java.util.List;
  * </p>
  */
 @SuppressWarnings( "serial" ) // use default serial UID
-public class JsonObject extends JsonValue {
+public class JsonObject extends JsonValue implements Iterable<Member> {
 
   private final List<String> names;
   private final List<JsonValue> values;
@@ -336,6 +340,10 @@ public class JsonObject extends JsonValue {
     return Collections.unmodifiableList( names );
   }
 
+  public Iterator<Member> iterator() {
+    return new MemberIterator();
+  }
+
   @Override
   protected void write( JsonWriter writer ) throws IOException {
     writer.writeBeginObject();
@@ -405,6 +413,74 @@ public class JsonObject extends JsonValue {
     for( int i = 0; i < size; i++ ) {
       table.add( names.get( i ), i );
     }
+  }
+
+  private final class MemberIterator implements Iterator<Member> {
+
+    private int cursor = 0;
+
+    public boolean hasNext() {
+      return cursor != size();
+    }
+
+    public Member next() {
+      Member member;
+      try {
+        member = new Member( names.get( cursor ), values.get( cursor ) );
+      } catch( IndexOutOfBoundsException exception ) {
+        throw new NoSuchElementException();
+      }
+      cursor++;
+      return member;
+    }
+
+    public void remove() {
+      throw new UnsupportedOperationException();
+    }
+
+  }
+
+  public static class Member {
+
+    private final String name;
+    private final JsonValue value;
+
+    Member( String name, JsonValue value ) {
+      this.name = name;
+      this.value = value;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public JsonValue getValue() {
+      return value;
+    }
+
+    @Override
+    public int hashCode() {
+      int result = 1;
+      result = 31 * result + name.hashCode();
+      result = 31 * result + value.hashCode();
+      return result;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+      if( this == obj ) {
+        return true;
+      }
+      if( obj == null ) {
+        return false;
+      }
+      if( getClass() != obj.getClass() ) {
+        return false;
+      }
+      Member other = (Member)obj;
+      return name.equals( other.name ) && value.equals( other.value );
+    }
+
   }
 
   static class HashIndexTable {

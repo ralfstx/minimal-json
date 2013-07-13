@@ -12,12 +12,15 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.eclipsesource.json.JsonObject.HashIndexTable;
+import com.eclipsesource.json.JsonObject.Member;
 
 import static com.eclipsesource.json.TestUtil.assertException;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
@@ -141,6 +144,54 @@ public class JsonObject_Test {
     List<String> names = object.names();
 
     names.add( "foo" );
+  }
+
+  @Test
+  public void iterator_isEmptyAfterCreation() {
+    assertFalse( object.iterator().hasNext() );
+  }
+
+  @Test
+  public void iterator_hasNextAfterAdd() {
+    object.add( "a", true );
+    Iterator<Member> iterator = object.iterator();
+
+    assertTrue( iterator.hasNext() );
+  }
+
+  @Test
+  public void iterator_nextReturnsActualValue() {
+    object.add( "a", true );
+    Iterator<Member> iterator = object.iterator();
+
+    assertEquals( new Member( "a", JsonValue.TRUE ), iterator.next() );
+  }
+
+  @Test
+  public void iterator_nextProgressesToNextValue() {
+    object.add( "a", true );
+    object.add( "b", false );
+    Iterator<Member> iterator = object.iterator();
+
+    iterator.next();
+    assertTrue( iterator.hasNext() );
+    assertEquals( new Member( "b", JsonValue.FALSE ), iterator.next() );
+  }
+
+  @Test( expected = NoSuchElementException.class )
+  public void iterator_nextFailsAtEnd() {
+    Iterator<Member> iterator = object.iterator();
+
+    iterator.next();
+  }
+
+  @Test( expected = UnsupportedOperationException.class )
+  public void iterator_doesNotAllowModification() {
+    object.add( "a", 23 );
+    Iterator<Member> iterator = object.iterator();
+    iterator.next();
+
+    iterator.remove();
   }
 
   @Test
@@ -529,6 +580,57 @@ public class JsonObject_Test {
     JsonObject deserializedObject = serializeAndDeserialize( object );
 
     assertEquals( 23, deserializedObject.get( "foo" ).asInt() );
+  }
+
+  @Test
+  public void member_equals_trueForSameInstance() {
+    Member member = new Member( "a", JsonValue.FALSE );
+
+    assertTrue( member.equals( member ) );
+  }
+
+  @Test
+  public void memeber_equals_trueForEqualObjects() {
+    Member member = new Member( "a", JsonValue.TRUE );
+
+    assertTrue( member.equals( new Member( "a", JsonValue.TRUE ) ) );
+  }
+
+  @Test
+  public void member_equals_falseForDifferentObjects() {
+    Member member = new Member( "a", JsonValue.TRUE );
+
+    assertFalse( member.equals( new Member( "b", JsonValue.TRUE ) ) );
+    assertFalse( member.equals( new Member( "a", JsonValue.FALSE ) ) );
+  }
+
+  @Test
+  public void member_equals_falseForNull() {
+    Member member = new Member( "a", JsonValue.TRUE );
+
+    assertFalse( member.equals( null ) );
+  }
+
+  @Test
+  public void member_equals_falseForSubclass() {
+    Member member = new Member( "a", JsonValue.TRUE );
+
+    assertFalse( member.equals( new Member( "a", JsonValue.TRUE ) {} ) );
+  }
+
+  @Test
+  public void member_hashCode_equalsForEqualObjects() {
+    Member member = new Member( "a", JsonValue.TRUE );
+
+    assertTrue( member.hashCode() == new Member( "a", JsonValue.TRUE ).hashCode() );
+  }
+
+  @Test
+  public void member_hashCode_differsForDifferentObjects() {
+    Member member = new Member( "a", JsonValue.TRUE );
+
+    assertFalse( member.hashCode() == new Member( "b", JsonValue.TRUE ).hashCode() );
+    assertFalse( member.hashCode() == new Member( "a", JsonValue.FALSE ).hashCode() );
   }
 
   private static JsonObject object( String... namesAndValues ) {

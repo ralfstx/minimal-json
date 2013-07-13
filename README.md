@@ -30,6 +30,24 @@ String name = jsonArray.get( 0 ).asString();
 int age = jsonArray.get( 1 ).asInt(); // asLong(), asFloat(), asDouble(), ...
 ```
 
+Iterate over the members of a JSON object:
+
+```java
+for( Member member : jsonObject ) {
+  String name = member.getName();
+  JsonValue value = member.getValue();
+  // process value
+}
+```
+
+Iterate over the values of a JSON array:
+
+```java
+for( JsonValue value : jsonArray ) {
+  // process value
+}
+```
+
 Writing JSON
 ------------
 
