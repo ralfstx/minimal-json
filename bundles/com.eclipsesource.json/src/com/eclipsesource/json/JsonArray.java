@@ -259,15 +259,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
 
   @Override
   protected void write( JsonWriter writer ) throws IOException {
-    writer.writeBeginArray();
-    int length = values.size();
-    for( int i = 0; i < length; i++ ) {
-      if( i != 0 ) {
-        writer.writeArrayValueSeparator();
-      }
-      values.get( i ).write( writer );
-    }
-    writer.writeEndArray();
+    writer.writeArray( this );
   }
 
   @Override

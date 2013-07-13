@@ -346,17 +346,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
 
   @Override
   protected void write( JsonWriter writer ) throws IOException {
-    writer.writeBeginObject();
-    int length = names.size();
-    for( int i = 0; i < length; i++ ) {
-      if( i != 0 ) {
-        writer.writeObjectValueSeparator();
-      }
-      writer.writeString( names.get( i ) );
-      writer.writeNameValueSeparator();
-      values.get( i ).write( writer );
-    }
-    writer.writeEndObject();
+    writer.writeObject( this );
   }
 
   @Override

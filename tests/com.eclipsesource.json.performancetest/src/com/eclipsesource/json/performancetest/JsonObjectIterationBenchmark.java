@@ -61,7 +61,7 @@ public class JsonObjectIterationBenchmark extends SimpleBenchmark {
   }
 
   public static void main( String[] args ) {
-    String[] defArgs = new String[] { "-Dsize=4,16,64" };
+    String[] defArgs = { "-Dsize=4,16,64" };
     Runner.main( JsonObjectIterationBenchmark.class, args.length > 0 ? args : defArgs );
   }
 

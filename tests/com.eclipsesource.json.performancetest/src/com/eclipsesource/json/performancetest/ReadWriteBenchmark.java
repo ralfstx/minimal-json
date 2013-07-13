@@ -19,6 +19,7 @@ import com.eclipsesource.json.performancetest.jsonrunners.JsonRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.MinimalJsonRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.SimpleRunner;
 import com.google.caliper.Param;
+import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 
 import static com.eclipsesource.json.performancetest.resources.Resources.readResource;
@@ -73,12 +74,9 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     }
   }
 
-  public static void main( String[] args ) throws IOException {
-    ReadWriteBenchmark benchmark = new ReadWriteBenchmark();
-    benchmark.variant = "gson";
-    benchmark.setUp();
-    benchmark.timeRead( 1 );
-    benchmark.timeWrite( 1 );
+  public static void main( String[] args ) {
+    String[] defArgs = { "-Dvariant=org-json,gson,jackson,json-simple,minimal-json" };
+    Runner.main( ReadWriteBenchmark.class, args.length > 0 ? args : defArgs );
   }
 
 }

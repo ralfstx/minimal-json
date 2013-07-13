@@ -12,7 +12,6 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -26,19 +25,19 @@ import com.eclipsesource.json.JsonObject.Member;
 import static com.eclipsesource.json.TestUtil.assertException;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.same;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 
 public class JsonObject_Test {
 
   private JsonObject object;
-  private StringWriter output;
-  private JsonWriter writer;
 
   @Before
   public void setUp() {
     object = new JsonObject();
-    output = new StringWriter();
-    writer = new JsonWriter( output );
   }
 
   @Test
@@ -453,33 +452,12 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void write_whenEmpty() throws IOException {
-    object.write( writer );
-
-    assertEquals( "{}", output.toString() );
-  }
-
-  @Test
-  public void write_withSingleValue() throws IOException {
-    object.add( "a", 23 );
+  public void write_delegatesToJsonWriter() throws IOException {
+    JsonWriter writer = mock( JsonWriter.class );
 
     object.write( writer );
 
-    assertEquals( "{\"a\":23}", output.toString() );
-  }
-
-  @Test
-  public void write_withMultipleValues() throws IOException {
-    object.add( "a", 23 );
-    object.add( "b", 3.14f );
-    object.add( "c", "foo" );
-    object.add( "d", true );
-    object.add( "e", ( String )null );
-
-    object.write( writer );
-
-    assertEquals( "{\"a\":23,\"b\":3.14,\"c\":\"foo\",\"d\":true,\"e\":null}",
-                  output.toString() );
+    verify( writer ).writeObject( same( object ) );
   }
 
   @Test

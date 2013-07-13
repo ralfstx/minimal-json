@@ -66,6 +66,21 @@ class JsonWriter {
     writer.write( '"' );
   }
 
+  protected void writeObject( JsonObject object ) throws IOException {
+    writeBeginObject();
+    boolean first = true;
+    for( JsonObject.Member member : object ) {
+      if( !first ) {
+        writeObjectValueSeparator();
+      }
+      writeString( member.getName() );
+      writeNameValueSeparator();
+      member.getValue().write( this );
+      first = false;
+    }
+    writeEndObject();
+  }
+
   protected void writeBeginObject() throws IOException {
     writer.write( '{' );
   }
@@ -80,6 +95,19 @@ class JsonWriter {
 
   protected void writeObjectValueSeparator() throws IOException {
     writer.write( ',' );
+  }
+
+  protected void writeArray( JsonArray array ) throws IOException {
+    writeBeginArray();
+    boolean first = true;
+    for( JsonValue value : array ) {
+      if( !first ) {
+        writeArrayValueSeparator();
+      }
+      value.write( this );
+      first = false;
+    }
+    writeEndArray();
   }
 
   protected void writeBeginArray() throws IOException {
