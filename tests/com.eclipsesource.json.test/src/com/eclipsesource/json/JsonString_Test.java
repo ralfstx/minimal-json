@@ -31,6 +31,11 @@ public class JsonString_Test {
     jsonWriter = new JsonWriter( stringWriter );
   }
 
+  @Test( expected = NullPointerException.class )
+  public void constructor_failsWithNull() {
+    new JsonString( null );
+  }
+
   @Test
   public void write() throws IOException {
     new JsonString( "foo" ).write( jsonWriter );

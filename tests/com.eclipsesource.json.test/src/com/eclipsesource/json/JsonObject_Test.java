@@ -11,6 +11,7 @@
 package com.eclipsesource.json;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
@@ -89,6 +90,19 @@ public class JsonObject_Test {
     JsonObject unmodifiableObject = JsonObject.unmodifiableObject( object );
 
     unmodifiableObject.add( "foo", 23 );
+  }
+
+  @Test
+  public void readFrom_reader() throws IOException {
+    assertEquals( new JsonObject(), JsonObject.readFrom( new StringReader( "{}" ) ) );
+    assertEquals( new JsonObject().add( "a", 23 ),
+                  JsonObject.readFrom( new StringReader( "{ \"a\": 23 }" ) ) );
+  }
+
+  @Test
+  public void readFrom_string() {
+    assertEquals( new JsonObject(), JsonObject.readFrom( "{}" ) );
+    assertEquals( new JsonObject().add( "a", 23 ), JsonObject.readFrom( "{ \"a\": 23 }" ) );
   }
 
   @Test
@@ -583,21 +597,29 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void member_returnsNameAndValue() {
+    Member member = new Member( "a", JsonValue.TRUE );
+
+    assertEquals( "a", member.getName() );
+    assertEquals( JsonValue.TRUE, member.getValue() );
+  }
+
+  @Test
   public void member_equals_trueForSameInstance() {
-    Member member = new Member( "a", JsonValue.FALSE );
+    Member member = new Member( "a", JsonValue.TRUE );
 
     assertTrue( member.equals( member ) );
   }
 
   @Test
-  public void memeber_equals_trueForEqualObjects() {
+  public void member_equals_trueForEqualObjects() {
     Member member = new Member( "a", JsonValue.TRUE );
 
     assertTrue( member.equals( new Member( "a", JsonValue.TRUE ) ) );
   }
 
   @Test
-  public void member_equals_falseForDifferentObjects() {
+  public void member_equals_falseForDifferingObjects() {
     Member member = new Member( "a", JsonValue.TRUE );
 
     assertFalse( member.equals( new Member( "b", JsonValue.TRUE ) ) );
@@ -626,7 +648,7 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void member_hashCode_differsForDifferentObjects() {
+  public void member_hashCode_differsForDifferingobjects() {
     Member member = new Member( "a", JsonValue.TRUE );
 
     assertFalse( member.hashCode() == new Member( "b", JsonValue.TRUE ).hashCode() );

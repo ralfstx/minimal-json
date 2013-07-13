@@ -31,6 +31,11 @@ public class JsonNumber_Test {
     writer = new JsonWriter( output );
   }
 
+  @Test( expected = NullPointerException.class )
+  public void constructor_failsWithNull() {
+    new JsonNumber( null );
+  }
+
   @Test
   public void write() throws IOException {
     new JsonNumber( "23" ).write( writer );

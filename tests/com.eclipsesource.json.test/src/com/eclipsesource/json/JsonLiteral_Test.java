@@ -75,7 +75,7 @@ public class JsonLiteral_Test {
 
   @Test( expected = UnsupportedOperationException.class )
   public void asBoolean_failsIfNotBoolean() {
-    JsonValue.NULL.asBoolean();
+    new JsonLiteral( "foo" ).asBoolean();
   }
 
   @Test
@@ -104,6 +104,42 @@ public class JsonLiteral_Test {
     assertFalse( JsonValue.NULL.isFalse() );
     assertFalse( JsonValue.TRUE.isFalse() );
     assertTrue( JsonValue.FALSE.isFalse() );
+  }
+
+  @Test
+  public void equals_trueForSameInstance() {
+    JsonLiteral literal = new JsonLiteral( "foo" );
+    assertTrue( literal.equals( literal ) );
+  }
+
+  @Test
+  public void equals_trueForEqualObjects() {
+    assertTrue( new JsonLiteral( "foo" ).equals( new JsonLiteral( "foo" ) ) );
+  }
+
+  @Test
+  public void equals_falseForDifferentArrays() {
+    assertFalse( new JsonLiteral( "foo" ).equals( new JsonLiteral( "bar" ) ) );
+  }
+
+  @Test
+  public void equals_falseForNull() {
+    assertFalse( new JsonLiteral( "foo" ).equals( null ) );
+  }
+
+  @Test
+  public void equals_falseForSubclass() {
+    assertFalse( new JsonLiteral( "foo" ).equals( new JsonLiteral( "foo" ) {} ) );
+  }
+
+  @Test
+  public void hashCode_equalsForEqualObjects() {
+    assertTrue( new JsonLiteral( "foo" ).hashCode() == new JsonLiteral( "foo" ).hashCode() );
+  }
+
+  @Test
+  public void hashCode_differsForDifferingObjects() {
+    assertFalse( new JsonLiteral( "foo" ).hashCode() == new JsonLiteral( "bar" ).hashCode() );
   }
 
   @Test
