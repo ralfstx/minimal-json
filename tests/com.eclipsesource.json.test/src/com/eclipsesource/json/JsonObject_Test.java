@@ -12,6 +12,7 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -205,6 +206,13 @@ public class JsonObject_Test {
     iterator.next();
 
     iterator.remove();
+  }
+
+  @Test( expected = ConcurrentModificationException.class )
+  public void iterator_detectsConcurrentModification() {
+    Iterator<Member> iterator = object.iterator();
+    object.add( "a", 23 );
+    iterator.next();
   }
 
   @Test

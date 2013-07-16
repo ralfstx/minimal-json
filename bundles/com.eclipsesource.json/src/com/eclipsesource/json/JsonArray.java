@@ -254,7 +254,21 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    * @return an iterator over the values of this array
    */
   public Iterator<JsonValue> iterator() {
-    return Collections.unmodifiableList( values ).iterator();
+    final Iterator<JsonValue> iterator = values.iterator();
+    return new Iterator<JsonValue>() {
+
+      public boolean hasNext() {
+        return iterator.hasNext();
+      }
+
+      public JsonValue next() {
+        return iterator.next();
+      }
+
+      public void remove() {
+        throw new UnsupportedOperationException();
+      }
+    };
   }
 
   @Override

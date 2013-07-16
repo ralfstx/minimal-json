@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import com.eclipsesource.json.JsonObject.Member;
 
@@ -356,7 +355,25 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return an iterator over the members of this object
    */
   public Iterator<Member> iterator() {
-    return new MemberIterator();
+    final Iterator<String> namesIterator = names.iterator();
+    final Iterator<JsonValue> valuesIterator = values.iterator();
+    return new Iterator<JsonObject.Member>() {
+
+      public boolean hasNext() {
+        return namesIterator.hasNext();
+      }
+
+      public Member next() {
+        String name = namesIterator.next();
+        JsonValue value = valuesIterator.next();
+        return new Member( name, value );
+      }
+
+      public void remove() {
+        throw new UnsupportedOperationException();
+      }
+
+    };
   }
 
   @Override
@@ -418,31 +435,6 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     for( int i = 0; i < size; i++ ) {
       table.add( names.get( i ), i );
     }
-  }
-
-  private final class MemberIterator implements Iterator<Member> {
-
-    private int cursor = 0;
-
-    public boolean hasNext() {
-      return cursor != size();
-    }
-
-    public Member next() {
-      Member member;
-      try {
-        member = new Member( names.get( cursor ), values.get( cursor ) );
-      } catch( IndexOutOfBoundsException exception ) {
-        throw new NoSuchElementException();
-      }
-      cursor++;
-      return member;
-    }
-
-    public void remove() {
-      throw new UnsupportedOperationException();
-    }
-
   }
 
   /**
