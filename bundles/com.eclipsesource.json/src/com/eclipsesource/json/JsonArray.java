@@ -22,8 +22,9 @@ import java.util.List;
  * Represents a JSON array. A JSON array is a sequence of elements, which are JSON values (see
  * {@link JsonValue}).
  * <p>
- * Elements can be added using one of the different <code>add(...)</code> methods. Accepted values
- * are either instances of {@link JsonValue}, or strings, primitive numbers, or boolean values.
+ * Elements can be added using one of the <code>add(name, value)</code> methods. Accepted values are
+ * either instances of {@link JsonValue}, strings, primitive numbers, or boolean values. To replace
+ * an element of an array, the <code>set(name, value)</code> methods can be used.
  * </p>
  * <p>
  * Elements can be accessed by their index using {@link #get(int)}. This class also supports
@@ -37,7 +38,7 @@ import java.util.List;
  * }
  * </pre>
  * <p>
- * A n equivalent {@link List} can be obtained from the method {@link #values()}.
+ * An equivalent {@link List} can be obtained from the method {@link #values()}.
  * </p>
  * <p>
  * Note that this class is <strong>not thread-safe</strong>. If multiple threads access a
@@ -49,7 +50,8 @@ import java.util.List;
  * This class is <strong>not supposed to be extended</strong> by clients.
  * </p>
  */
-@SuppressWarnings( "serial" ) // use default serial UID
+@SuppressWarnings( "serial" )
+// use default serial UID
 public class JsonArray extends JsonValue implements Iterable<JsonValue> {
 
   private final List<JsonValue> values;
@@ -191,10 +193,10 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * Adds the specified JsonValue to the array.
+   * Adds the specified JSON value to the array.
    *
    * @param value
-   *          the JsonValue to add to the array
+   *          the JsonValue to add to the array, must not be <code>null</code>
    * @return the array itself, to enable method chaining
    */
   public JsonArray add( JsonValue value ) {
@@ -202,6 +204,116 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
       throw new NullPointerException( "value is null" );
     }
     values.add( value );
+    return this;
+  }
+
+  /**
+   * Replaces the element at the specified position in this array with the JSON representation of
+   * the specified <code>long</code> value.
+   *
+   * @param index
+   *          the index of the array element to replace
+   * @param value
+   *          the value to be stored at the specified array position
+   * @return the array itself, to enable method chaining
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range, i.e. <code>index < 0</code> or
+   *           <code>index >= size</code>
+   */
+  public JsonArray set( int index, long value ) {
+    values.set( index, valueOf( value ) );
+    return this;
+  }
+
+  /**
+   * Replaces the element at the specified position in this array with the JSON representation of
+   * the specified <code>float</code> value.
+   *
+   * @param index
+   *          the index of the array element to replace
+   * @param value
+   *          the value to be stored at the specified array position
+   * @return the array itself, to enable method chaining
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range, i.e. <code>index < 0</code> or
+   *           <code>index >= size</code>
+   */
+  public JsonArray set( int index, float value ) {
+    values.set( index, valueOf( value ) );
+    return this;
+  }
+
+  /**
+   * Replaces the element at the specified position in this array with the JSON representation of
+   * the specified <code>double</code> value.
+   *
+   * @param index
+   *          the index of the array element to replace
+   * @param value
+   *          the value to be stored at the specified array position
+   * @return the array itself, to enable method chaining
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range, i.e. <code>index < 0</code> or
+   *           <code>index >= size</code>
+   */
+  public JsonArray set( int index, double value ) {
+    values.set( index, valueOf( value ) );
+    return this;
+  }
+
+  /**
+   * Replaces the element at the specified position in this array with the JSON representation of
+   * the specified <code>boolean</code> value.
+   *
+   * @param index
+   *          the index of the array element to replace
+   * @param value
+   *          the value to be stored at the specified array position
+   * @return the array itself, to enable method chaining
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range, i.e. <code>index < 0</code> or
+   *           <code>index >= size</code>
+   */
+  public JsonArray set( int index, boolean value ) {
+    values.set( index, valueOf( value ) );
+    return this;
+  }
+
+  /**
+   * Replaces the element at the specified position in this array with the JSON representation of
+   * the specified string.
+   *
+   * @param index
+   *          the index of the array element to replace
+   * @param value
+   *          the string to be stored at the specified array position
+   * @return the array itself, to enable method chaining
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range, i.e. <code>index < 0</code> or
+   *           <code>index >= size</code>
+   */
+  public JsonArray set( int index, String value ) {
+    values.set( index, valueOf( value ) );
+    return this;
+  }
+
+  /**
+   * Replaces the element at the specified position in this array with the specified JSON value.
+   *
+   * @param index
+   *          the index of the array element to replace
+   * @param value
+   *          the value to be stored at the specified array position, must not be <code>null</code>
+   * @return the array itself, to enable method chaining
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range, i.e. <code>index < 0</code> or
+   *           <code>index >= size</code>
+   */
+  public JsonArray set( int index, JsonValue value ) {
+    if( value == null ) {
+      throw new NullPointerException( "value is null" );
+    }
+    values.set( index, value );
     return this;
   }
 

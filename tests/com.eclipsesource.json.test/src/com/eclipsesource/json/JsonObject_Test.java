@@ -407,6 +407,130 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void set_int() {
+    object.set( "a", 23 );
+
+    assertEquals( "{\"a\":23}", object.toString() );
+  }
+
+  @Test
+  public void set_int_enablesChaining() {
+    assertSame( object, object.set( "a", 23 ) );
+  }
+
+  @Test
+  public void set_long() {
+    object.set( "a", 23l );
+
+    assertEquals( "{\"a\":23}", object.toString() );
+  }
+
+  @Test
+  public void set_long_enablesChaining() {
+    assertSame( object, object.set( "a", 23l ) );
+  }
+
+  @Test
+  public void set_float() {
+    object.set( "a", 3.14f );
+
+    assertEquals( "{\"a\":3.14}", object.toString() );
+  }
+
+  @Test
+  public void set_float_enablesChaining() {
+    assertSame( object, object.set( "a", 3.14f ) );
+  }
+
+  @Test
+  public void set_double() {
+    object.set( "a", 3.14d );
+
+    assertEquals( "{\"a\":3.14}", object.toString() );
+  }
+
+  @Test
+  public void set_double_enablesChaining() {
+    assertSame( object, object.set( "a", 3.14d ) );
+  }
+
+  @Test
+  public void set_boolean() {
+    object.set( "a", true );
+
+    assertEquals( "{\"a\":true}", object.toString() );
+  }
+
+  @Test
+  public void set_boolean_enablesChaining() {
+    assertSame( object, object.set( "a", true ) );
+  }
+
+  @Test
+  public void set_string() {
+    object.set( "a", "foo" );
+
+    assertEquals( "{\"a\":\"foo\"}", object.toString() );
+  }
+
+  @Test
+  public void set_string_enablesChaining() {
+    assertSame( object, object.set( "a", "foo" ) );
+  }
+
+  @Test
+  public void set_jsonNull() {
+    object.set( "a", JsonValue.NULL );
+
+    assertEquals( "{\"a\":null}", object.toString() );
+  }
+
+  @Test
+  public void set_jsonArray() {
+    object.set( "a", new JsonArray() );
+
+    assertEquals( "{\"a\":[]}", object.toString() );
+  }
+
+  @Test
+  public void set_jsonObject() {
+    object.set( "a", new JsonObject() );
+
+    assertEquals( "{\"a\":{}}", object.toString() );
+  }
+
+  @Test
+  public void set_json_enablesChaining() {
+    assertSame( object, object.set( "a", JsonValue.NULL ) );
+  }
+
+  @Test
+  public void set_addsElementIfMissing() {
+    object.set( "a", JsonValue.TRUE );
+
+    assertEquals( "{\"a\":true}", object.toString() );
+  }
+
+  @Test
+  public void set_modifiesElementIfExisting() {
+    object.add( "a", JsonValue.TRUE );
+
+    object.set( "a", JsonValue.FALSE );
+
+    assertEquals( "{\"a\":false}", object.toString() );
+  }
+
+  @Test
+  public void set_modifiesLastElementIfMultipleExisting() {
+    object.add( "a", 1 );
+    object.add( "a", 2 );
+
+    object.set( "a", JsonValue.TRUE );
+
+    assertEquals( "{\"a\":1,\"a\":true}", object.toString() );
+  }
+
+  @Test
   public void remove_failsWithNullName() {
     assertException( NullPointerException.class, "name is null", new Runnable() {
       public void run() {

@@ -346,6 +346,156 @@ public class JsonArray_Test {
   }
 
   @Test
+  public void set_int() {
+    array.add( false );
+    array.set( 0, 23 );
+
+    assertEquals( "[23]", array.toString() );
+  }
+
+  @Test
+  public void set_int_enablesChaining() {
+    array.add( false );
+
+    assertSame( array, array.set( 0, 23 ) );
+  }
+
+  @Test
+  public void set_long() {
+    array.add( false );
+
+    array.set( 0, 23l );
+
+    assertEquals( "[23]", array.toString() );
+  }
+
+  @Test
+  public void set_long_enablesChaining() {
+    array.add( false );
+
+    assertSame( array, array.set( 0, 23l ) );
+  }
+
+  @Test
+  public void set_float() {
+    array.add( false );
+
+    array.set( 0, 3.14f );
+
+    assertEquals( "[3.14]", array.toString() );
+  }
+
+  @Test
+  public void set_float_enablesChaining() {
+    array.add( false );
+
+    assertSame( array, array.set( 0, 3.14f ) );
+  }
+
+  @Test
+  public void set_double() {
+    array.add( false );
+
+    array.set( 0, 3.14d );
+
+    assertEquals( "[3.14]", array.toString() );
+  }
+
+  @Test
+  public void set_double_enablesChaining() {
+    array.add( false );
+
+    assertSame( array, array.set( 0, 3.14d ) );
+  }
+
+  @Test
+  public void set_boolean() {
+    array.add( false );
+
+    array.set( 0, true );
+
+    assertEquals( "[true]", array.toString() );
+  }
+
+  @Test
+  public void set_boolean_enablesChaining() {
+    array.add( false );
+
+    assertSame( array, array.set( 0, true ) );
+  }
+
+  @Test
+  public void set_string() {
+    array.add( false );
+
+    array.set( 0, "foo" );
+
+    assertEquals( "[\"foo\"]", array.toString() );
+  }
+
+  @Test
+  public void set_string_enablesChaining() {
+    array.add( false );
+
+    assertSame( array, array.set( 0, "foo" ) );
+  }
+
+  @Test
+  public void set_jsonNull() {
+    array.add( false );
+
+    array.set( 0, JsonValue.NULL );
+
+    assertEquals( "[null]", array.toString() );
+  }
+
+  @Test
+  public void set_jsonArray() {
+    array.add( false );
+
+    array.set( 0, new JsonArray() );
+
+    assertEquals( "[[]]", array.toString() );
+  }
+
+  @Test
+  public void set_jsonObject() {
+    array.add( false );
+
+    array.set( 0, new JsonObject() );
+
+    assertEquals( "[{}]", array.toString() );
+  }
+
+  @Test( expected = NullPointerException.class )
+  public void set_json_failsWithNull() {
+    array.add( false );
+
+    array.set( 0, (JsonValue)null );
+  }
+
+  @Test( expected = IndexOutOfBoundsException.class )
+  public void set_json_failsWithInvalidIndex() {
+    array.set( 0, JsonValue.NULL );
+  }
+
+  @Test
+  public void set_json_enablesChaining() {
+    array.add( false );
+
+    assertSame( array, array.set( 0, JsonValue.NULL ) );
+  }
+
+  @Test
+  public void set_json_replacesDifferntArrayElements() {
+    array.add( 3 ).add( 6 ).add( 9 );
+
+    array.set( 1, 4 ).set( 2, 5 );
+
+    assertEquals( "[3,4,5]", array.toString() );
+  }
+
+  @Test
   public void write_delegatesToJsonWriter() throws IOException {
     JsonWriter writer = mock( JsonWriter.class );
 
