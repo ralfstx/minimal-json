@@ -283,7 +283,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
 
   /**
    * Removes a member with the specified name from this object. If this object contains multiple
-   * members with the given name, only the first one is removed. If this object does not contain a
+   * members with the given name, only the last one is removed. If this object does not contain a
    * member with the specified name, the object is not modified.
    *
    * @param name
@@ -304,12 +304,13 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Returns the value of the member with the specified name in this object.
-   *
+   * Returns the value of the member with the specified name in this object. If this object contains
+   * multiple members with the given name, this method will return the last one.
+   * 
    * @param name
    *          the name of the member whose value is to be returned
-   * @return the value of the member with the specified name, or <code>null</code> if there is no
-   *         member with that name in this object
+   * @return the value of the last member with the specified name, or <code>null</code> if this
+   *         object does not contain a member with that name
    */
   public JsonValue get( String name ) {
     if( name == null ) {
@@ -396,12 +397,12 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     return names.equals( other.names ) && values.equals( other.values );
   }
 
-  private int indexOf( String name ) {
+  int indexOf( String name ) {
     int index = table.get( name );
     if( index != -1 && name.equals( names.get( index ) ) ) {
       return index;
     }
-    return names.indexOf( name );
+    return names.lastIndexOf( name );
   }
 
   private synchronized void readObject( ObjectInputStream inputStream ) throws IOException,
@@ -512,12 +513,12 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     }
 
     void add( String name, int index ) {
+      int slot = hashSlotFor( name );
       if( index < 0xff ) {
-        int slot = hashSlotFor( name );
-        if( hashTable[slot] == 0 ) {
-          // increment by 1, 0 stands for empty
-          hashTable[slot] = (byte)( index + 1 );
-        }
+        // increment by 1, 0 stands for empty
+        hashTable[slot] = (byte)( index + 1 );
+      } else {
+        hashTable[slot] = 0;
       }
     }
 

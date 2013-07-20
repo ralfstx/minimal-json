@@ -217,15 +217,22 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void get_returnsExistingValue() {
-    object.add( "foo", true );
-
-    assertSame( JsonValue.TRUE, object.get( "foo" ) );
+  public void get_returnsNullForNonExistingMember() {
+    assertNull( object.get( "foo" ) );
   }
 
   @Test
-  public void get_returnsNullForNonExistingValue() {
-    assertSame( null, object.get( "foo" ) );
+  public void get_returnsValueForName() {
+    object.add( "foo", true );
+
+    assertEquals( JsonValue.TRUE, object.get( "foo" ) );
+  }
+
+  @Test
+  public void get_returnsLastValueForName() {
+    object.add( "foo", false ).add( "foo", true );
+
+    assertEquals( JsonValue.TRUE, object.get( "foo" ) );
   }
 
   @Test
@@ -421,17 +428,17 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void remove_removesOnlyFirstMatchingMember() {
+  public void remove_removesOnlyLastMatchingMember() {
     object.add( "a", 23 );
     object.add( "a", 42 );
 
     object.remove( "a" );
 
-    assertEquals( "{\"a\":42}", object.toString() );
+    assertEquals( "{\"a\":23}", object.toString() );
   }
 
   @Test
-  public void remove_removesOnlyFirstMatchingMember_afterRemove() {
+  public void remove_removesOnlyLastMatchingMember_afterRemove() {
     object.add( "a", 23 );
     object.remove( "a" );
     object.add( "a", 42 );
@@ -439,7 +446,7 @@ public class JsonObject_Test {
 
     object.remove( "a" );
 
-    assertEquals( "{\"a\":47}", object.toString() );
+    assertEquals( "{\"a\":42}", object.toString() );
   }
 
   @Test
@@ -514,6 +521,47 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void indexOf_returnsNoIndexIfEmpty() {
+    assertEquals( -1, object.indexOf( "a" ) );
+  }
+
+  @Test
+  public void indexOf_returnsIndexOfMember() {
+    object.add( "a", 23 );
+
+    assertEquals( 0, object.indexOf( "a" ) );
+  }
+
+  @Test
+  public void indexOf_returnsIndexOfLastMember() {
+    object.add( "a", 23 );
+    object.add( "a", 42 );
+
+    assertEquals( 1, object.indexOf( "a" ) );
+  }
+
+  @Test
+  public void indexOf_returnsIndexOfLastMember_afterRemove() {
+    object.add( "a", 23 );
+    object.add( "a", 42 );
+    object.remove( "a" );
+
+    assertEquals( 0, object.indexOf( "a" ) );
+  }
+
+  @Test
+  public void indexOf_returnsIndexOfLastMember_forBigObject() {
+    object.add( "a", 23 );
+    // for indexes above 255, the hash index table does not return a value
+    for( int i = 0; i < 256; i++ ) {
+      object.add( "x-" + i, 0 );
+    }
+    object.add( "a", 42 );
+
+    assertEquals( 257, object.indexOf( "a" ) );
+  }
+
+  @Test
   public void hashIndexTable_copyConstructor() {
     HashIndexTable original = new HashIndexTable();
     original.add( "name", 23 );
@@ -539,13 +587,23 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void hashIndexTable_add_doesNotOverwrite() {
+  public void hashIndexTable_add_overwritesPreviousValue() {
     HashIndexTable indexTable = new HashIndexTable();
 
     indexTable.add( "name", 23 );
     indexTable.add( "name", 42 );
 
-    assertEquals( 23, indexTable.get( "name" ) );
+    assertEquals( 42, indexTable.get( "name" ) );
+  }
+
+  @Test
+  public void hashIndexTable_add_clearsPreviousValueIfIndexExceeds0xff() {
+    HashIndexTable indexTable = new HashIndexTable();
+
+    indexTable.add( "name", 23 );
+    indexTable.add( "name", 300 );
+
+    assertEquals( -1, indexTable.get( "name" ) );
   }
 
   @Test
