@@ -21,16 +21,29 @@ import static org.junit.Assert.*;
 
 public class TestUtil {
 
-  public static void assertException( Class<? extends Exception> type,
-                                      String message,
-                                      Runnable runnable )
+  public static <T extends Exception> T assertException( Class<T> type,
+                                                         String message,
+                                                         Runnable runnable )
   {
+    T exception = assertException( type, runnable );
+    assertEquals( "message", message, exception.getMessage() );
+    return exception;
+  }
+
+  @SuppressWarnings( "unchecked" )
+  public static <T extends Exception> T assertException( Class<T> type, Runnable runnable ) {
+    Exception exception = catchException( runnable );
+    assertNotNull( "Expected exception: ", type.getName() );
+    assertSame( "exception type", type, exception.getClass() );
+    return (T)exception;
+  }
+
+  private static Exception catchException( Runnable runnable ) {
     try {
       runnable.run();
-      fail( "Expected exception: " + type.getName() );
+      return null;
     } catch( Exception exception ) {
-      assertSame( "type", type, exception.getClass() );
-      assertEquals( "message", message, exception.getMessage() );
+      return exception;
     }
   }
 

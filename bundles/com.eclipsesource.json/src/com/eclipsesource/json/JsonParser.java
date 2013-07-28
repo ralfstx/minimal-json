@@ -20,7 +20,8 @@ class JsonParser {
   private final StringBuilder recorder;
   private int current;
   private int line;
-  private int column;
+  private int offset;
+  private int lineOffset;
 
   JsonParser( Reader reader ) {
     this.reader = reader;
@@ -40,7 +41,8 @@ class JsonParser {
 
   private void start() throws IOException {
     line = 1;
-    column = -1;
+    offset = -1;
+    lineOffset = 0;
     read();
   }
 
@@ -292,11 +294,10 @@ class JsonParser {
     if( endOfText() ) {
       throw error( "Unexpected end of input" );
     }
+    offset++;
     if( current == '\n' ) {
       line++;
-      column = 0;
-    } else {
-      column++;
+      lineOffset = offset;
     }
     current = reader.read();
   }
@@ -313,7 +314,7 @@ class JsonParser {
   }
 
   private ParseException error( String message ) {
-    return new ParseException( message, line, column );
+    return new ParseException( message, offset, line, offset - lineOffset );
   }
 
   private static boolean isWhiteSpace( int ch ) {

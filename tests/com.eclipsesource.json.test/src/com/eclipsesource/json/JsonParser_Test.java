@@ -13,17 +13,17 @@ package com.eclipsesource.json;
 import java.io.IOException;
 import java.io.StringReader;
 
+import org.hamcrest.core.StringStartsWith;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 
 public class JsonParser_Test {
 
   @Test
   public void parse_rejectsEmptyString() {
-    assertParseException( "Unexpected end of input at 1:0", "" );
+    assertParseException( 0, "Unexpected end of input", "" );
   }
 
   @Test
@@ -57,7 +57,16 @@ public class JsonParser_Test {
 
   @Test
   public void parse_failsWithUnterminatedString() {
-    assertParseException( "Unexpected end of input at 1:5", "[\"foo" );
+    assertParseException( 5, "Unexpected end of input", "[\"foo" );
+  }
+
+  @Test
+  public void parse_handlesLineBreaksAndColumnsCorrectly() {
+    assertParseException( 0, 1, 0, "!" );
+    assertParseException( 2, 2, 0, "[\n!" );
+    assertParseException( 3, 2, 0, "[\r\n!" );
+    assertParseException( 6, 3, 1, "[ \n \n !" );
+    assertParseException( 7, 2, 3, "[ \r\n \r !" );
   }
 
   @Test
@@ -87,19 +96,19 @@ public class JsonParser_Test {
 
   @Test
   public void arrays_illegalSyntax() {
-    assertParseException( "Expected value at 1:1", "[,]" );
-    assertParseException( "Expected ',' or ']' at 1:4", "[23 42]" );
-    assertParseException( "Expected value at 1:4", "[23,]" );
+    assertParseException( 1, "Expected value", "[,]" );
+    assertParseException( 4, "Expected ',' or ']'", "[23 42]" );
+    assertParseException( 4, "Expected value", "[23,]" );
   }
 
   @Test
   public void arrays_incomplete() {
-    assertParseException( "Unexpected end of input at 1:1", "[" );
-    assertParseException( "Unexpected end of input at 1:2", "[ " );
-    assertParseException( "Unexpected end of input at 1:3", "[23" );
-    assertParseException( "Unexpected end of input at 1:4", "[23 " );
-    assertParseException( "Unexpected end of input at 1:4", "[23," );
-    assertParseException( "Unexpected end of input at 1:5", "[23, " );
+    assertParseException( 1, "Unexpected end of input", "[" );
+    assertParseException( 2, "Unexpected end of input", "[ " );
+    assertParseException( 3, "Unexpected end of input", "[23" );
+    assertParseException( 4, "Unexpected end of input", "[23 " );
+    assertParseException( 4, "Unexpected end of input", "[23," );
+    assertParseException( 5, "Unexpected end of input", "[23, " );
   }
 
   @Test
@@ -129,29 +138,29 @@ public class JsonParser_Test {
 
   @Test
   public void objects_illegalSyntax() {
-    assertParseException( "Expected name at 1:1", "{,}" );
-    assertParseException( "Expected name at 1:1", "{:}" );
-    assertParseException( "Expected name at 1:1", "{23}" );
-    assertParseException( "Expected ':' at 1:4", "{\"a\"}" );
-    assertParseException( "Expected ':' at 1:5", "{\"a\" \"b\"}" );
-    assertParseException( "Expected value at 1:5", "{\"a\":}" );
-    assertParseException( "Expected name at 1:8", "{\"a\":23,}" );
-    assertParseException( "Expected name at 1:8", "{\"a\":23,42" );
+    assertParseException( 1, "Expected name", "{,}" );
+    assertParseException( 1, "Expected name", "{:}" );
+    assertParseException( 1, "Expected name", "{23}" );
+    assertParseException( 4, "Expected ':'", "{\"a\"}" );
+    assertParseException( 5, "Expected ':'", "{\"a\" \"b\"}" );
+    assertParseException( 5, "Expected value", "{\"a\":}" );
+    assertParseException( 8, "Expected name", "{\"a\":23,}" );
+    assertParseException( 8, "Expected name", "{\"a\":23,42" );
   }
 
   @Test
   public void objects_incomplete() {
-    assertParseException( "Unexpected end of input at 1:1", "{" );
-    assertParseException( "Unexpected end of input at 1:2", "{ " );
-    assertParseException( "Unexpected end of input at 1:2", "{\"" );
-    assertParseException( "Unexpected end of input at 1:4", "{\"a\"" );
-    assertParseException( "Unexpected end of input at 1:5", "{\"a\" " );
-    assertParseException( "Unexpected end of input at 1:5", "{\"a\":" );
-    assertParseException( "Unexpected end of input at 1:6", "{\"a\": " );
-    assertParseException( "Unexpected end of input at 1:7", "{\"a\":23" );
-    assertParseException( "Unexpected end of input at 1:8", "{\"a\":23 " );
-    assertParseException( "Unexpected end of input at 1:8", "{\"a\":23," );
-    assertParseException( "Unexpected end of input at 1:9", "{\"a\":23, " );
+    assertParseException( 1, "Unexpected end of input", "{" );
+    assertParseException( 2, "Unexpected end of input", "{ " );
+    assertParseException( 2, "Unexpected end of input", "{\"" );
+    assertParseException( 4, "Unexpected end of input", "{\"a\"" );
+    assertParseException( 5, "Unexpected end of input", "{\"a\" " );
+    assertParseException( 5, "Unexpected end of input", "{\"a\":" );
+    assertParseException( 6, "Unexpected end of input", "{\"a\": " );
+    assertParseException( 7, "Unexpected end of input", "{\"a\":23" );
+    assertParseException( 8, "Unexpected end of input", "{\"a\":23 " );
+    assertParseException( 8, "Unexpected end of input", "{\"a\":23," );
+    assertParseException( 9, "Unexpected end of input", "{\"a\":23, " );
   }
 
   @Test
@@ -178,11 +187,11 @@ public class JsonParser_Test {
   @Test
   public void strings_controlCharacters_areRejected() {
     // JSON string must not contain characters < 0x20
-    assertParseException( "Expected valid string character at 1:3", "\"--\n--\"" );
-    assertParseException( "Expected valid string character at 1:3", "\"--\r\n--\"" );
-    assertParseException( "Expected valid string character at 1:3", "\"--\t--\"" );
-    assertParseException( "Expected valid string character at 1:3", "\"--\u0000--\"" );
-    assertParseException( "Expected valid string character at 1:3", "\"--\u001f--\"" );
+    assertParseException( 3, "Expected valid string character", "\"--\n--\"" );
+    assertParseException( 3, "Expected valid string character", "\"--\r\n--\"" );
+    assertParseException( 3, "Expected valid string character", "\"--\t--\"" );
+    assertParseException( 3, "Expected valid string character", "\"--\u0000--\"" );
+    assertParseException( 3, "Expected valid string character", "\"--\u001f--\"" );
   }
 
   @Test
@@ -200,9 +209,9 @@ public class JsonParser_Test {
 
   @Test
   public void strings_illegalEscapes_areRejected() {
-    assertParseException( "Expected valid escape sequence at 1:2", "\"\\a\"" );
-    assertParseException( "Expected valid escape sequence at 1:2", "\"\\x\"" );
-    assertParseException( "Expected valid escape sequence at 1:2", "\"\\000\"" );
+    assertParseException( 2, "Expected valid escape sequence", "\"\\a\"" );
+    assertParseException( 2, "Expected valid escape sequence", "\"\\x\"" );
+    assertParseException( 2, "Expected valid escape sequence", "\"\\000\"" );
   }
 
   @Test
@@ -215,22 +224,22 @@ public class JsonParser_Test {
 
   @Test
   public void strings_illegalUnicodeEscapes_areRejected() {
-    assertParseException( "Expected hexadecimal digit at 1:3", "\"\\u \"" );
-    assertParseException( "Expected hexadecimal digit at 1:3", "\"\\ux\"" );
-    assertParseException( "Expected hexadecimal digit at 1:5", "\"\\u20 \"" );
-    assertParseException( "Expected hexadecimal digit at 1:6", "\"\\u000x\"" );
+    assertParseException( 3, "Expected hexadecimal digit", "\"\\u \"" );
+    assertParseException( 3, "Expected hexadecimal digit", "\"\\ux\"" );
+    assertParseException( 5, "Expected hexadecimal digit", "\"\\u20 \"" );
+    assertParseException( 6, "Expected hexadecimal digit", "\"\\u000x\"" );
   }
 
   @Test
   public void strings_incompleteStrings_areRejected() {
-    assertParseException( "Unexpected end of input at 1:1", "\"" );
-    assertParseException( "Unexpected end of input at 1:4", "\"foo" );
-    assertParseException( "Unexpected end of input at 1:5", "\"foo\\" );
-    assertParseException( "Unexpected end of input at 1:6", "\"foo\\n" );
-    assertParseException( "Unexpected end of input at 1:6", "\"foo\\u" );
-    assertParseException( "Unexpected end of input at 1:7", "\"foo\\u0" );
-    assertParseException( "Unexpected end of input at 1:9", "\"foo\\u000" );
-    assertParseException( "Unexpected end of input at 1:10", "\"foo\\u0000" );
+    assertParseException( 1, "Unexpected end of input", "\"" );
+    assertParseException( 4, "Unexpected end of input", "\"foo" );
+    assertParseException( 5, "Unexpected end of input", "\"foo\\" );
+    assertParseException( 6, "Unexpected end of input", "\"foo\\n" );
+    assertParseException( 6, "Unexpected end of input", "\"foo\\u" );
+    assertParseException( 7, "Unexpected end of input", "\"foo\\u0" );
+    assertParseException( 9, "Unexpected end of input", "\"foo\\u000" );
+    assertParseException( 10, "Unexpected end of input", "\"foo\\u0000" );
   }
 
   @Test
@@ -278,22 +287,22 @@ public class JsonParser_Test {
 
   @Test
   public void numbers_withInvalidFormat() {
-    assertParseException( "Expected value at 1:0", "+1" );
-    assertParseException( "Expected value at 1:0", ".1" );
-    assertParseException( "Unexpected character at 1:1", "02" );
-    assertParseException( "Unexpected character at 1:2", "-02" );
-    assertParseException( "Expected digit at 1:1", "-x" );
-    assertParseException( "Expected digit at 1:2", "1.x" );
-    assertParseException( "Expected digit at 1:2", "1ex" );
-    assertParseException( "Unexpected character at 1:3", "1e1x" );
+    assertParseException( 0, "Expected value", "+1" );
+    assertParseException( 0, "Expected value", ".1" );
+    assertParseException( 1, "Unexpected character", "02" );
+    assertParseException( 2, "Unexpected character", "-02" );
+    assertParseException( 1, "Expected digit", "-x" );
+    assertParseException( 2, "Expected digit", "1.x" );
+    assertParseException( 2, "Expected digit", "1ex" );
+    assertParseException( 3, "Unexpected character", "1e1x" );
   }
 
   @Test
   public void numbers_incomplete() {
-    assertParseException( "Unexpected end of input at 1:1", "-" );
-    assertParseException( "Unexpected end of input at 1:2", "1." );
-    assertParseException( "Unexpected end of input at 1:4", "1.0e" );
-    assertParseException( "Unexpected end of input at 1:5", "1.0e-" );
+    assertParseException( 1, "Unexpected end of input", "-" );
+    assertParseException( 2, "Unexpected end of input", "1." );
+    assertParseException( 4, "Unexpected end of input", "1.0e" );
+    assertParseException( 5, "Unexpected end of input", "1.0e-" );
   }
 
   @Test
@@ -303,17 +312,17 @@ public class JsonParser_Test {
 
   @Test
   public void null_incomplete() {
-    assertParseException( "Unexpected end of input at 1:1", "n" );
-    assertParseException( "Unexpected end of input at 1:2", "nu" );
-    assertParseException( "Unexpected end of input at 1:3", "nul" );
+    assertParseException( 1, "Unexpected end of input", "n" );
+    assertParseException( 2, "Unexpected end of input", "nu" );
+    assertParseException( 3, "Unexpected end of input", "nul" );
   }
 
   @Test
   public void null_withIllegalCharacter() {
-    assertParseException( "Expected 'u' at 1:1", "nx" );
-    assertParseException( "Expected 'l' at 1:2", "nux" );
-    assertParseException( "Expected 'l' at 1:3", "nulx" );
-    assertParseException( "Unexpected character at 1:4", "nullx" );
+    assertParseException( 1, "Expected 'u'", "nx" );
+    assertParseException( 2, "Expected 'l'", "nux" );
+    assertParseException( 3, "Expected 'l'", "nulx" );
+    assertParseException( 4, "Unexpected character", "nullx" );
   }
 
   @Test
@@ -323,17 +332,17 @@ public class JsonParser_Test {
 
   @Test
   public void true_incomplete() {
-    assertParseException( "Unexpected end of input at 1:1", "t" );
-    assertParseException( "Unexpected end of input at 1:2", "tr" );
-    assertParseException( "Unexpected end of input at 1:3", "tru" );
+    assertParseException( 1, "Unexpected end of input", "t" );
+    assertParseException( 2, "Unexpected end of input", "tr" );
+    assertParseException( 3, "Unexpected end of input", "tru" );
   }
 
   @Test
   public void true_withIllegalCharacter() {
-    assertParseException( "Expected 'r' at 1:1", "tx" );
-    assertParseException( "Expected 'u' at 1:2", "trx" );
-    assertParseException( "Expected 'e' at 1:3", "trux" );
-    assertParseException( "Unexpected character at 1:4", "truex" );
+    assertParseException( 1, "Expected 'r'", "tx" );
+    assertParseException( 2, "Expected 'u'", "trx" );
+    assertParseException( 3, "Expected 'e'", "trux" );
+    assertParseException( 4, "Unexpected character", "truex" );
   }
 
   @Test
@@ -343,27 +352,40 @@ public class JsonParser_Test {
 
   @Test
   public void false_incomplete() {
-    assertParseException( "Unexpected end of input at 1:1", "f" );
-    assertParseException( "Unexpected end of input at 1:2", "fa" );
-    assertParseException( "Unexpected end of input at 1:3", "fal" );
-    assertParseException( "Unexpected end of input at 1:4", "fals" );
+    assertParseException( 1, "Unexpected end of input", "f" );
+    assertParseException( 2, "Unexpected end of input", "fa" );
+    assertParseException( 3, "Unexpected end of input", "fal" );
+    assertParseException( 4, "Unexpected end of input", "fals" );
   }
 
   @Test
   public void false_withIllegalCharacter() {
-    assertParseException( "Expected 'a' at 1:1", "fx" );
-    assertParseException( "Expected 'l' at 1:2", "fax" );
-    assertParseException( "Expected 's' at 1:3", "falx" );
-    assertParseException( "Expected 'e' at 1:4", "falsx" );
-    assertParseException( "Unexpected character at 1:5", "falsex" );
+    assertParseException( 1, "Expected 'a'", "fx" );
+    assertParseException( 2, "Expected 'l'", "fax" );
+    assertParseException( 3, "Expected 's'", "falx" );
+    assertParseException( 4, "Expected 'e'", "falsx" );
+    assertParseException( 5, "Unexpected character", "falsex" );
   }
 
-  private static void assertParseException( String expectedMessage, final String json ) {
-    TestUtil.assertException( ParseException.class, expectedMessage, new Runnable() {
+  private static void assertParseException( int offset, String message, final String json ) {
+    ParseException exception = TestUtil.assertException( ParseException.class, new Runnable() {
       public void run() {
         parse( json );
       }
     } );
+    assertEquals( offset, exception.getOffset() );
+    assertThat( exception.getMessage(), StringStartsWith.startsWith( message + " at" ) );
+  }
+
+  private static void assertParseException( int offset, int line, int column, final String json ) {
+    ParseException exception = TestUtil.assertException( ParseException.class, new Runnable() {
+      public void run() {
+        parse( json );
+      }
+    } );
+    assertEquals( "offset", offset, exception.getOffset() );
+    assertEquals( "line", line, exception.getLine() );
+    assertEquals( "column", column, exception.getColumn() );
   }
 
   private static JsonValue parse( String json ) {

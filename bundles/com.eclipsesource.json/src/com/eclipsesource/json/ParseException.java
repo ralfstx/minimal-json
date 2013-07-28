@@ -17,13 +17,25 @@ package com.eclipsesource.json;
 @SuppressWarnings( "serial" ) // use default serial UID
 public class ParseException extends RuntimeException {
 
+  private final int offset;
   private final int line;
   private final int column;
 
-  ParseException( String message, int line, int column ) {
+  ParseException( String message, int offset, int line, int column ) {
     super( message + " at " + line + ":" + column );
+    this.offset = offset;
     this.line = line;
     this.column = column;
+  }
+
+  /**
+   * Returns the absolute index of the character at which the error occurred. The
+   * index of the first character of a document is 0.
+   *
+   * @return the character offset at which the error occurred, will be &gt;= 0
+   */
+  public int getOffset() {
+    return offset;
   }
 
   /**
