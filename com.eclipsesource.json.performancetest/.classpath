@@ -4,12 +4,11 @@
 	<classpathentry kind="lib" path="lib/caliper-0.5-rc1.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/guava-r09.jar"/>
-	<classpathentry kind="lib" path="lib/java-allocation-instrumenter-2.1.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-core-asl-1.9.12.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-mapper-asl-1.9.12.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-lgpl-1.9.13.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-mapper-lgpl-1.9.13.jar"/>
 	<classpathentry kind="lib" path="lib/json-20090211.jar"/>
 	<classpathentry kind="lib" path="lib/json-simple-1.1.1.jar"/>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.eclipsesource.json"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

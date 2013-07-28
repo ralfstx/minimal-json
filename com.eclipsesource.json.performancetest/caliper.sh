@@ -15,6 +15,6 @@ for f in $base/lib/*.jar; do
 done
 
 addPath $base/bin
-addPath $base/../../bundles/com.eclipsesource.json/bin
+addPath $base/../com.eclipsesource.json/bin
 
 exec java -cp $CLASSPATH com.google.caliper.Runner "$@"
