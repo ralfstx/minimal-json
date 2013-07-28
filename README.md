@@ -1,6 +1,8 @@
 minimal-json
 ============
 
+[![Build Status](https://travis-ci.org/ralfstx/minimal-json.png?branch=master)](https://travis-ci.org/ralfstx/minimal-json)
+
 A fast and minimal JSON parser and writer for Java.
 It has been written for (and is used in) the [Eclipse RAP project](http://eclipse.org/rap).
 However, I hope that it is useful for others as well, therefore I keep this repository up-to-date.
