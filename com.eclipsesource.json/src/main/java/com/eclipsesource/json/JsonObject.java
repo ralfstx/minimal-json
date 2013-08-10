@@ -147,6 +147,28 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
 
   /**
    * Adds a new member at the end of this object, with the specified name and the JSON
+   * representation of the specified <code>int</code> value.
+   * <p>
+   * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
+   * already exists in the object will add another member with the same name. In order to replace
+   * existing members, use the method <code>set(name, value)</code> instead. However, <strong>
+   * <em>add</em> is much faster than <em>set</em></strong> (because it does not need to search for
+   * existing members). Therefore <em>add</em> should be preferred when constructing new objects.
+   * </p>
+   *
+   * @param name
+   *          the name of the member to add
+   * @param value
+   *          the value of the member to add
+   * @return the object itself, to enable method chaining
+   */
+  public JsonObject add( String name, int value ) {
+    add( name, valueOf( value ) );
+    return this;
+  }
+
+  /**
+   * Adds a new member at the end of this object, with the specified name and the JSON
    * representation of the specified <code>long</code> value.
    * <p>
    * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
@@ -282,6 +304,28 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     table.add( name, names.size() );
     names.add( name );
     values.add( value );
+    return this;
+  }
+
+  /**
+   * Sets the value of the member with the specified name to the JSON representation of the
+   * specified <code>int</code> value. If this object does not contain a member with this name, a
+   * new member is added at the end of the object. If this object contains multiple members with
+   * this name, only the last one is changed.
+   * <p>
+   * This method should <strong>only be used to modify existing objects</strong>. To fill a new
+   * object with members, the method <code>add(name, value)</code> should be preferred which is much
+   * faster (as it does not need to search for existing members).
+   * </p>
+   *
+   * @param name
+   *          the name of the member to replace
+   * @param value
+   *          the value to set to the member
+   * @return the object itself, to enable method chaining
+   */
+  public JsonObject set( String name, int value ) {
+    set( name, valueOf( value ) );
     return this;
   }
 

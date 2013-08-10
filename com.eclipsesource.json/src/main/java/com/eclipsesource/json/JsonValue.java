@@ -106,6 +106,17 @@ public abstract class JsonValue implements Serializable {
   }
 
   /**
+   * Returns a JsonValue instance that represents the given <code>int</code> value.
+   *
+   * @param value
+   *          the value to get a JSON representation for
+   * @return a JSON value that represents the given value
+   */
+  public static JsonValue valueOf( int value ) {
+    return new JsonNumber( Integer.toString( value, 10 ) );
+  }
+
+  /**
    * Returns a JsonValue instance that represents the given <code>long</code> value.
    *
    * @param value

@@ -133,6 +133,18 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
+   * Adds the JSON representation of the specified <code>int</code> value to the array.
+   *
+   * @param value
+   *          the value to add to the array
+   * @return the array itself, to enable method chaining
+   */
+  public JsonArray add( int value ) {
+    values.add( valueOf( value ) );
+    return this;
+  }
+
+  /**
    * Adds the JSON representation of the specified <code>long</code> value to the array.
    *
    * @param value
