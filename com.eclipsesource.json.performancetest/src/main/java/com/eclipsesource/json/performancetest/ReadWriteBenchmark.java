@@ -31,27 +31,28 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
   private String json;
   private Object model;
 
-  @Param String variant; // set by -Dvariant
+  @Param String input; // set by -Dinput
+  @Param String parser; // set by -Dparser
 
   @Override
   protected void setUp() throws IOException {
-    json = readResource( "rap.json" );
-    if( "org-json".equals( variant ) ) {
+    json = readResource( input + ".json" );
+    if( "org-json".equals( parser ) ) {
       jsonImpl = new JsonOrgRunner();
-    } else if( "gson".equals( variant ) ) {
+    } else if( "gson".equals( parser ) ) {
       jsonImpl = new GsonRunner();
-    } else if( "jackson".equals( variant ) ) {
+    } else if( "jackson".equals( parser ) ) {
       jsonImpl = new JacksonRunner();
-    } else if( "json-simple".equals( variant ) ) {
+    } else if( "json-simple".equals( parser ) ) {
       jsonImpl = new SimpleRunner();
-    } else if( "minimal-json".equals( variant ) ) {
+    } else if( "minimal-json".equals( parser ) ) {
       jsonImpl = new MinimalJsonRunner();
     } else {
-      throw new IllegalArgumentException( "Unknown variant: " + variant );
+      throw new IllegalArgumentException( "Unknown variant: " + parser );
     }
     model = jsonImpl.read( json );
     String result = jsonImpl.write( model );
-    if( !result.contains( "\"requestCounter\"" ) ) {
+    if( !result.trim().startsWith( "{" ) ) {
       throw new RuntimeException( "Unexpected output" );
     }
   }
@@ -75,7 +76,8 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
   }
 
   public static void main( String[] args ) {
-    String[] defArgs = { "-Dvariant=org-json,gson,jackson,json-simple,minimal-json" };
+    String[] defArgs = { "-Dparser=org-json,gson,jackson,json-simple,minimal-json",
+                         "-Dinput=long-string,numbers-array" }; // rap,caliper
     Runner.main( ReadWriteBenchmark.class, args.length > 0 ? args : defArgs );
   }
 
