@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+org.moreunit.preferences.version=2
+org.moreunit.testClassNameTemplate=${srcFile}_Test
+org.moreunit.test_methodType=testMethodTypeNoPrefix
+org.moreunit.unitsourcefolder=com.eclipsesource.json\:src/main/java\:com.eclipsesource.json\:src/test/java
+org.moreunit.useprojectsettings=true

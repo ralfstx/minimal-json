@@ -33,7 +33,7 @@ public class TestUtil {
   @SuppressWarnings( "unchecked" )
   public static <T extends Exception> T assertException( Class<T> type, Runnable runnable ) {
     Exception exception = catchException( runnable );
-    assertNotNull( "Expected exception: ", type.getName() );
+    assertNotNull( "Expected exception: " + type.getName(), exception );
     assertSame( "exception type", type, exception.getClass() );
     return (T)exception;
   }
