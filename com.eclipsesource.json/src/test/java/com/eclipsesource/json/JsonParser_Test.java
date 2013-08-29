@@ -209,6 +209,16 @@ public class JsonParser_Test {
   }
 
   @Test
+  public void strings_escape_atStart() {
+    assertEquals( "\\x", parse( "\"\\\\x\"" ).asString() );
+  }
+
+  @Test
+  public void strings_escape_atEnd() {
+    assertEquals( "x\\", parse( "\"x\\\\\"" ).asString() );
+  }
+
+  @Test
   public void strings_illegalEscapes_areRejected() {
     assertParseException( 2, "Expected valid escape sequence", "\"\\a\"" );
     assertParseException( 2, "Expected valid escape sequence", "\"\\x\"" );

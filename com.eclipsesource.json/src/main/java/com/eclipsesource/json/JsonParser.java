@@ -18,6 +18,7 @@ class JsonParser {
 
   private final BufferedTextReader reader;
   private int current;
+  private StringBuilder buffer;
 
   JsonParser( Reader reader ) {
     this.reader = new BufferedTextReader( reader );
@@ -107,6 +108,13 @@ class JsonParser {
     return object;
   }
 
+  private String readName() throws IOException {
+    if( current != '"' ) {
+      throw expected( "name" );
+    }
+    return readStringInternal();
+  }
+
   private JsonValue readNull() throws IOException {
     read();
     readRequiredChar( 'u' );
@@ -139,15 +147,20 @@ class JsonParser {
   }
 
   private JsonValue readString() throws IOException {
+    return new JsonString( readStringInternal() );
+  }
+
+  private String readStringInternal() throws IOException {
     read();
-    StringBuilder buffer = null;
     reader.startCapture();
     while( current != '"' ) {
       if( current == '\\' ) {
+        String captured = reader.endCapture();
         if( buffer == null ) {
-          buffer = new StringBuilder();
+          buffer = new StringBuilder( captured );
+        } else {
+          buffer.append( captured );
         }
-        buffer.append( reader.endCapture() );
         readEscape( buffer );
         reader.startCapture();
       } else if( current < 0x20 ) {
@@ -156,14 +169,14 @@ class JsonParser {
         read();
       }
     }
-    String capture = reader.endCapture();
+    String captured = reader.endCapture();
     if( buffer != null ) {
-      buffer.append( capture );
-      capture = buffer.toString();
+      buffer.append( captured );
+      captured = buffer.toString();
       buffer.setLength( 0 );
     }
     read();
-    return new JsonString( capture );
+    return captured;
   }
 
   private void readEscape( StringBuilder buffer ) throws IOException {
@@ -247,13 +260,6 @@ class JsonParser {
     while( readDigit() ) {
     }
     return true;
-  }
-
-  private String readName() throws IOException {
-    if( current != '"' ) {
-      throw expected( "name" );
-    }
-    return readString().asString();
   }
 
   private boolean readChar( char ch ) throws IOException {
