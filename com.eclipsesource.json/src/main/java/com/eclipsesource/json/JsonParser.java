@@ -28,7 +28,7 @@ class JsonParser {
     skipWhiteSpace();
     JsonValue result = readValue();
     skipWhiteSpace();
-    if( !isEndOfText( current ) ) {
+    if( !isEndOfText() ) {
       throw error( "Unexpected character" );
     }
     return result;
@@ -193,7 +193,7 @@ class JsonParser {
       char[] hexChars = new char[4];
       for( int i = 0; i < 4; i++ ) {
         read();
-        if( !isHexDigit( current ) ) {
+        if( !isHexDigit() ) {
           throw expected( "hexadecimal digit" );
         }
         hexChars[i] = (char)current;
@@ -265,7 +265,7 @@ class JsonParser {
   }
 
   private boolean readDigit() throws IOException {
-    if( !isDigit( current ) ) {
+    if( !isDigit() ) {
       return false;
     }
     read();
@@ -273,44 +273,46 @@ class JsonParser {
   }
 
   private void skipWhiteSpace() throws IOException {
-    while( isWhiteSpace( current ) && !isEndOfText( current ) ) {
+    while( isWhiteSpace() ) {
       read();
     }
   }
 
   private void read() throws IOException {
-    if( isEndOfText( current ) ) {
+    if( isEndOfText() ) {
       throw error( "Unexpected end of input" );
     }
     current = reader.read();
   }
 
   private ParseException expected( String expected ) {
-    if( isEndOfText( current ) ) {
+    if( isEndOfText() ) {
       return error( "Unexpected end of input" );
     }
     return error( "Expected " + expected );
   }
 
   private ParseException error( String message ) {
-    int offset = isEndOfText( current ) ? reader.getIndex() : reader.getIndex() - 1;
-    return new ParseException( message, offset, reader.getLine(), reader.getColumn() -1 );
+    int offset = isEndOfText() ? reader.getIndex() : reader.getIndex() - 1;
+    return new ParseException( message, offset, reader.getLine(), reader.getColumn() - 1 );
   }
 
-  private static boolean isWhiteSpace( int ch ) {
-    return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r';
+  private boolean isWhiteSpace() {
+    return current == ' ' || current == '\t' || current == '\n' || current == '\r';
   }
 
-  private static boolean isDigit( int ch ) {
-    return ch >= '0' && ch <= '9';
+  private boolean isDigit() {
+    return current >= '0' && current <= '9';
   }
 
-  private static boolean isHexDigit( int ch ) {
-    return ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'f' || ch >= 'A' && ch <= 'F';
+  private boolean isHexDigit() {
+    return current >= '0' && current <= '9'
+        || current >= 'a' && current <= 'f'
+        || current >= 'A' && current <= 'F';
   }
 
-  private static boolean isEndOfText( int ch ) {
-    return ch == -1;
+  private boolean isEndOfText() {
+    return current == -1;
   }
 
 }
