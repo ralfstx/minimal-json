@@ -19,6 +19,18 @@ class JsonWriter {
   private static final int CONTROL_CHARACTERS_START = 0x0000;
   private static final int CONTROL_CHARACTERS_END = 0x001f;
 
+  private static final char[] QUOT_CHARS = { '\\', '"' };
+  private static final char[] BS_CHARS = { '\\', '\\' };
+  private static final char[] LF_CHARS = { '\\', 'n' };
+  private static final char[] CR_CHARS = { '\\', 'r' };
+  private static final char[] TAB_CHARS = { '\\', 't' };
+  // In JavaScript, U+2028 and U+2029 characters count as line endings and must be encoded.
+  // http://stackoverflow.com/questions/2965293/javascript-parse-error-on-u2028-unicode-character
+  private static final char[] UNICODE_2028_CHARS = { '\\', 'u',  '2', '0', '2', '8' };
+  private static final char[] UNICODE_2029_CHARS = { '\\', 'u',  '2', '0', '2', '9' };
+  private static final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                                             'a', 'b', 'c', 'd', 'e', 'f' };
+
   protected final Writer writer;
 
   JsonWriter( Writer writer ) {
@@ -32,38 +44,43 @@ class JsonWriter {
   void writeString( String string ) throws IOException {
     writer.write( '"' );
     int length = string.length();
+    int start = 0;
     char[] chars = new char[ length ];
     string.getChars( 0, length, chars, 0 );
-    for( int i = 0; i < length; i++ ) {
-      char ch = chars[ i ];
-      if( ch == '"' || ch == '\\' ) {
-        writer.write( '\\' );
-        writer.write( ch );
-      } else if( ch == '\n' ) {
-        writer.write( '\\' );
-        writer.write( 'n' );
-      } else if( ch == '\r' ) {
-        writer.write( '\\' );
-        writer.write( 'r' );
-      } else if( ch == '\t' ) {
-        writer.write( "\\t" );
-      // In JavaScript, U+2028 and U+2029 characters count as line endings and must be encoded.
-      // http://stackoverflow.com/questions/2965293/javascript-parse-error-on-u2028-unicode-character
-      } else if( ch == '\u2028' ) {
-        writer.write( "\\u2028" );
-      } else if( ch == '\u2029' ) {
-        writer.write( "\\u2029" );
-      } else if( ch >= CONTROL_CHARACTERS_START && ch <= CONTROL_CHARACTERS_END ) {
-        writer.write( "\\u00" );
-        if( ch <= 0x000f ) {
-          writer.write( '0' );
-        }
-        writer.write( Integer.toHexString( ch ) );
-      } else {
-        writer.write( ch );
+    for( int index = 0; index < length; index++ ) {
+      char[] replacement = getReplacementChars( chars[index] );
+      if( replacement != null ) {
+        writer.write( chars, start, index - start );
+        writer.write( replacement );
+        start = index+1;
       }
     }
+    writer.write( chars, start, length - start );
     writer.write( '"' );
+  }
+
+  private static char[] getReplacementChars( char ch ) {
+    char[] replacement = null;
+    if( ch == '"' ) {
+      replacement = QUOT_CHARS;
+    } else if( ch == '\\' ) {
+      replacement = BS_CHARS;
+    } else if( ch == '\n' ) {
+      replacement = LF_CHARS;
+    } else if( ch == '\r' ) {
+      replacement = CR_CHARS;
+    } else if( ch == '\t' ) {
+      replacement = TAB_CHARS;
+    } else if( ch == '\u2028' ) {
+      replacement = UNICODE_2028_CHARS;
+    } else if( ch == '\u2029' ) {
+      replacement = UNICODE_2029_CHARS;
+    } else if( ch >= CONTROL_CHARACTERS_START && ch <= CONTROL_CHARACTERS_END ) {
+      replacement = new char[] { '\\', 'u',  '0', '0', '0', '0' };
+      replacement[4] = HEX_DIGITS[ ch >> 4 & 0x000f ];
+      replacement[5] = HEX_DIGITS[ ch & 0x000f ];
+    }
+    return replacement;
   }
 
   protected void writeObject( JsonObject object ) throws IOException {

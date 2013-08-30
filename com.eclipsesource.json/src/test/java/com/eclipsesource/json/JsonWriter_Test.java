@@ -108,17 +108,24 @@ public class JsonWriter_Test {
   }
 
   @Test
-  public void escapesControlCharacter8() throws IOException {
-    writer.writeString( string( 'f', 'o', 'o', (char)8, 'b', 'a', 'r' ) );
+  public void escapesControlCharacters() throws IOException {
+    writer.writeString( string( (char)1, (char)8, (char)15, (char)16, (char)31 ) );
 
-    assertEquals( "\"foo\\u0008bar\"", output.toString() );
+    assertEquals( "\"\\u0001\\u0008\\u000f\\u0010\\u001f\"", output.toString() );
   }
 
   @Test
-  public void escapesControlCharacter15() throws IOException {
-    writer.writeString( string( 'f', 'o', 'o', (char)15, 'b', 'a', 'r' ) );
+  public void escapesFirstChar() throws IOException {
+    writer.writeString( string( '\\', 'x' ) );
 
-    assertEquals( "\"foo\\u000fbar\"", output.toString() );
+    assertEquals( "\"\\\\x\"", output.toString() );
+  }
+
+  @Test
+  public void escapesLastChar() throws IOException {
+    writer.writeString( string( 'x', '\\' ) );
+
+    assertEquals( "\"x\\\\\"", output.toString() );
   }
 
   @Test
