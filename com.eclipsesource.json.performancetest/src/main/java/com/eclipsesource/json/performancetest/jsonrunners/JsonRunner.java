@@ -10,11 +10,18 @@
  ******************************************************************************/
 package com.eclipsesource.json.performancetest.jsonrunners;
 
+import java.io.Reader;
+import java.io.Writer;
+
 
 public interface JsonRunner {
 
-  public abstract String write( Object model );
+  public abstract Object readFromString( String string ) throws Exception;
 
-  public abstract Object read( String json );
+  public abstract Object readFromReader( Reader reader ) throws Exception;
+
+  public abstract String writeToString( Object model ) throws Exception;
+
+  public abstract void writeToWriter( Object model, Writer writer ) throws Exception;
 
 }

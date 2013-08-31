@@ -1,5 +1,8 @@
 package com.eclipsesource.json.performancetest.jsonrunners;
 
+import java.io.Reader;
+import java.io.Writer;
+
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -14,28 +17,37 @@ public class JacksonRunner implements JsonRunner {
   }
 
   @Override
-  public Object read( String json ) {
+  public Object readFromString( String string ) throws Exception {
     ObjectMapper mapper = new ObjectMapper();
+    JsonParser parser = factory.createJsonParser( string );
     try {
-      JsonParser parser = factory.createJsonParser( json );
-      try {
-        return mapper.readTree( parser );
-      } finally {
-        parser.close();
-      }
-    } catch( Exception exception ) {
-      throw new RuntimeException( exception );
+      return mapper.readTree( parser );
+    } finally {
+      parser.close();
     }
   }
 
   @Override
-  public String write( Object model ) {
+  public Object readFromReader( Reader reader ) throws Exception {
     ObjectMapper mapper = new ObjectMapper();
+    JsonParser parser = factory.createJsonParser( reader );
     try {
-      return mapper.writeValueAsString( model );
-    } catch( Exception exception ) {
-      throw new RuntimeException( exception );
+      return mapper.readTree( parser );
+    } finally {
+      parser.close();
     }
+  }
+
+  @Override
+  public String writeToString( Object model ) throws Exception {
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.writeValueAsString( model );
+  }
+
+  @Override
+  public void writeToWriter( Object model, Writer writer ) throws Exception {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.writeValue( writer, model );
   }
 
 }

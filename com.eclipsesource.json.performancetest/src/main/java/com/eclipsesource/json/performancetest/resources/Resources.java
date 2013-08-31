@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 public class Resources {
 
   public static String readResource( String name ) throws IOException {
-    InputStream inputStream = Resources.class.getResourceAsStream( name );
+    InputStream inputStream = getResourceAsStream( name );
     if( inputStream == null ) {
       return null;
     }
@@ -35,6 +35,10 @@ public class Resources {
       inputStream.close();
     }
     return stringBuilder.toString();
+  }
+
+  public static InputStream getResourceAsStream( String name ) {
+    return Resources.class.getResourceAsStream( name );
   }
 
 }

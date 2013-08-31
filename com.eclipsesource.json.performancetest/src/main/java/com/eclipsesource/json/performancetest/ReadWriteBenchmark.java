@@ -10,7 +10,10 @@
  ******************************************************************************/
 package com.eclipsesource.json.performancetest;
 
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 import com.eclipsesource.json.performancetest.jsonrunners.GsonRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JacksonRunner;
@@ -18,6 +21,7 @@ import com.eclipsesource.json.performancetest.jsonrunners.JsonOrgRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JsonRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.MinimalJsonRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.SimpleRunner;
+import com.eclipsesource.json.performancetest.resources.Resources;
 import com.google.caliper.Param;
 import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
@@ -33,10 +37,12 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
 
   @Param String input; // set by -Dinput
   @Param String parser; // set by -Dparser
+  private String resourceName;
 
   @Override
-  protected void setUp() throws IOException {
-    json = readResource( input + ".json" );
+  protected void setUp() throws Exception {
+    resourceName = input + ".json";
+    json = readResource( resourceName );
     if( "org-json".equals( parser ) ) {
       jsonImpl = new JsonOrgRunner();
     } else if( "gson".equals( parser ) ) {
@@ -50,34 +56,56 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     } else {
       throw new IllegalArgumentException( "Unknown variant: " + parser );
     }
-    model = jsonImpl.read( json );
-    String result = jsonImpl.write( model );
+    model = jsonImpl.readFromString( json );
+    String result = jsonImpl.writeToString( model );
     if( !result.trim().startsWith( "{" ) ) {
       throw new RuntimeException( "Unexpected output" );
     }
   }
 
-  public void timeRead( int reps ) {
+  public void timeReadFromString( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
-      Object model = jsonImpl.read( json );
+      Object model = jsonImpl.readFromString( json );
       if( model == null ) {
         throw new NullPointerException();
       }
     }
   }
 
-  public void timeWrite( int reps ) {
+  public void timeReadFromReader( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
-      String string = jsonImpl.write( model );
+      InputStream inputStream = Resources.getResourceAsStream( resourceName );
+      Object model = jsonImpl.readFromReader( new InputStreamReader( inputStream ) );
+      inputStream.close();
+      if( model == null ) {
+        throw new NullPointerException();
+      }
+    }
+  }
+
+  public void timeWriteToString( int reps ) throws Exception {
+    for( int i = 0; i < reps; i++ ) {
+      String string = jsonImpl.writeToString( model );
       if( string == null ) {
         throw new NullPointerException();
       }
     }
   }
 
+  public void timeWriteToWriter( int reps ) throws Exception {
+    for( int i = 0; i < reps; i++ ) {
+      ByteArrayOutputStream output = new ByteArrayOutputStream();
+      jsonImpl.writeToWriter( model, new OutputStreamWriter( output ) );
+      if( output.size() == 0 ) {
+        throw new RuntimeException();
+      }
+    }
+  }
+
   public static void main( String[] args ) {
     String[] defArgs = { "-Dparser=org-json,gson,jackson,json-simple,minimal-json",
-                         "-Dinput=long-string,numbers-array" }; // rap,caliper
+                         "-Dinput=rap,caliper", // long-string,numbers-array
+                         "--saveResults", "results.json" };
     Runner.main( ReadWriteBenchmark.class, args.length > 0 ? args : defArgs );
   }
 
