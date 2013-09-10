@@ -15,12 +15,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import com.eclipsesource.json.performancetest.jsonrunners.GsonRunner;
-import com.eclipsesource.json.performancetest.jsonrunners.JacksonRunner;
-import com.eclipsesource.json.performancetest.jsonrunners.JsonOrgRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JsonRunner;
-import com.eclipsesource.json.performancetest.jsonrunners.MinimalJsonRunner;
-import com.eclipsesource.json.performancetest.jsonrunners.SimpleRunner;
+import com.eclipsesource.json.performancetest.jsonrunners.JsonRunnerFactory;
 import com.eclipsesource.json.performancetest.resources.Resources;
 import com.google.caliper.Param;
 import com.google.caliper.Runner;
@@ -31,41 +27,23 @@ import static com.eclipsesource.json.performancetest.resources.Resources.readRes
 
 public class ReadWriteBenchmark extends SimpleBenchmark {
 
-  private JsonRunner jsonImpl;
+  private JsonRunner runner;
   private String json;
   private Object model;
 
   @Param String input; // set by -Dinput
   @Param String parser; // set by -Dparser
-  private String resourceName;
 
   @Override
   protected void setUp() throws Exception {
-    resourceName = input + ".json";
-    json = readResource( resourceName );
-    if( "org-json".equals( parser ) ) {
-      jsonImpl = new JsonOrgRunner();
-    } else if( "gson".equals( parser ) ) {
-      jsonImpl = new GsonRunner();
-    } else if( "jackson".equals( parser ) ) {
-      jsonImpl = new JacksonRunner();
-    } else if( "json-simple".equals( parser ) ) {
-      jsonImpl = new SimpleRunner();
-    } else if( "minimal-json".equals( parser ) ) {
-      jsonImpl = new MinimalJsonRunner();
-    } else {
-      throw new IllegalArgumentException( "Unknown variant: " + parser );
-    }
-    model = jsonImpl.readFromString( json );
-    String result = jsonImpl.writeToString( model );
-    if( !result.trim().startsWith( "{" ) ) {
-      throw new RuntimeException( "Unexpected output" );
-    }
+    json = readResource( input );
+    runner = JsonRunnerFactory.findByName( parser );
+    model = runner.readFromString( json );
   }
 
   public void timeReadFromString( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
-      Object model = jsonImpl.readFromString( json );
+      Object model = runner.readFromString( json );
       if( model == null ) {
         throw new NullPointerException();
       }
@@ -74,8 +52,8 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
 
   public void timeReadFromReader( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
-      InputStream inputStream = Resources.getResourceAsStream( resourceName );
-      Object model = jsonImpl.readFromReader( new InputStreamReader( inputStream ) );
+      InputStream inputStream = Resources.getResourceAsStream( input );
+      Object model = runner.readFromReader( new InputStreamReader( inputStream ) );
       inputStream.close();
       if( model == null ) {
         throw new NullPointerException();
@@ -85,7 +63,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
 
   public void timeWriteToString( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
-      String string = jsonImpl.writeToString( model );
+      String string = runner.writeToString( model );
       if( string == null ) {
         throw new NullPointerException();
       }
@@ -95,7 +73,9 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
   public void timeWriteToWriter( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      jsonImpl.writeToWriter( model, new OutputStreamWriter( output ) );
+      OutputStreamWriter writer = new OutputStreamWriter( output );
+      runner.writeToWriter( model, writer );
+      writer.close();
       if( output.size() == 0 ) {
         throw new RuntimeException();
       }

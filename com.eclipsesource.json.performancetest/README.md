@@ -24,7 +24,7 @@ Input files
 -----------
 
 Input files can be selected using `-Dinput=<name>` where name is the filename without extension.
-The files reside in `/src/main/java` in the `performancetest.resources` package.
+The files reside in `/src/main/resources`.
 
 Some of them are real-world examples:
 
