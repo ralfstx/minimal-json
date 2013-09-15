@@ -11,17 +11,18 @@
 package com.eclipsesource.json.performancetest;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JsonRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JsonRunnerFactory;
-import com.eclipsesource.json.performancetest.resources.Resources;
 import com.google.caliper.Param;
-import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 
+import static com.eclipsesource.json.performancetest.resources.Resources.getResourceAsStream;
 import static com.eclipsesource.json.performancetest.resources.Resources.readResource;
 
 
@@ -31,12 +32,12 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
   private String json;
   private Object model;
 
-  @Param String input; // set by -Dinput
-  @Param String parser; // set by -Dparser
+  @Param String input;
+  @Param String parser;
 
   @Override
   protected void setUp() throws Exception {
-    json = readResource( input );
+    json = readResource( "input/" + input + ".json" );
     runner = JsonRunnerFactory.findByName( parser );
     model = runner.readFromString( json );
   }
@@ -52,7 +53,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
 
   public void timeReadFromReader( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
-      InputStream inputStream = Resources.getResourceAsStream( input );
+      InputStream inputStream = getResourceAsStream( "input/" + input + ".json" );
       Object model = runner.readFromReader( new InputStreamReader( inputStream ) );
       inputStream.close();
       if( model == null ) {
@@ -82,11 +83,11 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     }
   }
 
-  public static void main( String[] args ) {
-    String[] defArgs = { "-Dparser=org-json,gson,jackson,json-simple,minimal-json",
-                         "-Dinput=rap,caliper", // long-string,numbers-array
-                         "--saveResults", "results.json" };
-    Runner.main( ReadWriteBenchmark.class, args.length > 0 ? args : defArgs );
+  public static void main( String[] args ) throws IOException {
+    CaliperRunner runner = new CaliperRunner( ReadWriteBenchmark.class );
+    runner.addParameter( "parser", "org-json", "gson", "jackson", "json-simple", "minimal-json" );
+    runner.addParameter( "input", "rap", "caliper", "long-string", "numbers-array" );
+    runner.exec();
   }
 
 }

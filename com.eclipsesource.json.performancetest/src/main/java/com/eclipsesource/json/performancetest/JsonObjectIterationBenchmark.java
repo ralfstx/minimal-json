@@ -14,15 +14,15 @@ import java.io.IOException;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonObject.Member;
+import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
 import com.eclipsesource.json.JsonValue;
 import com.google.caliper.Param;
-import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 
 
 public class JsonObjectIterationBenchmark extends SimpleBenchmark {
 
-  @Param int size; // set by -Dsize
+  @Param int size;
 
   private JsonObject jsonObject;
 
@@ -60,9 +60,10 @@ public class JsonObjectIterationBenchmark extends SimpleBenchmark {
     }
   }
 
-  public static void main( String[] args ) {
-    String[] defArgs = { "-Dsize=4,16,64" };
-    Runner.main( JsonObjectIterationBenchmark.class, args.length > 0 ? args : defArgs );
+  public static void main( String[] args ) throws IOException {
+    CaliperRunner runner = new CaliperRunner( JsonObjectIterationBenchmark.class );
+    runner.addParameter( "size", "4", "16", "64" );
+    runner.exec();
   }
 
 }

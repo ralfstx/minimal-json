@@ -55,7 +55,7 @@ public class JsonRunner_Test {
   @Before
   public void setUp() throws Exception {
     runner = JsonRunnerFactory.findByName( name );
-    json = readResource( "caliper" );
+    json = readResource( "input/caliper.json" );
   }
 
   @Test

@@ -1,0 +1,18 @@
+body {
+  font: 12px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: none;
+  shape-rendering: crispEdges;
+}
+
+.x.axis line {
+  stroke: lightgray;
+}
+
+svg {
+  border: 1px solid lightgray
+}

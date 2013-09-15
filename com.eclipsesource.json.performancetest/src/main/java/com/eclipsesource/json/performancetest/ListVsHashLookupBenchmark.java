@@ -16,14 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
 import com.google.caliper.Param;
-import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 
 
 public class ListVsHashLookupBenchmark extends SimpleBenchmark {
 
-  @Param int size; // set by -Dsize
+  @Param int size;
 
   private String[] names;
   private List<String> arrayList;
@@ -141,9 +141,10 @@ public class ListVsHashLookupBenchmark extends SimpleBenchmark {
     }
   }
 
-  public static void main( String[] args ) {
-    String[] defaultArgs = { "-Dsize=4,16,64,256" };
-    Runner.main( ListVsHashLookupBenchmark.class, args.length > 0 ? args : defaultArgs );
+  public static void main( String[] args ) throws IOException {
+    CaliperRunner runner = new CaliperRunner( ListVsHashLookupBenchmark.class );
+    runner.addParameter( "size", "4", "16", "64", "256" );
+    runner.exec();
   }
 
 }

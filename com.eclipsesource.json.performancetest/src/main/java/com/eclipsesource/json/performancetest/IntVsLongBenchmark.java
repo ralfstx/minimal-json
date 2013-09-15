@@ -10,8 +10,10 @@
  ******************************************************************************/
 package com.eclipsesource.json.performancetest;
 
+import java.io.IOException;
+
 import com.eclipsesource.json.JsonValue;
-import com.google.caliper.Runner;
+import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
 import com.google.caliper.SimpleBenchmark;
 
 
@@ -34,8 +36,8 @@ public class IntVsLongBenchmark extends SimpleBenchmark {
     assert value != null;
   }
 
-  public static void main( String[] args ) {
-    Runner.main( IntVsLongBenchmark.class, args );
+  public static void main( String[] args ) throws IOException {
+    new CaliperRunner( IntVsLongBenchmark.class ).exec();
   }
 
 }
