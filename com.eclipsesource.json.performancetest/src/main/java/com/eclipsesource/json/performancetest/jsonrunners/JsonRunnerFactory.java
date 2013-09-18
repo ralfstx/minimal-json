@@ -14,7 +14,9 @@ package com.eclipsesource.json.performancetest.jsonrunners;
 public class JsonRunnerFactory {
 
   public static JsonRunner findByName( String name ) {
-    if( "org-json".equals( name ) ) {
+    if( "null".equals( name ) ) {
+      return new NullRunner();
+    } else if( "org-json".equals( name ) ) {
       return new JsonOrgRunner();
     } else if( "gson".equals( name ) ) {
       return new GsonRunner();

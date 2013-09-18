@@ -73,6 +73,11 @@ public abstract class JsonValue implements Serializable {
 
   /**
    * Reads a JSON value from the given reader.
+   * <p>
+   * Characters are read in chunks and buffered internally, therefore wrapping an existing reader in
+   * an additional <code>BufferedReader</code> does <strong>not</strong> improve reading
+   * performance.
+   * </p>
    *
    * @param reader
    *          the reader to read the JSON value from
@@ -374,6 +379,11 @@ public abstract class JsonValue implements Serializable {
 
   /**
    * Writes the JSON representation for this object to the given writer.
+   * <p>
+   * Single elements are passed directly to the given writer. Therefore, if the writer is not
+   * buffered, wrapping it in a {@link java.io.BufferedWriter BufferedWriter} can drastically
+   * improve writing performance.
+   * </p>
    *
    * @param writer
    *          the writer to write this value to

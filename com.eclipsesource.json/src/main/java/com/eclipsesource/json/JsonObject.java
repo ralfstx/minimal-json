@@ -98,6 +98,11 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
 
   /**
    * Reads a JSON object from the given reader.
+   * <p>
+   * Characters are read in chunks and buffered internally, therefore wrapping an existing reader in
+   * an additional <code>BufferedReader</code> does <strong>not</strong> improve reading
+   * performance.
+   * </p>
    *
    * @param reader
    *          the reader to read the JSON object from

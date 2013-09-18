@@ -10,13 +10,7 @@
  ******************************************************************************/
 package com.eclipsesource.json.performancetest;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JsonRunner;
@@ -24,15 +18,15 @@ import com.eclipsesource.json.performancetest.jsonrunners.JsonRunnerFactory;
 import com.google.caliper.Param;
 import com.google.caliper.SimpleBenchmark;
 
-import static com.eclipsesource.json.performancetest.resources.Resources.getResourceAsStream;
 import static com.eclipsesource.json.performancetest.resources.Resources.readResource;
 
 
 /*
- * Measures overall reading and writing performance with real-life JSON data. Should be used with
- * rather big JSON input to reduce the influence of the readers and writers creation overhead.
+ * Measures reading and writing performance for small inputs with different characteristics. Uses
+ * strings only, as the overhead for creating readers and writers distorts the results for small
+ * inputs.
  */
-public class ReadWriteBenchmark extends SimpleBenchmark {
+public class ReadWriteMicroBenchmark extends SimpleBenchmark {
 
   private JsonRunner runner;
   private String json;
@@ -57,17 +51,6 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     }
   }
 
-  public void timeReadFromReader( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
-      InputStream inputStream = getResourceAsStream( "input/" + input + ".json" );
-      Object model = runner.readFromReader( new InputStreamReader( inputStream ) );
-      inputStream.close();
-      if( model == null ) {
-        throw new NullPointerException();
-      }
-    }
-  }
-
   public void timeWriteToString( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       String string = runner.writeToString( model );
@@ -77,22 +60,10 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     }
   }
 
-  public void timeWriteToWriter( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
-      ByteArrayOutputStream output = new ByteArrayOutputStream();
-      Writer writer = new BufferedWriter( new OutputStreamWriter( output ) );
-      runner.writeToWriter( model, writer );
-      writer.close();
-      if( output.size() == 0 ) {
-        throw new RuntimeException();
-      }
-    }
-  }
-
   public static void main( String[] args ) throws IOException {
-    CaliperRunner runner = new CaliperRunner( ReadWriteBenchmark.class );
+    CaliperRunner runner = new CaliperRunner( ReadWriteMicroBenchmark.class );
     runner.addParameter( "parser", "org-json", "gson", "jackson", "json-simple", "minimal-json" );
-    runner.addParameter( "input", "rap", "caliper" );
+    runner.addParameter( "input", "long-string", "numbers-array" );
     runner.exec();
   }
 
