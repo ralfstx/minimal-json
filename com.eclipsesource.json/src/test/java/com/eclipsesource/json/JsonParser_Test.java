@@ -27,6 +27,22 @@ public class JsonParser_Test {
   }
 
   @Test
+  public void parse_rejectsEmptyReader() {
+    ParseException exception = TestUtil.assertException( ParseException.class, new Runnable() {
+      public void run() {
+        try {
+          new JsonParser( new StringReader( "" ) ).parse();
+        } catch( IOException exception ) {
+          throw new RuntimeException( exception );
+        }
+      }
+    } );
+
+    assertEquals( 0, exception.getOffset() );
+    assertThat( exception.getMessage(), StringStartsWith.startsWith( "Unexpected end of input at" ) );
+  }
+
+  @Test
   public void parse_acceptsArrays() {
     assertEquals( new JsonArray(), parse( "[]" ) );
   }
@@ -401,7 +417,7 @@ public class JsonParser_Test {
 
   private static JsonValue parse( String json ) {
     try {
-      return new JsonParser( new StringReader( json ) ).parse();
+      return new JsonParser( json ).parse();
     } catch( IOException exception ) {
       throw new RuntimeException( exception );
     }

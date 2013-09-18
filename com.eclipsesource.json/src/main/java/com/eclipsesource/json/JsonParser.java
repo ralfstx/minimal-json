@@ -12,9 +12,13 @@ package com.eclipsesource.json;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 
 class JsonParser {
+
+  private static final int MIN_BUFFER_SIZE = 10;
+  private static final int MAX_BUFFER_SIZE = 1024;
 
   private final BufferedTextReader reader;
   private int current;
@@ -22,6 +26,11 @@ class JsonParser {
 
   JsonParser( Reader reader ) {
     this.reader = new BufferedTextReader( reader );
+  }
+
+  JsonParser( String string ) {
+    int buffersize = Math.max( MIN_BUFFER_SIZE, Math.min( MAX_BUFFER_SIZE, string.length() ) );
+    reader = new BufferedTextReader( new StringReader( string ), buffersize );
   }
 
   JsonValue parse() throws IOException {

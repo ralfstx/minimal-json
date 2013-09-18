@@ -13,7 +13,6 @@ package com.eclipsesource.json;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -98,9 +97,9 @@ public abstract class JsonValue implements Serializable {
    */
   public static JsonValue readFrom( String text ) {
     try {
-      return new JsonParser( new StringReader( text ) ).parse();
+      return new JsonParser( text ).parse();
     } catch( IOException exception ) {
-      // StringReader does not throw IOException
+      // JsonParser does not throw IOException for String
       throw new RuntimeException( exception );
     }
   }
