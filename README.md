@@ -94,10 +94,9 @@ The purpose of this benchmark is only to ensure a reasonable reading and writing
 
 It seems that reading performance is good average, and writing performance is very good.
 
-![Read/Write performance compared to other parsers](https://raw.github.com/ralfstx/minimal-json/master/tests/com.eclipsesource.json.performancetest/performance.png "Read/Write performance compared to other parsers")
+![Read/Write performance compared to other parsers](https://raw.github.com/ralfstx/minimal-json/master/com.eclipsesource.json.performancetest/performance.png "Read/Write performance compared to other parsers")
 
 License
 -------
 
 The code is available under the terms of the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html).
-
