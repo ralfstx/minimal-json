@@ -3,41 +3,32 @@ package com.eclipsesource.json.performancetest.jsonrunners;
 import java.io.Reader;
 import java.io.Writer;
 
-import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 
 
 public class JacksonRunner implements JsonRunner {
 
-  private final JsonFactory factory;
   private final ObjectMapper mapper;
 
   public JacksonRunner() {
-    // Reuse factory and object mapper to improve performance
+    // Reuse object mapper to improve performance
     // See http://wiki.fasterxml.com/JacksonBestPracticesPerformance
-    factory = new JsonFactory();
     mapper = new ObjectMapper();
+    mapper.configure( JsonParser.Feature.AUTO_CLOSE_SOURCE, false );
+    mapper.configure( JsonGenerator.Feature.AUTO_CLOSE_TARGET, false );
+    mapper.configure( JsonGenerator.Feature.FLUSH_PASSED_TO_STREAM, false );
   }
 
   @Override
   public Object readFromString( String string ) throws Exception {
-    JsonParser parser = factory.createJsonParser( string );
-    try {
-      return mapper.readTree( parser );
-    } finally {
-      parser.close();
-    }
+    return mapper.readTree( string );
   }
 
   @Override
   public Object readFromReader( Reader reader ) throws Exception {
-    JsonParser parser = factory.createJsonParser( reader );
-    try {
-      return mapper.readTree( parser );
-    } finally {
-      parser.close();
-    }
+    return mapper.readTree( reader );
   }
 
   @Override

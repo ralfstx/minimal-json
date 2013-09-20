@@ -29,7 +29,6 @@ import com.eclipsesource.json.JsonValue;
 
 import static com.eclipsesource.json.performancetest.resources.Resources.readResource;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
 
 import static org.mockito.Mockito.*;
 
@@ -88,8 +87,6 @@ public class JsonRunner_Test {
 
   @Test
   public void testReadFromReader_doesNotCloseReader() throws Exception {
-    // Jackson does close the reader
-    assumeFalse( "jackson".equals( name ) );
     Reader reader = spy( new StringReader( json ) );
 
     runner.readFromReader( reader );
@@ -99,14 +96,22 @@ public class JsonRunner_Test {
 
   @Test
   public void testWriteToWriter_doesNotCloseWriter() throws Exception {
-    // Jackson does close the writer
-    assumeFalse( "jackson".equals( name ) );
     StringWriter writer = spy( new StringWriter() );
     Object model = runner.readFromString( json );
 
     runner.writeToWriter( model, writer );
 
     verify( writer, never() ).close();
+  }
+
+  @Test
+  public void testWriteToWriter_doesNotFlushWriter() throws Exception {
+    StringWriter writer = spy( new StringWriter() );
+    Object model = runner.readFromString( json );
+
+    runner.writeToWriter( model, writer );
+
+    verify( writer, never() ).flush();
   }
 
   private boolean equalsIgnoreOrder( JsonValue value1, JsonValue value2 ) {
