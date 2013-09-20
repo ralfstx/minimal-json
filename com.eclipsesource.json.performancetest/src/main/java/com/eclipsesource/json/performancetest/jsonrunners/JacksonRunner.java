@@ -3,9 +3,9 @@ package com.eclipsesource.json.performancetest.jsonrunners;
 import java.io.Reader;
 import java.io.Writer;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class JacksonRunner implements JsonRunner {

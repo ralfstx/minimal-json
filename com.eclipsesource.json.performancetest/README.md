@@ -1,14 +1,13 @@
 Performance Tests for minimal-json
 ==================================
 
-Download libraries from Maven central
--------------------------------------
+Download required libraries
+---------------------------
 
-    $ ./download-jars.sh
+    $ cd com.eclipsesource.json.performancetest
+    $ mvn -DoutputDirectory=lib dependency:copy-dependencies
 
-This script copies the jars to `/lib`.
-
-TODO: use maven to download the dependencies defined in pom file
+This command copies all dependencies to `lib/`.
 
 Run benchmarks
 --------------
