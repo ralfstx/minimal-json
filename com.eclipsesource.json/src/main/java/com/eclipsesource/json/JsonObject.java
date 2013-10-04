@@ -493,7 +493,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     }
     int index = indexOf( name );
     if( index != -1 ) {
-      table.remove( name );
+      table.remove( index );
       names.remove( index );
       values.remove( index );
     }
@@ -712,9 +712,14 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
       }
     }
 
-    void remove( String name ) {
-      int slot = hashSlotFor( name );
-      hashTable[slot] = 0;
+    void remove( int index ) {
+      for( int i = 0; i < hashTable.length; i++ ) {
+        if( hashTable[i] == index + 1 ) {
+          hashTable[i] = 0;
+        } else if( hashTable[i] > index + 1 ) {
+          hashTable[i]--;
+        }
+      }
     }
 
     int get( Object name ) {

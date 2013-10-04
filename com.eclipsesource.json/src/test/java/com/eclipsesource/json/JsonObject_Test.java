@@ -659,36 +659,46 @@ public class JsonObject_Test {
 
   @Test
   public void indexOf_returnsIndexOfMember() {
-    object.add( "a", 23 );
+    object.add( "a", true );
 
     assertEquals( 0, object.indexOf( "a" ) );
   }
 
   @Test
   public void indexOf_returnsIndexOfLastMember() {
-    object.add( "a", 23 );
-    object.add( "a", 42 );
+    object.add( "a", true );
+    object.add( "a", true );
 
     assertEquals( 1, object.indexOf( "a" ) );
   }
 
   @Test
   public void indexOf_returnsIndexOfLastMember_afterRemove() {
-    object.add( "a", 23 );
-    object.add( "a", 42 );
+    object.add( "a", true );
+    object.add( "a", true );
     object.remove( "a" );
 
     assertEquals( 0, object.indexOf( "a" ) );
   }
 
   @Test
+  public void indexOf_returnsUpdatedIndexAfterRemove() {
+    // See issue #16
+    object.add( "a", true );
+    object.add( "b", true );
+    object.remove( "a" );
+
+    assertEquals( 0, object.indexOf( "b" ) );
+  }
+
+  @Test
   public void indexOf_returnsIndexOfLastMember_forBigObject() {
-    object.add( "a", 23 );
+    object.add( "a", true );
     // for indexes above 255, the hash index table does not return a value
     for( int i = 0; i < 256; i++ ) {
       object.add( "x-" + i, 0 );
     }
-    object.add( "a", 42 );
+    object.add( "a", true );
 
     assertEquals( 257, object.indexOf( "a" ) );
   }
@@ -743,9 +753,31 @@ public class JsonObject_Test {
     HashIndexTable indexTable = new HashIndexTable();
 
     indexTable.add( "name", 23 );
-    indexTable.remove( "name" );
+    indexTable.remove( 23 );
 
     assertEquals( -1, indexTable.get( "name" ) );
+  }
+
+  @Test
+  public void hashIndexTable_remove_updatesSubsequentElements() {
+    HashIndexTable indexTable = new HashIndexTable();
+
+    indexTable.add( "foo", 23 );
+    indexTable.add( "bar", 42 );
+    indexTable.remove( 23 );
+
+    assertEquals( 41, indexTable.get( "bar" ) );
+  }
+
+  @Test
+  public void hashIndexTable_remove_doesNotChangePrecedingElements() {
+    HashIndexTable indexTable = new HashIndexTable();
+
+    indexTable.add( "foo", 23 );
+    indexTable.add( "bar", 42 );
+    indexTable.remove( 42 );
+
+    assertEquals( 23, indexTable.get( "foo" ) );
   }
 
   @Test
