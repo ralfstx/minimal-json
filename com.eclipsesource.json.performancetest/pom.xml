@@ -62,6 +62,11 @@
       <version>2.2.3</version>
     </dependency>
     <dependency>
+      <groupId>com.google.caliper</groupId>
+      <artifactId>caliper</artifactId>
+      <version>0.5-rc1</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
@@ -72,11 +77,6 @@
       <artifactId>mockito-core</artifactId>
       <version>1.9.5</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.caliper</groupId>
-      <artifactId>caliper</artifactId>
-      <version>0.5-rc1</version>
     </dependency>
   </dependencies>
 

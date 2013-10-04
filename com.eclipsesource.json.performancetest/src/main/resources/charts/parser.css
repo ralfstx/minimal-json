@@ -1,0 +1,30 @@
+.bar.null {
+  fill: #b3b1bd;
+}
+.bar.org-json {
+  fill: #ed88cf;
+}
+.bar.gson {
+  fill: #61a716;
+}
+.bar.jackson {
+  fill: #3070bf;
+}
+.bar.json-simple {
+  fill: #d50c0c;
+}
+.bar.minimal-json {
+  fill: #ffd100;
+}
+.bar.ReadFromString {
+  fill: #3070bf;
+}
+.bar.ReadFromReader {
+  fill: #0abdf7;
+}
+.bar.WriteToString {
+  fill: #61a716;
+}
+.bar.WriteToWriter {
+  fill: #aee519;
+}

@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
 import com.google.caliper.SimpleBenchmark;
 
 import static java.util.Arrays.asList;
@@ -28,12 +27,12 @@ public class CaliperRunner_Test {
   public void caliperArguments() {
     CaliperRunner runner = new CaliperRunner( TestBenchmark.class );
 
-    List<String> options = runner.getOptions();
+    String[] options = runner.getOptions();
 
     List<String> expected = asList( "--saveResults",
                                     new File( "results/TestBenchmark.json" ).getAbsolutePath(),
                                     TestBenchmark.class.getName() );
-    assertEquals( expected, options );
+    assertEquals( expected, asList( options ) );
   }
 
   @Test
@@ -42,26 +41,14 @@ public class CaliperRunner_Test {
     runner.addParameter( "foo", "foo1", "foo2" );
     runner.addParameter( "bar", "bar1", "bar2" );
 
-    List<String> options = runner.getOptions();
+    String[] options = runner.getOptions();
 
     List<String> expected = asList( "-Dfoo=foo1,foo2",
                                     "-Dbar=bar1,bar2",
                                     "--saveResults",
                                     new File( "results/TestBenchmark.json" ).getAbsolutePath(),
                                     TestBenchmark.class.getName() );
-    assertEquals( expected, options );
-  }
-
-  @Test
-  public void replaceTemplate() {
-    CaliperRunner runner = new CaliperRunner( TestBenchmark.class );
-    runner.addParameter( "foo", "foo1", "foo2" );
-    runner.addParameter( "bar", "bar1", "bar2" );
-
-    String result = runner.replaceTemplate( "{title} {filename} {parameters}" );
-
-    String expected = "TestBenchmark TestBenchmark.json [\"foo\",\"bar\"]";
-    assertEquals( expected, result );
+    assertEquals( expected, asList( options ) );
   }
 
   private static class TestBenchmark extends SimpleBenchmark {}

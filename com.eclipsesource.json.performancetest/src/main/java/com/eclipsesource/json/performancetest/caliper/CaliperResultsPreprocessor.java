@@ -109,7 +109,7 @@ class CaliperResultsPreprocessor {
 //         s: 1000000000
 //         ms: 1000000
 //         us: 1000
-//       numbers: []
+//       values: []
 //         5640.85597996243
 //         ...
 //     ...
@@ -168,7 +168,7 @@ class CaliperResultsPreprocessor {
     return new JsonObject()
       .add( "variables", measurement.get( "k" ).asObject().get( "variables" ) )
       .add( "units", times.get( "unitNames" ) )
-      .add( "numbers", extractTimes( times.get( "measurements" ).asArray() ) );
+      .add( "values", extractTimes( times.get( "measurements" ).asArray() ) );
   }
 
   private static JsonValue extractTimes( JsonArray measurements ) {

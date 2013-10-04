@@ -22,7 +22,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.google.caliper.Benchmark;
 import com.google.caliper.Runner;
@@ -42,15 +41,11 @@ public class CaliperRunner {
   private final Class<? extends Benchmark> benchmark;
   private final List<String> options = new ArrayList<String>();
   private final List<String> parameters = new ArrayList<String>();
-  private File resultsFile;
+  private final File resultsFile;
 
   public CaliperRunner( Class<? extends Benchmark> benchmark ) {
     this.benchmark = benchmark;
-    this.resultsFile = new File( "results/" + getName() + ".json" );
-  }
-
-  public void setResultsFile( File resultsFile ) {
-    this.resultsFile = resultsFile;
+    this.resultsFile = getResultsFile();
   }
 
   public void addParameter( String name, String... values ) {
@@ -59,12 +54,21 @@ public class CaliperRunner {
   }
 
   public void exec() throws IOException {
-    int exitCode = safeRun( getOptions().toArray( new String[0] ) );
+    int exitCode = safeRun( getOptions() );
     if( exitCode == 0 && resultsFile != null ) {
-      replaceJsonFile();
-      createHtmlFile();
+      createJsonFile();
+      copyHtmlResources( resultsFile.getParentFile() );
     }
     System.exit( exitCode ); // cleanup non-daemon threads from user code, see caliper.Runner
+  }
+
+  private File getResultsFile() {
+    File file = new File( "results/" + getName() + ".json" );
+    int i = 0;
+    while( file.exists() ) {
+      file = new File( "results/" + getName() + "-" + ++i + ".json" );
+    }
+    return file;
   }
 
   private String getName() {
@@ -75,23 +79,26 @@ public class CaliperRunner {
     return name;
   }
 
-  private void replaceJsonFile() throws IOException {
+  private void createJsonFile() throws IOException {
     JsonObject caliperJson = JsonObject.readFrom( readFromFile( resultsFile ) );
     String resultsJson = new CaliperResultsPreprocessor( caliperJson ).getResults().toString();
     writeToFile( resultsJson, resultsFile );
   }
 
-  private void createHtmlFile() throws IOException {
-    File htmlFile = getHtmlFile();
-    if( !htmlFile.exists() ) {
-      File parent = htmlFile.getParentFile();
-      parent.mkdirs();
-      copyResource( "benchmarks.js", parent );
-      copyResource( "benchmarks.css", parent );
-      String template = readResource( "charts/template.html" );
-      String html = replaceTemplate( template );
-      writeToFile( html, htmlFile );
+  String[] getOptions() {
+    if( resultsFile != null ) {
+      options.add( "--saveResults" );
+      options.add( resultsFile.getAbsolutePath() );
     }
+    options.add( benchmark.getName() );
+    return options.toArray( new String[0] );
+  }
+
+  private static void copyHtmlResources( File parent ) throws IOException {
+    copyResource( "Benchmarks.html", parent );
+    copyResource( "benchmarks.js", parent );
+    copyResource( "benchmarks.css", parent );
+    copyResource( "parser.css", parent );
   }
 
   private static void copyResource( String name, File parent ) throws IOException {
@@ -99,34 +106,6 @@ public class CaliperRunner {
     if( !file.exists() ) {
       writeToFile( readResource( "charts/" + name ), file );
     }
-  }
-
-  String replaceTemplate( String template ) {
-    return template
-      .replace( "{title}", getName() )
-      .replace( "{filename}", resultsFile.getName() )
-      .replace( "{parameters}", getParametersAsJson() );
-  }
-
-  private String getParametersAsJson() {
-    JsonArray array = new JsonArray();
-    for( String name : parameters ) {
-      array.add( name );
-    }
-    return array.toString();
-  }
-
-  private File getHtmlFile() {
-    return new File( resultsFile.getAbsolutePath().replaceFirst( ".json$", ".html" ) );
-  }
-
-  List<String> getOptions() {
-    if( resultsFile != null ) {
-      options.add( "--saveResults" );
-      options.add( resultsFile.getAbsolutePath() );
-    }
-    options.add( benchmark.getName() );
-    return options;
   }
 
   private static int safeRun( String[] args ) {

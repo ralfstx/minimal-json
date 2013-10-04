@@ -22,9 +22,10 @@ runner but transforms the caliper output to a simple, generic JSON format.
 Display test results
 --------------------
 
-Along with the results, an HTML file is created that displays the results in a chart. This HTML
-file requires `d3.v3.min.js`, copy this file from http://d3js.org/d3.v3.min.js into the `results`
-folder.
+Along with the results, the HTML file `Benchmarks.html` is copied into the `results` directory
+to display the results in nice charts.
+This HTML file requires `d3.v3.min.js`, copy this file from `http://d3js.org/d3.v3.min.js` into the
+`results` folder.
 
 Some browsers may require the results directory to be mirrored by a web server, Firefox does not.
 

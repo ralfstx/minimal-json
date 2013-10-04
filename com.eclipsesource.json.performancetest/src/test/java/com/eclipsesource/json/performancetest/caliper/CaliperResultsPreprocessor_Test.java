@@ -16,7 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.performancetest.caliper.CaliperResultsPreprocessor;
 import com.eclipsesource.json.performancetest.resources.Resources;
 
 import static java.util.Arrays.asList;
@@ -84,10 +83,10 @@ public class CaliperResultsPreprocessor_Test {
 
     assertFalse( results.get( "measurements" ).asArray().isEmpty() );
     JsonObject measurement = results.get( "measurements" ).asArray().get( 0 ).asObject();
-    assertEquals( asList( "variables", "units", "numbers" ), measurement.names() );
+    assertEquals( asList( "variables", "units", "values" ), measurement.names() );
     assertTrue( measurement.get( "variables" ).asObject().names().contains( "vm" ) );
     assertTrue( measurement.get( "units" ).asObject().names().contains( "ns" ) );
-    assertTrue( measurement.get( "numbers" ).asArray().get( 0 ).isNumber() );
+    assertTrue( measurement.get( "values" ).asArray().get( 0 ).isNumber() );
   }
 
 }
