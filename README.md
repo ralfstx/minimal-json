@@ -4,97 +4,106 @@ minimal-json
 [![Build Status](https://travis-ci.org/ralfstx/minimal-json.png?branch=master)](https://travis-ci.org/ralfstx/minimal-json)
 
 A fast and minimal JSON parser and writer for Java.
-It has been written for (and is used in) the [Eclipse RAP project](http://eclipse.org/rap).
-However, I hope that it is useful for others as well, therefore I keep this repository up-to-date.
+It's not an object mapper, but a bare-bones library that aims at being minimal, fast, leighweight, and easy to use.
 
-Reading JSON
-------------
+* minimal: only one package, fair amount of classes, no dependencies
+* fast: performance comparable or better than other state-of-the-art JSON parsers (see below)
+* leightweight: object representation with minimal memory footprint (e.g. no HashMaps involved)
+* easy-to-use: reading, writing and modifying JSON shouldn't require lots of code (short names, fluent style)
 
-Read a JSON object or array from a Reader or a String:
+Minimal-json is fully covered by unit tests, and field-tested by the [Eclipse RAP project](http://eclipse.org/rap).
+
+Code Examples
+-------------
+
+### Read JSON from a String or a Reader:
+
+Reading is buffered already, so you *don't* need to wrap your reader in a BufferedReader.
+
 ```java
-JsonObject jsonObject = JsonObject.readFrom( jsonString );
-```
-```java
-JsonArray jsonArray = JsonArray.readFrom( jsonReader );
+JsonObject jsonObject = JsonObject.readFrom( string );
+JsonArray jsonArray = JsonArray.readFrom( reader );
 ```
 
-Access the contents of a JSON object:
+### Access the contents of a JSON object:
 
 ```java
 String name = jsonObject.get( "name" ).asString();
 int age = jsonObject.get( "age" ).asInt(); // asLong(), asFloat(), asDouble(), ...
+
+// or iterate over the members:
+for( Member member : jsonObject ) {
+  String name = member.getName();
+  JsonValue value = member.getValue();
+  // ...
+}
 ```
 
-Access the contents of a JSON array:
+### Access the contents of a JSON array:
 
 ```java
 String name = jsonArray.get( 0 ).asString();
 int age = jsonArray.get( 1 ).asInt(); // asLong(), asFloat(), asDouble(), ...
-```
 
-Iterate over the members of a JSON object:
-
-```java
-for( Member member : jsonObject ) {
-  String name = member.getName();
-  JsonValue value = member.getValue();
-  // process value
-}
-```
-
-Iterate over the values of a JSON array:
-
-```java
+// or iterate over the values:
 for( JsonValue value : jsonArray ) {
-  // process value
+  // ...
 }
 ```
 
-Writing JSON
-------------
-
-Create a JSON object and add some values:
+### Create JSON objects and arrays:
 
 ```java
-new JsonObject().add( "name", "John" ).add( "age", 23 );
+JsonObject jsonObject = new JsonObject().add( "name", "John" ).add( "age", 23 );
+JsonArray jsonArray = new JsonArray().add( "John" ).add( 23 );
 ```
 
-Create a JSON array and add some values:
+### Write JSON to a Writer:
 
-```java
-new JsonArray().add( "John" ).add( 23 );
-```
-
-Write JSON to a Writer:
+Writing is not buffered (to avoid buffering twice), so you *should* use a BufferedWriter.
 
 ```java
 jsonObject.writeTo( writer );
+jsonArray.writeTo( writer );
 ```
 
-Create JSON as a String:
+### Export JSON as a String:
 
 ```java
+jsonObject.toString();
 jsonArray.toString();
 ```
+
+Build
+-----
+
+To build minimal-json on your machine, simply checkout the repository, `cd` into it and call maven:
+```
+cd minimal-json
+mvn clean install
+```
+A continuous integration build is running at [Travis-CI](https://travis-ci.org/ralfstx/minimal-json).
+
 
 Performance
 -----------
 
-Below is the result of a rough performance comparison with other parsers, namely
+Below is the result of a performance comparison with other parsers, namely
 [org.json](http://www.json.org/java/index.html),
 [Gson](http://code.google.com/p/google-gson/),
 [Jackson](http://wiki.fasterxml.com/JacksonHome), and
 [JSON.simple](1.1.1).
 In this benchmark, an example JSON text (~30kB) is parsed into a Java object and then serialized to JSON again.
+All benchmarks can be found in `com.eclipsesource.json.performancetest`.
 
-Disclaimer: This benchmark is restricted to a single use case and to my limited knowledge on the other libraries.
-It may be unfair as it ignores other use cases and perhaps better ways to use these libraries.
-Most JSON parsers have more advanced functions and may be more suitable for other use cases.
-The purpose of this benchmark is only to ensure a reasonable reading and writing performance compared to other state-of-the-art parsers.
-
-It seems that reading performance is good average, and writing performance is very good.
+Although it cannot outperform jackson's exceptional writing performance (which is, to my knowledge, mostly achieved by caching),
+minimal-json offers a very good reading and writing performance.
 
 ![Read/Write performance compared to other parsers](https://raw.github.com/ralfstx/minimal-json/master/com.eclipsesource.json.performancetest/performance.png "Read/Write performance compared to other parsers")
+
+Disclaimer: This benchmark is restricted to a single use case and to my limited knowledge on the other libraries.
+It probably ignores better ways to use these libraries.
+The purpose of this benchmark is only to ensure a reasonable reading and writing performance compared to other state-of-the-art parsers.
 
 License
 -------
