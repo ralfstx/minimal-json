@@ -18,19 +18,42 @@ import java.io.StringReader;
 class JsonParser {
 
   private static final int MIN_BUFFER_SIZE = 10;
-  private static final int MAX_BUFFER_SIZE = 1024;
+  private static final int DEFAULT_BUFFER_SIZE = 1024;
 
-  private final BufferedTextReader reader;
+  private final Reader reader;
+  private final char[] buffer;
+  private int bufferOffset;
+  private int index;
+  private int fill;
+  private int line;
+  private int lineOffset;
   private int current;
-  private StringBuilder buffer;
+  private StringBuilder captureBuffer;
+  private int captureStart;
 
-  JsonParser( Reader reader ) {
-    this.reader = new BufferedTextReader( reader );
-  }
+  /*
+   * |                      bufferOffset
+   *                        v
+   * [a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t]        < input
+   *                       [l|m|n|o|p|q|r|s|t|?|?]    < buffer
+   *                          ^               ^
+   *                       |  index           fill
+   */
 
   JsonParser( String string ) {
-    int buffersize = Math.max( MIN_BUFFER_SIZE, Math.min( MAX_BUFFER_SIZE, string.length() ) );
-    reader = new BufferedTextReader( new StringReader( string ), buffersize );
+    this( new StringReader( string ),
+          Math.max( MIN_BUFFER_SIZE, Math.min( DEFAULT_BUFFER_SIZE, string.length() ) ) );
+  }
+
+  JsonParser( Reader reader ) {
+    this( reader, DEFAULT_BUFFER_SIZE );
+  }
+
+  JsonParser( Reader reader, int buffersize ) {
+    this.reader = reader;
+    buffer = new char[ buffersize ];
+    line = 1;
+    captureStart = -1;
   }
 
   JsonValue parse() throws IOException {
@@ -161,55 +184,45 @@ class JsonParser {
 
   private String readStringInternal() throws IOException {
     read();
-    reader.startCapture();
+    startCapture();
     while( current != '"' ) {
       if( current == '\\' ) {
-        String captured = reader.endCapture();
-        if( buffer == null ) {
-          buffer = new StringBuilder( captured );
-        } else {
-          buffer.append( captured );
-        }
-        readEscape( buffer );
-        reader.startCapture();
+        pauseCapture();
+        readEscape();
+        startCapture();
       } else if( current < 0x20 ) {
         throw expected( "valid string character" );
       } else {
         read();
       }
     }
-    String captured = reader.endCapture();
-    if( buffer != null ) {
-      buffer.append( captured );
-      captured = buffer.toString();
-      buffer.setLength( 0 );
-    }
+    String string = endCapture();
     read();
-    return captured;
+    return string;
   }
 
-  private void readEscape( StringBuilder buffer ) throws IOException {
+  private void readEscape() throws IOException {
     read();
     switch( current ) {
     case '"':
     case '/':
     case '\\':
-      buffer.append( (char)current );
+      captureBuffer.append( (char)current );
       break;
     case 'b':
-      buffer.append( '\b' );
+      captureBuffer.append( '\b' );
       break;
     case 'f':
-      buffer.append( '\f' );
+      captureBuffer.append( '\f' );
       break;
     case 'n':
-      buffer.append( '\n' );
+      captureBuffer.append( '\n' );
       break;
     case 'r':
-      buffer.append( '\r' );
+      captureBuffer.append( '\r' );
       break;
     case 't':
-      buffer.append( '\t' );
+      captureBuffer.append( '\t' );
       break;
     case 'u':
       char[] hexChars = new char[4];
@@ -220,7 +233,7 @@ class JsonParser {
         }
         hexChars[i] = (char)current;
       }
-      buffer.append( (char)Integer.parseInt( String.valueOf( hexChars ), 16 ) );
+      captureBuffer.append( (char)Integer.parseInt( String.valueOf( hexChars ), 16 ) );
       break;
     default:
       throw expected( "valid escape sequence" );
@@ -229,7 +242,7 @@ class JsonParser {
   }
 
   private JsonValue readNumber() throws IOException {
-    reader.startCapture();
+    startCapture();
     readChar( '-' );
     int firstDigit = current;
     if( !readDigit() ) {
@@ -241,7 +254,7 @@ class JsonParser {
     }
     readFraction();
     readExponent();
-    return new JsonNumber( reader.endCapture() );
+    return new JsonNumber( endCapture() );
   }
 
   private boolean readFraction() throws IOException {
@@ -297,7 +310,51 @@ class JsonParser {
     if( isEndOfText() ) {
       throw error( "Unexpected end of input" );
     }
-    current = reader.read();
+    if( index == fill ) {
+      if( captureStart != -1 ) {
+        captureBuffer.append( buffer, captureStart, fill - captureStart );
+        captureStart = 0;
+      }
+      bufferOffset += fill;
+      fill = reader.read( buffer, 0, buffer.length );
+      index = 0;
+      if( fill == -1 ) {
+        current = -1;
+        return;
+      }
+    }
+    if( current == '\n' ) {
+      line++;
+      lineOffset = bufferOffset + index;
+    }
+    current = buffer[index++];
+  }
+
+  private void startCapture() {
+    if( captureBuffer == null ) {
+      captureBuffer = new StringBuilder();
+    }
+    captureStart = index - 1;
+  }
+
+  private void pauseCapture() {
+    int end = current == -1 ? index : index - 1;
+    captureBuffer.append( buffer, captureStart, end - captureStart );
+    captureStart = -1;
+  }
+
+  private String endCapture() {
+    int end = current == -1 ? index : index - 1;
+    String captured;
+    if( captureBuffer.length() > 0 ) {
+      captureBuffer.append( buffer, captureStart, end - captureStart );
+      captured = captureBuffer.toString();
+      captureBuffer.setLength( 0 );
+    } else {
+      captured = new String( buffer, captureStart, end - captureStart );
+    }
+    captureStart = -1;
+    return captured;
   }
 
   private ParseException expected( String expected ) {
@@ -308,8 +365,10 @@ class JsonParser {
   }
 
   private ParseException error( String message ) {
-    int offset = isEndOfText() ? reader.getIndex() : reader.getIndex() - 1;
-    return new ParseException( message, offset, reader.getLine(), reader.getColumn() - 1 );
+    int absIndex = bufferOffset + index;
+    int column = absIndex - lineOffset;
+    int offset = isEndOfText() ? absIndex : absIndex - 1;
+    return new ParseException( message, offset, line, column - 1 );
   }
 
   private boolean isWhiteSpace() {

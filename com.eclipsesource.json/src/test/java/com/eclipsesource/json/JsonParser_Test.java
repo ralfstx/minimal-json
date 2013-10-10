@@ -16,6 +16,7 @@ import java.io.StringReader;
 import org.hamcrest.core.StringStartsWith;
 import org.junit.Test;
 
+import static com.eclipsesource.json.TestUtil.assertException;
 import static org.junit.Assert.*;
 
 
@@ -28,7 +29,7 @@ public class JsonParser_Test {
 
   @Test
   public void parse_rejectsEmptyReader() {
-    ParseException exception = TestUtil.assertException( ParseException.class, new Runnable() {
+    ParseException exception = assertException( ParseException.class, new Runnable() {
       public void run() {
         try {
           new JsonParser( new StringReader( "" ) ).parse();
@@ -84,6 +85,51 @@ public class JsonParser_Test {
     assertParseException( 3, 2, 0, "[\r\n!" );
     assertParseException( 6, 3, 1, "[ \n \n !" );
     assertParseException( 7, 2, 3, "[ \r\n \r !" );
+  }
+
+  @Test
+  public void parse_handlesInputsThatExceedBufferSize() throws IOException {
+    String input = "[ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47 ]";
+
+    JsonValue value = new JsonParser( new StringReader( input ), 3 ).parse();
+
+    assertEquals( "[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47]", value.toString() );
+  }
+
+  @Test
+  public void parse_handlesStringsThatExceedBufferSize() throws IOException {
+    String input = "[ \"lorem ipsum dolor sit amet\" ]";
+
+    JsonValue value = new JsonParser( new StringReader( input ), 3 ).parse();
+
+    assertEquals( "[\"lorem ipsum dolor sit amet\"]", value.toString() );
+  }
+
+  @Test
+  public void parse_handlesNumbersThatExceedBufferSize() throws IOException {
+    String input = "[ 3.141592653589 ]";
+
+    JsonValue value = new JsonParser( new StringReader( input ), 3 ).parse();
+
+    assertEquals( "[3.141592653589]", value.toString() );
+  }
+
+  @Test
+  public void parse_handlesPositionsCorrectlyWhenInputExceedsBufferSize() {
+    final String input = "{\n  \"a\": 23,\n  \"b\": 42,\n}";
+
+    ParseException exception = assertException( ParseException.class, new Runnable() {
+      public void run() {
+        try {
+          new JsonParser( new StringReader( input ), 3 ).parse();
+        } catch( IOException e ) {
+        }
+      }
+    } );
+
+    assertEquals( 4, exception.getLine() );
+    assertEquals( 0, exception.getColumn() );
+    assertEquals( 24, exception.getOffset() );
   }
 
   @Test
@@ -395,7 +441,7 @@ public class JsonParser_Test {
   }
 
   private static void assertParseException( int offset, String message, final String json ) {
-    ParseException exception = TestUtil.assertException( ParseException.class, new Runnable() {
+    ParseException exception = assertException( ParseException.class, new Runnable() {
       public void run() {
         parse( json );
       }
@@ -405,7 +451,7 @@ public class JsonParser_Test {
   }
 
   private static void assertParseException( int offset, int line, int column, final String json ) {
-    ParseException exception = TestUtil.assertException( ParseException.class, new Runnable() {
+    ParseException exception = assertException( ParseException.class, new Runnable() {
       public void run() {
         parse( json );
       }
