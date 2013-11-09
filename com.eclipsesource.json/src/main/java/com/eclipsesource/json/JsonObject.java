@@ -22,14 +22,15 @@ import com.eclipsesource.json.JsonObject.Member;
 
 
 /**
- * Represents a JSON object. A JSON object contains a sequence of members, which are pairs of a name
- * and a JSON value (see {@link JsonValue}). Although JSON objects should be used for unordered
- * collections, this class stores members in document order.
+ * Represents a JSON object, i.e. an unordered set of name/value pairs, where the names are strings
+ * and the values are JSON values.
  * <p>
- * Members can be added using one of the <code>add(name, value)</code> methods. Accepted values are
- * either instances of {@link JsonValue}, strings, primitive numbers, or boolean values. To override
- * values in an object, the <code>set(name, value)</code> methods can be used. However, not that the
- * <code>add</code> methods perform better than <code>set</code>.
+ * Members can be added using the <code>add(String, ...)</code> methods which accept instances of
+ * {@link JsonValue}, strings, primitive numbers, and boolean values. To modify certain values of an
+ * object, use the <code>set(String, ...)</code> methods. Please note that the <code>add</code>
+ * methods are faster than <code>set</code> as they do not search for existing members. On the other
+ * hand, the <code>add</code> methods do not prevent adding multiple members with the same name.
+ * Duplicate names are discouraged but not prohibited by JSON.
  * </p>
  * <p>
  * Members can be accessed by their name using {@link #get(String)}. A list of all names can be
@@ -44,6 +45,10 @@ import com.eclipsesource.json.JsonObject.Member;
  *   ...
  * }
  * </pre>
+ * <p>
+ * Even though JSON objects are unordered by definition, instances of this class preserve the order
+ * of members to allow processing in document order and to guarantee a predictable output.
+ * </p>
  * <p>
  * Note that this class is <strong>not thread-safe</strong>. If multiple threads access a
  * <code>JsonObject</code> instance concurrently, while at least one of these threads modifies the

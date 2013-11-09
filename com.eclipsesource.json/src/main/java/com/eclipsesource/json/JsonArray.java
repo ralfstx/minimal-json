@@ -19,12 +19,11 @@ import java.util.List;
 
 
 /**
- * Represents a JSON array. A JSON array is a sequence of elements, which are JSON values (see
- * {@link JsonValue}).
+ * Represents a JSON array, i.e. an ordered collection of JSON values.
  * <p>
- * Elements can be added using one of the <code>add(name, value)</code> methods. Accepted values are
- * either instances of {@link JsonValue}, strings, primitive numbers, or boolean values. To replace
- * an element of an array, the <code>set(name, value)</code> methods can be used.
+ * Elements can be added using the <code>add(...)</code> methods which accept instances of
+ * {@link JsonValue}, strings, primitive numbers, and boolean values. To replace an element of an
+ * array, use the <code>set(int, ...)</code> methods.
  * </p>
  * <p>
  * Elements can be accessed by their index using {@link #get(int)}. This class also supports

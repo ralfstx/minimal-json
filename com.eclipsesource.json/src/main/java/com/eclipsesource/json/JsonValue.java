@@ -18,22 +18,22 @@ import java.io.Writer;
 
 
 /**
- * Represents a JSON value. According to RFC 4627, a JSON value must be an <strong>object</strong>,
- * an <strong>array</strong>, a <strong>number</strong>, a <strong>string</strong>, or one of the
- * literal names <strong>true</strong>, <strong>false</strong>, and <strong>null</strong>.
+ * Represents a JSON value. This can be a JSON <strong>object</strong>, an <strong> array</strong>,
+ * a <strong>number</strong>, a <strong>string</strong>, or one of the literals
+ * <strong>true</strong>, <strong>false</strong>, and <strong>null</strong>.
  * <p>
- * The literal names <strong>true</strong>, <strong>false</strong>, and <strong>null</strong> are
+ * The literals <strong>true</strong>, <strong>false</strong>, and <strong>null</strong> are
  * represented by the constants {@link #TRUE}, {@link #FALSE}, and {@link #NULL}.
  * </p>
  * <p>
  * JSON <strong>objects</strong> and <strong>arrays</strong> are represented by the subtypes
  * {@link JsonObject} and {@link JsonArray}. Instances of these types can be created using the
- * public constructors.
+ * public constructors of these classes.
  * </p>
  * <p>
- * Instances for JSON <strong>numbers</strong> and <strong>strings</strong> can be created using the
- * static factory methods {@link #valueOf(String)}, {@link #valueOf(long)}, {@link #valueOf(double)}
- * , etc.
+ * Instances that represent JSON <strong>numbers</strong>, <strong>strings</strong> and
+ * <strong>boolean</strong> values can be created using the static factory methods
+ * {@link #valueOf(String)}, {@link #valueOf(long)}, {@link #valueOf(double)}, etc.
  * </p>
  * <p>
  * In order to find out whether an instance of this class is of a certain type, the methods
@@ -41,9 +41,9 @@ import java.io.Writer;
  * used.
  * </p>
  * <p>
- * If there is no doubt about the type of a JSON value, one of the methods {@link #asObject()},
- * {@link #asArray()}, {@link #asString()}, {@link #asInt()}, etc. can be used to get this value
- * directly in the appropriate target type.
+ * If the type of a JSON value is known, the methods {@link #asObject()}, {@link #asArray()},
+ * {@link #asString()}, {@link #asInt()}, etc. can be used to get this value directly in the
+ * appropriate target type.
  * </p>
  * <p>
  * This class is <strong>not supposed to be extended</strong> by clients.
