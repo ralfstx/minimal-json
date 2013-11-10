@@ -495,6 +495,29 @@ public class JsonArray_Test {
     assertEquals( "[3,4,5]", array.toString() );
   }
 
+  @Test( expected = IndexOutOfBoundsException.class )
+  public void remove_failsWithInvalidIndex() {
+    array.remove( 0 );
+  }
+
+  @Test
+  public void remove_removesElement() {
+    array.add( 23 );
+
+    array.remove( 0 );
+
+    assertEquals( "[]", array.toString() );
+  }
+
+  @Test
+  public void remove_keepsOtherElements() {
+    array.add( "a" ).add( "b" ).add( "c" );
+
+    array.remove( 1 );
+
+    assertEquals( "[\"a\",\"c\"]", array.toString() );
+  }
+
   @Test
   public void write_delegatesToJsonWriter() throws IOException {
     JsonWriter writer = mock( JsonWriter.class );

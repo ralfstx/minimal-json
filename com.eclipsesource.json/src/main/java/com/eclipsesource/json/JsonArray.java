@@ -233,8 +233,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the value to be stored at the specified array position
    * @return the array itself, to enable method chaining
    * @throws IndexOutOfBoundsException
-   *           if the index is out of range, i.e. <code>index < 0</code> or
-   *           <code>index >= size</code>
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
    */
   public JsonArray set( int index, int value ) {
     values.set( index, valueOf( value ) );
@@ -251,8 +251,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the value to be stored at the specified array position
    * @return the array itself, to enable method chaining
    * @throws IndexOutOfBoundsException
-   *           if the index is out of range, i.e. <code>index < 0</code> or
-   *           <code>index >= size</code>
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
    */
   public JsonArray set( int index, long value ) {
     values.set( index, valueOf( value ) );
@@ -269,8 +269,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the value to be stored at the specified array position
    * @return the array itself, to enable method chaining
    * @throws IndexOutOfBoundsException
-   *           if the index is out of range, i.e. <code>index < 0</code> or
-   *           <code>index >= size</code>
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
    */
   public JsonArray set( int index, float value ) {
     values.set( index, valueOf( value ) );
@@ -287,8 +287,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the value to be stored at the specified array position
    * @return the array itself, to enable method chaining
    * @throws IndexOutOfBoundsException
-   *           if the index is out of range, i.e. <code>index < 0</code> or
-   *           <code>index >= size</code>
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
    */
   public JsonArray set( int index, double value ) {
     values.set( index, valueOf( value ) );
@@ -305,8 +305,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the value to be stored at the specified array position
    * @return the array itself, to enable method chaining
    * @throws IndexOutOfBoundsException
-   *           if the index is out of range, i.e. <code>index < 0</code> or
-   *           <code>index >= size</code>
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
    */
   public JsonArray set( int index, boolean value ) {
     values.set( index, valueOf( value ) );
@@ -323,8 +323,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the string to be stored at the specified array position
    * @return the array itself, to enable method chaining
    * @throws IndexOutOfBoundsException
-   *           if the index is out of range, i.e. <code>index < 0</code> or
-   *           <code>index >= size</code>
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
    */
   public JsonArray set( int index, String value ) {
     values.set( index, valueOf( value ) );
@@ -340,14 +340,29 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the value to be stored at the specified array position, must not be <code>null</code>
    * @return the array itself, to enable method chaining
    * @throws IndexOutOfBoundsException
-   *           if the index is out of range, i.e. <code>index < 0</code> or
-   *           <code>index >= size</code>
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
    */
   public JsonArray set( int index, JsonValue value ) {
     if( value == null ) {
       throw new NullPointerException( "value is null" );
     }
     values.set( index, value );
+    return this;
+  }
+
+  /**
+   * Removes the element at the specified index from this array.
+   *
+   * @param index
+   *          the index of the element to remove
+   * @return the array itself, to enable method chaining
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
+   */
+  public JsonArray remove( int index ) {
+    values.remove( index );
     return this;
   }
 
@@ -376,7 +391,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the index of the array element to return
    * @return the value of the element at the specified position
    * @throws IndexOutOfBoundsException
-   *           if the index is out of range (index &lt; 0 || index &gt;= size()).
+   *           if the index is out of range, i.e. <code>index &lt; 0</code> or
+   *           <code>index &gt;= size</code>
    */
   public JsonValue get( int index ) {
     return values.get( index );
