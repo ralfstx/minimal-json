@@ -4,7 +4,7 @@ minimal-json
 [![Build Status](https://travis-ci.org/ralfstx/minimal-json.png?branch=master)](https://travis-ci.org/ralfstx/minimal-json)
 
 A fast and minimal JSON parser and writer for Java.
-It's not an object mapper, but a bare-bones library that aims at being minimal, fast, leighweight, and easy to use.
+It's not an object mapper, but a bare-bones library that aims at being minimal, fast, lightweight, and easy to use.
 
 * minimal: only one package, fair amount of classes, no dependencies
 * fast: performance comparable or better than other state-of-the-art JSON parsers (see below)
