@@ -6,7 +6,7 @@
 
   <groupId>com.eclipsesource.minimal-json</groupId>
   <artifactId>minimal-json-performancetest</artifactId>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>0.9.2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>minimal-json performance tests</name>
   <description>Performance benchmarks for minimal-json parser</description>
@@ -34,7 +34,7 @@
     <dependency>
       <groupId>com.eclipsesource.minimal-json</groupId>
       <artifactId>minimal-json</artifactId>
-      <version>0.9.1-SNAPSHOT</version>
+      <version>0.9.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.json</groupId>
