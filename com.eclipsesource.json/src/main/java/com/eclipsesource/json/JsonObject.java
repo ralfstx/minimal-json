@@ -156,14 +156,15 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Adds a new member at the end of this object, with the specified name and the JSON
+   * Appends a new member to the end of this object, with the specified name and the JSON
    * representation of the specified <code>int</code> value.
    * <p>
-   * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * already exists in the object will add another member with the same name. In order to replace
-   * existing members, use the method <code>set(name, value)</code> instead. However, <strong>
-   * <em>add</em> is much faster than <em>set</em></strong> (because it does not need to search for
-   * existing members). Therefore <em>add</em> should be preferred when constructing new objects.
+   * This method <strong>does not prevent duplicate names</strong>. Calling this method with a name
+   * that already exists in the object will append another member with the same name. In order to
+   * replace existing members, use the method <code>set(name, value)</code> instead. However,
+   * <strong> <em>add</em> is much faster than <em>set</em></strong> (because it does not need to
+   * search for existing members). Therefore <em>add</em> should be preferred when constructing new
+   * objects.
    * </p>
    *
    * @param name
@@ -178,14 +179,15 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Adds a new member at the end of this object, with the specified name and the JSON
+   * Appends a new member to the end of this object, with the specified name and the JSON
    * representation of the specified <code>long</code> value.
    * <p>
-   * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * already exists in the object will add another member with the same name. In order to replace
-   * existing members, use the method <code>set(name, value)</code> instead. However, <strong>
-   * <em>add</em> is much faster than <em>set</em></strong> (because it does not need to search for
-   * existing members). Therefore <em>add</em> should be preferred when constructing new objects.
+   * This method <strong>does not prevent duplicate names</strong>. Calling this method with a name
+   * that already exists in the object will append another member with the same name. In order to
+   * replace existing members, use the method <code>set(name, value)</code> instead. However,
+   * <strong> <em>add</em> is much faster than <em>set</em></strong> (because it does not need to
+   * search for existing members). Therefore <em>add</em> should be preferred when constructing new
+   * objects.
    * </p>
    *
    * @param name
@@ -200,14 +202,15 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Adds a new member at the end of this object, with the specified name and the JSON
+   * Appends a new member to the end of this object, with the specified name and the JSON
    * representation of the specified <code>float</code> value.
    * <p>
-   * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * already exists in the object will add another member with the same name. In order to replace
-   * existing members, use the method <code>set(name, value)</code> instead. However, <strong>
-   * <em>add</em> is much faster than <em>set</em></strong> (because it does not need to search for
-   * existing members). Therefore <em>add</em> should be preferred when constructing new objects.
+   * This method <strong>does not prevent duplicate names</strong>. Calling this method with a name
+   * that already exists in the object will append another member with the same name. In order to
+   * replace existing members, use the method <code>set(name, value)</code> instead. However,
+   * <strong> <em>add</em> is much faster than <em>set</em></strong> (because it does not need to
+   * search for existing members). Therefore <em>add</em> should be preferred when constructing new
+   * objects.
    * </p>
    *
    * @param name
@@ -222,14 +225,15 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Adds a new member at the end of this object, with the specified name and the JSON
+   * Appends a new member to the end of this object, with the specified name and the JSON
    * representation of the specified <code>double</code> value.
    * <p>
-   * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * already exists in the object will add another member with the same name. In order to replace
-   * existing members, use the method <code>set(name, value)</code> instead. However, <strong>
-   * <em>add</em> is much faster than <em>set</em></strong> (because it does not need to search for
-   * existing members). Therefore <em>add</em> should be preferred when constructing new objects.
+   * This method <strong>does not prevent duplicate names</strong>. Calling this method with a name
+   * that already exists in the object will append another member with the same name. In order to
+   * replace existing members, use the method <code>set(name, value)</code> instead. However,
+   * <strong> <em>add</em> is much faster than <em>set</em></strong> (because it does not need to
+   * search for existing members). Therefore <em>add</em> should be preferred when constructing new
+   * objects.
    * </p>
    *
    * @param name
@@ -244,14 +248,15 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Adds a new member at the end of this object, with the specified name and the JSON
+   * Appends a new member to the end of this object, with the specified name and the JSON
    * representation of the specified <code>boolean</code> value.
    * <p>
-   * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * already exists in the object will add another member with the same name. In order to replace
-   * existing members, use the method <code>set(name, value)</code> instead. However, <strong>
-   * <em>add</em> is much faster than <em>set</em></strong> (because it does not need to search for
-   * existing members). Therefore <em>add</em> should be preferred when constructing new objects.
+   * This method <strong>does not prevent duplicate names</strong>. Calling this method with a name
+   * that already exists in the object will append another member with the same name. In order to
+   * replace existing members, use the method <code>set(name, value)</code> instead. However,
+   * <strong> <em>add</em> is much faster than <em>set</em></strong> (because it does not need to
+   * search for existing members). Therefore <em>add</em> should be preferred when constructing new
+   * objects.
    * </p>
    *
    * @param name
@@ -266,14 +271,15 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Adds a new member at the end of this object, with the specified name and the JSON
+   * Appends a new member to the end of this object, with the specified name and the JSON
    * representation of the specified string.
    * <p>
-   * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * already exists in the object will add another member with the same name. In order to replace
-   * existing members, use the method <code>set(name, value)</code> instead. However, <strong>
-   * <em>add</em> is much faster than <em>set</em></strong> (because it does not need to search for
-   * existing members). Therefore <em>add</em> should be preferred when constructing new objects.
+   * This method <strong>does not prevent duplicate names</strong>. Calling this method with a name
+   * that already exists in the object will append another member with the same name. In order to
+   * replace existing members, use the method <code>set(name, value)</code> instead. However,
+   * <strong> <em>add</em> is much faster than <em>set</em></strong> (because it does not need to
+   * search for existing members). Therefore <em>add</em> should be preferred when constructing new
+   * objects.
    * </p>
    *
    * @param name
@@ -288,14 +294,15 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Adds a new member at the end of this object, with the specified name and the specified JSON
+   * Appends a new member to the end of this object, with the specified name and the specified JSON
    * value.
    * <p>
-   * This method <strong>does not prevent duplicate names</strong>. Adding a member with a name that
-   * already exists in the object will add another member with the same name. In order to replace
-   * existing members, use the method <code>set(name, value)</code> instead. However, <strong>
-   * <em>add</em> is much faster than <em>set</em></strong> (because it does not need to search for
-   * existing members). Therefore <em>add</em> should be preferred when constructing new objects.
+   * This method <strong>does not prevent duplicate names</strong>. Calling this method with a name
+   * that already exists in the object will append another member with the same name. In order to
+   * replace existing members, use the method <code>set(name, value)</code> instead. However,
+   * <strong> <em>add</em> is much faster than <em>set</em></strong> (because it does not need to
+   * search for existing members). Therefore <em>add</em> should be preferred when constructing new
+   * objects.
    * </p>
    *
    * @param name

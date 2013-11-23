@@ -137,7 +137,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * Adds the JSON representation of the specified <code>int</code> value to the array.
+   * Appends the JSON representation of the specified <code>int</code> value to the end of this
+   * array.
    *
    * @param value
    *          the value to add to the array
@@ -149,7 +150,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * Adds the JSON representation of the specified <code>long</code> value to the array.
+   * Appends the JSON representation of the specified <code>long</code> value to the end of this
+   * array.
    *
    * @param value
    *          the value to add to the array
@@ -161,7 +163,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * Adds the JSON representation of the specified <code>float</code> value to the array.
+   * Appends the JSON representation of the specified <code>float</code> value to the end of this
+   * array.
    *
    * @param value
    *          the value to add to the array
@@ -173,7 +176,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * Adds the JSON representation of the specified <code>double</code> value to the array.
+   * Appends the JSON representation of the specified <code>double</code> value to the end of this
+   * array.
    *
    * @param value
    *          the value to add to the array
@@ -185,7 +189,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * Adds the JSON representation of the specified <code>boolean</code> value to the array.
+   * Appends the JSON representation of the specified <code>boolean</code> value to the end of this
+   * array.
    *
    * @param value
    *          the value to add to the array
@@ -197,7 +202,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * Adds the JSON representation of the specified string to the array.
+   * Appends the JSON representation of the specified string to the end of this array.
    *
    * @param value
    *          the string to add to the array
@@ -209,7 +214,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * Adds the specified JSON value to the array.
+   * Appends the specified JSON value to the end of this array.
    *
    * @param value
    *          the JsonValue to add to the array, must not be <code>null</code>
