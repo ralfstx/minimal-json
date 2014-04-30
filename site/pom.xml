@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion> 
+	<parent>
+		<groupId>com.eclipsesource.minimal-json</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.9.2-SNAPSHOT</version>
+	</parent>
+	<groupId>com.eclipsesource.minimal-json</groupId>
+	<artifactId>site</artifactId> 
+	<packaging>eclipse-repository</packaging>
+
+	<properties>
+		<update.site.name>minimal-json</update.site.name>
+		<update.site.description>Nightly Build</update.site.description>
+		<update.site.version>${project.version}</update.site.version>
+		<target.eclipse.version>${targetEclipseVersion}</target.eclipse.version>
+		<siteTemplateFolder>siteTemplateFolder</siteTemplateFolder>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jboss.tools.tycho-plugins</groupId>
+				<artifactId>repository-utils</artifactId>
+				<executions>
+					<execution>
+						<id>generate-facade</id>
+						<phase>package</phase>
+						<goals>
+							<goal>generate-repository-facade</goal>
+						</goals>
+						<configuration>
+							<siteTemplateFolder>${siteTemplateFolder}</siteTemplateFolder>
+							<symbols>
+								<update.site.name>${update.site.name}</update.site.name>
+								<update.site.description>${update.site.description}</update.site.description>
+								<update.site.version>${update.site.version}</update.site.version>
+								<target.eclipse.version>${target.eclipse.version}</target.eclipse.version>
+							</symbols>
+							<associateSites>
+								<site>${jbosstools-locus-site}</site>
+							</associateSites>
+							<removeDefaultCategory>true</removeDefaultCategory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

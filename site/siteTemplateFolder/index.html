@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>${update.site.name} - ${update.site.description} Update Site: ${update.site.version}</title>
+<link rel="stylesheet" type="text/css" href="web/site.css">
+</head>
+<style type="text/css">
+.td_header {
+	background: url("images/pixel.gif") 0 no-repeat;
+	height: 110px;
+}
+</style>
+<body marginheight="0" marginwidth="0" leftmargin="0" topmargin="0">
+<center>
+<table cellspacing="0" cellpadding="0" class="table">
+	<tr>
+		<td colspan="3" class="td_header">&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;</td>
+	</tr>
+	<tr>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>
+		<h2 class="title">${update.site.name} - ${update.site.description} Update Site</h2>
+		<table width="100%">
+			<tr class="header">
+				<td class="sub-header" width="100%"><span>Latest Build: ${update.site.version}</span></td>
+			</tr>
+
+			<tr class="light-row" style="height: 30px">
+				<td class="bodyText">
+				<p class="bodyText">This is the <b>${update.site.description}</b>
+				Update Site for ${update.site.name}.
+								<blockquote style="border: 1px dashed #1778be; padding: 2px">
+									<ol>
+										<li>To install from this site, start up Eclipse ${target.eclipse.version}, then do:
+											<ul>
+												<code><strong>Help > Install New Software... ></strong></code>
+											</ul>
+										</li>
+										<li>Copy this site's URL into Eclipse, and hit Enter.</li>
+										<li>When the site loads, select the features to install,
+											or click the <code><strong>Select All</strong></code> button.</li>
+										<li>To properly resolve all dependencies, check
+										<ul><code><strong>[x] Contact all update sites during install to find required software</strong></code></ul>
+
+										<li>Click <code><strong>Next</strong></code>, agree to the license
+											terms, and install.</li>
+									</ol>
+								</blockquote>
+							</td>
+						</tr>
+		</table>
+		</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+	        ${site.contents}
+		</td>
+		<td></td>
+	</tr>
+</table>
+</center>
+</html>
