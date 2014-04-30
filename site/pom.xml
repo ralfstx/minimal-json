@@ -9,6 +9,15 @@
 	<groupId>com.eclipsesource.minimal-json</groupId>
 	<artifactId>site</artifactId> 
 	<packaging>eclipse-repository</packaging>
+
+	<properties>
+		<update.site.name>minimal-json</update.site.name>
+		<update.site.description>Nightly Build</update.site.description>
+		<update.site.version>${project.version}</update.site.version>
+		<target.eclipse.version>${targetEclipseVersion}</target.eclipse.version>
+		<siteTemplateFolder>siteTemplateFolder</siteTemplateFolder>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -22,6 +31,13 @@
 							<goal>generate-repository-facade</goal>
 						</goals>
 						<configuration>
+							<siteTemplateFolder>${siteTemplateFolder}</siteTemplateFolder>
+							<symbols>
+								<update.site.name>${update.site.name}</update.site.name>
+								<update.site.description>${update.site.description}</update.site.description>
+								<update.site.version>${update.site.version}</update.site.version>
+								<target.eclipse.version>${target.eclipse.version}</target.eclipse.version>
+							</symbols>
 							<associateSites>
 								<site>${jbosstools-locus-site}</site>
 							</associateSites>
