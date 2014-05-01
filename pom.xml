@@ -154,7 +154,7 @@
           <useUIThread>true</useUIThread>
           <!-- THE FOLLOWING LINE MUST NOT BE BROKEN BY AUTOFORMATTING -->
           <!-- tycho.testArgLine repeated to keep jacoco configuration for jacoco-maven-plugin -->
-          <argLine>${tycho.testArgLine} ${memoryOptions1} ${memoryOptions2} ${applejdkProperties} ${platformSystemProperties} ${systemProperties} -Dusage_reporting_enabled=false -Dorg.jboss.tools.tests.skipPrivateRequirements=${skipPrivateRequirements} -Dorg.eclipse.ui.testsDisableWorkbenchAutoSave=true</argLine>
+          <argLine>${tycho.testArgLine} ${memoryOptions1} ${memoryOptions2} ${applejdkProperties} ${platformSystemProperties} ${systemProperties} -Dusage_reporting_enabled=false -Dorg.eclipse.ui.testsDisableWorkbenchAutoSave=true</argLine>
           <!-- https://docs.sonatype.org/display/TYCHO/How+to+run+SWTBot+tests+with+Tycho -->
           <!-- set useUIThread=true for regular ui tests -->
           <!-- set useUIThread=false for swtbot tests -->
@@ -194,29 +194,6 @@
             <goals>
               <goal>plugin-source</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.jboss.tools.tycho-plugins</groupId>
-        <artifactId>repository-utils</artifactId>
-        <version>0.19.0-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <id>generate-facade</id>
-            <phase>package</phase>
-            <goals>
-              <goal>generate-repository-facade</goal>
-            </goals>
-            <configuration>
-              <symbols>
-                <update.site.name>${update.site.name}</update.site.name>
-                <update.site.description>${update.site.description}</update.site.description>
-                <update.site.version>${project.version} (${buildQualifier})</update.site.version>
-                <target.eclipse.version>${targetEclipseVersion}</target.eclipse.version>
-              </symbols>
-            </configuration>
           </execution>
         </executions>
       </plugin>
