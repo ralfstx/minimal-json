@@ -327,7 +327,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     }
     table.add( name, names.size() );
     names.add( name );
-    values.add(value);
+    values.add( value );
     return this;
   }
 
@@ -490,9 +490,9 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     if( index != -1 ) {
       values.set( index, value );
     } else {
-      table.add(name, names.size());
-      names.add(name);
-      values.add(value);
+      table.add( name, names.size() );
+      names.add( name );
+      values.add( value );
     }
     return this;
   }
@@ -537,7 +537,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Returns the value of teh member when found, otherwise returns the default value.
+   * Returns the value of the member when found, otherwise returns the default value.
    * Behaves in a similar way to {@link #get(String)}
    *
    * @param name
@@ -693,10 +693,10 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     }
   }
 
-	/**
+  /**
    * Represents a member of a JSON object, i.e. a pair of name and value.
    */
-  public static class Member {
+  static class Member {
 
     private final String name;
     private final JsonValue value;
