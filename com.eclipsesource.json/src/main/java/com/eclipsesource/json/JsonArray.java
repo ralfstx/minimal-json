@@ -84,7 +84,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
-   * * Creates a new empty JsonObject.
+   * Creates a new empty JsonObject.
    */
   public static JsonArray jsonArray() {
     return new JsonArray();
