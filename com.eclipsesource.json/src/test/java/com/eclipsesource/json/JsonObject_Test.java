@@ -10,6 +10,11 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import com.eclipsesource.json.JsonObject.HashIndexTable;
+import com.eclipsesource.json.JsonObject.Member;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ConcurrentModificationException;
@@ -17,17 +22,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.eclipsesource.json.JsonObject.HashIndexTable;
-import com.eclipsesource.json.JsonObject.Member;
-
 import static com.eclipsesource.json.TestUtil.assertException;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -43,11 +41,7 @@ public class JsonObject_Test {
 
   @Test
   public void copyConstructor_failsWithNull() {
-    assertException( NullPointerException.class, "object is null", new Runnable() {
-      public void run() {
-        new JsonObject( null );
-      }
-    } );
+    assertException( NullPointerException.class, "object is null", () -> new JsonObject( null ));
   }
 
   @Test
@@ -217,11 +211,7 @@ public class JsonObject_Test {
 
   @Test
   public void get_failsWithNullName() {
-    assertException( NullPointerException.class, "name is null", new Runnable() {
-      public void run() {
-        object.get( null );
-      }
-    } );
+    assertException( NullPointerException.class, "name is null", () -> object.get( null ));
   }
 
   @Test
@@ -245,11 +235,7 @@ public class JsonObject_Test {
 
   @Test
   public void add_failsWithNullName() {
-    assertException( NullPointerException.class, "name is null", new Runnable() {
-      public void run() {
-        object.add( null, 23 );
-      }
-    } );
+    assertException( NullPointerException.class, "name is null", () -> object.add( null, 23 ));
   }
 
   @Test
@@ -359,11 +345,7 @@ public class JsonObject_Test {
 
   @Test
   public void add_json_failsWithNull() {
-    assertException( NullPointerException.class, "value is null", new Runnable() {
-      public void run() {
-        object.add( "a", (JsonValue)null );
-      }
-    } );
+    assertException( NullPointerException.class, "value is null", () -> object.add( "a", (JsonValue)null ));
   }
 
   @Test
@@ -532,11 +514,7 @@ public class JsonObject_Test {
 
   @Test
   public void remove_failsWithNullName() {
-    assertException( NullPointerException.class, "name is null", new Runnable() {
-      public void run() {
-        object.remove( null );
-      }
-    } );
+    assertException( NullPointerException.class, "name is null", () -> object.remove( null ));
   }
 
   @Test

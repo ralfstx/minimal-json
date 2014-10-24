@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import com.eclipsesource.json.JsonObject.Member;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Reader;
@@ -17,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import com.eclipsesource.json.JsonObject.Member;
 
 
 /**
@@ -552,7 +552,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * this object and will reflect subsequent changes. It cannot be used to modify this object.
    * Attempts to modify the returned list will result in an exception.
    *
-   * @returns a list of the names in this object
+   * @return a list of the names in this object
    */
   public List<String> names() {
     return Collections.unmodifiableList( names );
