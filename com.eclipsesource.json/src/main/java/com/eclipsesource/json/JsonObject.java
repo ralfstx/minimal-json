@@ -696,7 +696,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   /**
    * Represents a member of a JSON object, i.e. a pair of name and value.
    */
-  static class Member {
+  public static class Member {
 
     private final String name;
     private final JsonValue value;
@@ -749,7 +749,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
 
   }
 
-  public static class HashIndexTable {
+  static class HashIndexTable {
 
     private final byte[] hashTable = new byte[32]; // must be a power of two
 
