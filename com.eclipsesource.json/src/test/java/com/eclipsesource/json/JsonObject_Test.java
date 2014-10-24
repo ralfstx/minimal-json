@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
-import com.eclipsesource.json.JsonObject.HashIndexTable;
-import com.eclipsesource.json.JsonObject.Member;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,8 +20,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.eclipsesource.json.JsonObject.HashIndexTable;
+import static com.eclipsesource.json.JsonObject.Member;
 import static com.eclipsesource.json.TestUtil.assertException;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
@@ -40,6 +41,11 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void is_created_by_factory_method() {
+     assertThat(JsonObject.jsonObject(), is(new JsonObject()));
+  }
+
+	@Test
   public void copyConstructor_failsWithNull() {
     assertException( NullPointerException.class, "object is null", () -> new JsonObject( null ));
   }
@@ -231,6 +237,18 @@ public class JsonObject_Test {
     object.add( "foo", false ).add( "foo", true );
 
     assertEquals( JsonValue.TRUE, object.get( "foo" ) );
+  }
+
+  @Test
+  public void get_returnDefaultValueWhenNameNotFound() {
+	assertThat( object.getOrElse("name", "default value").asString(), is("default value"));
+	assertThat( object.getOrElse("name", 1).asInt(), is(1));
+	assertThat( object.getOrElse("name", 1L).asLong(), is(1L));
+	assertThat( object.getOrElse("name", 1D).asDouble(), is(1D));
+	assertThat( object.getOrElse("name", 1F).asFloat(), is(1F));
+	assertThat( object.getOrElse("name", true).asBoolean(), is(true));
+	assertThat( object.getOrElse("name", new JsonObject()).asObject(), is(new JsonObject()));
+	assertThat( object.getOrElse("name", new JsonArray()).asArray(), is(new JsonArray()));
   }
 
   @Test

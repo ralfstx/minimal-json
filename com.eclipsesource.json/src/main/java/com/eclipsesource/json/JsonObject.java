@@ -83,7 +83,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the JSON object to get the initial contents from, must not be <code>null</code>
    */
   public JsonObject( JsonObject object ) {
-    this( object, false );
+    this(object, false);
   }
 
   private JsonObject( JsonObject object, boolean unmodifiable ) {
@@ -102,6 +102,13 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
+   * Creates a new empty JsonObject.
+   */
+  public static JsonObject jsonObject() {
+    return new JsonObject();
+  }
+
+	/**
    * Reads a JSON object from the given reader.
    * <p>
    * Characters are read in chunks and buffered internally, therefore wrapping an existing reader in
@@ -289,7 +296,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject add( String name, String value ) {
-    add( name, valueOf( value ) );
+    add(name, valueOf(value));
     return this;
   }
 
@@ -320,7 +327,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     }
     table.add( name, names.size() );
     names.add( name );
-    values.add( value );
+    values.add(value);
     return this;
   }
 
@@ -483,9 +490,9 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     if( index != -1 ) {
       values.set( index, value );
     } else {
-      table.add( name, names.size() );
-      names.add( name );
-      values.add( value );
+      table.add(name, names.size());
+      names.add(name);
+      values.add(value);
     }
     return this;
   }
@@ -530,6 +537,45 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
+   * Returns the value of teh member when found, otherwise returns the default value.
+   * Behaves in a similar way to {@link #get(String)}
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @param defaultValue
+   *          the default value to be return in case member was not found
+   * @return the value of the member when present, otherwise the default value
+   *
+   * @throws IllegalArgumentException
+   *           if default value does not match any of the types accepted by {@link com.eclipsesource.json.JsonValue}
+   *
+   */
+  public <T> JsonValue getOrElse( String name, T defaultValue ) {
+    JsonValue value = get(name);
+    return value != null ? value : jsonValueFor(defaultValue);
+  }
+
+  private <T> JsonValue jsonValueFor(T defaultValue) {
+    if (defaultValue instanceof String) {
+      return JsonValue.valueOf((String) defaultValue);
+    } else if (defaultValue instanceof Integer) {
+      return JsonValue.valueOf((Integer) defaultValue);
+    } else if (defaultValue instanceof Long) {
+      return JsonValue.valueOf((Long) defaultValue);
+    } else if (defaultValue instanceof Double) {
+      return JsonValue.valueOf((Double) defaultValue);
+    } else if (defaultValue instanceof Float) {
+      return JsonValue.valueOf((Float) defaultValue);
+    } else if (defaultValue instanceof Boolean) {
+      return JsonValue.valueOf((Boolean) defaultValue);
+    } else if (defaultValue instanceof JsonValue) {
+      return (JsonValue) defaultValue;
+    } else {
+      throw new IllegalArgumentException("Invalid default type");
+    }
+  }
+
+	/**
    * Returns the number of members (i.e. name/value pairs) in this object.
    *
    * @return the number of members in this object
@@ -647,7 +693,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     }
   }
 
-  /**
+	/**
    * Represents a member of a JSON object, i.e. a pair of name and value.
    */
   public static class Member {
@@ -703,7 +749,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
 
   }
 
-  static class HashIndexTable {
+  public static class HashIndexTable {
 
     private final byte[] hashTable = new byte[32]; // must be a power of two
 
