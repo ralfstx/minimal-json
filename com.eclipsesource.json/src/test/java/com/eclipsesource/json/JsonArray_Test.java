@@ -10,20 +10,20 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import static com.eclipsesource.json.TestUtil.assertException;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -38,12 +38,13 @@ public class JsonArray_Test {
   }
 
   @Test
+  public void is_created_by_factory_method() {
+    assertThat(JsonArray.jsonArray(), is(new JsonArray()));
+  }
+
+  @Test
   public void copyConstructor_failsWithNull() {
-    assertException( NullPointerException.class, "array is null", new Runnable() {
-      public void run() {
-        new JsonArray( null );
-      }
-    } );
+    assertException( NullPointerException.class, "array is null", () -> new JsonArray( null ));
   }
 
   @Test

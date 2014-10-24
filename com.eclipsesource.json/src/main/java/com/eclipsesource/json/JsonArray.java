@@ -84,6 +84,13 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   /**
+   * * Creates a new empty JsonObject.
+   */
+  public static JsonArray jsonArray() {
+    return new JsonArray();
+  }
+
+  /**
    * Reads a JSON array from the given reader.
    * <p>
    * Characters are read in chunks and buffered internally, therefore wrapping an existing reader in
