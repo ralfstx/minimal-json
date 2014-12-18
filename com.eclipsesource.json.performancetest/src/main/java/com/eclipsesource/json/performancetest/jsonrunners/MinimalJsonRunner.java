@@ -1,13 +1,11 @@
 package com.eclipsesource.json.performancetest.jsonrunners;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 
 import com.eclipsesource.json.JsonValue;
 
 
-public class MinimalJsonRunner implements JsonRunner {
+public class MinimalJsonRunner extends JsonRunner {
 
   @Override
   public Object readFromString( String string ) throws IOException {
@@ -28,5 +26,4 @@ public class MinimalJsonRunner implements JsonRunner {
   public void writeToWriter( Object model, Writer writer ) throws IOException {
     ((JsonValue)model).writeTo( writer );
   }
-
 }

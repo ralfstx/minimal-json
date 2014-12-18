@@ -1,5 +1,7 @@
 package com.eclipsesource.json.performancetest.jsonrunners;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Map;
@@ -7,7 +9,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 
-public class GsonRunner implements JsonRunner {
+public class GsonRunner extends JsonRunner {
 
   private final Gson gson;
 
