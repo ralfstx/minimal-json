@@ -37,7 +37,7 @@ public class IntVsLongBenchmark extends SimpleBenchmark {
   }
 
   public static void main( String[] args ) throws IOException {
-    new CaliperRunner( IntVsLongBenchmark.class ).exec();
+    new CaliperRunner( IntVsLongBenchmark.class ).exec( args );
   }
 
 }

@@ -143,8 +143,8 @@ public class ListVsHashLookupBenchmark extends SimpleBenchmark {
 
   public static void main( String[] args ) throws IOException {
     CaliperRunner runner = new CaliperRunner( ListVsHashLookupBenchmark.class );
-    runner.addParameter( "size", "4", "16", "64", "256" );
-    runner.exec();
+    runner.addParameterDefault( "size", "4", "16", "64", "256" );
+    runner.exec( args );
   }
 
 }

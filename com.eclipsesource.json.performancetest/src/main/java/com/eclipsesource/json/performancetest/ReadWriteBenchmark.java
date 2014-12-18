@@ -91,9 +91,9 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
 
   public static void main( String[] args ) throws IOException {
     CaliperRunner runner = new CaliperRunner( ReadWriteBenchmark.class );
-    runner.addParameter( "parser", "org-json", "gson", "jackson", "json-simple", "minimal-json" );
-    runner.addParameter( "input", "rap", "caliper" );
-    runner.exec();
+    runner.addParameterDefault( "parser", "org-json", "gson", "jackson", "json-simple", "minimal-json" );
+    runner.addParameterDefault( "input", "rap", "caliper" );
+    runner.exec( args );
   }
 
 }

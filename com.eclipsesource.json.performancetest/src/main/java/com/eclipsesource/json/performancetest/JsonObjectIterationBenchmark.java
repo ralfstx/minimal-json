@@ -62,8 +62,8 @@ public class JsonObjectIterationBenchmark extends SimpleBenchmark {
 
   public static void main( String[] args ) throws IOException {
     CaliperRunner runner = new CaliperRunner( JsonObjectIterationBenchmark.class );
-    runner.addParameter( "size", "4", "16", "64" );
-    runner.exec();
+    runner.addParameterDefault( "size", "4", "16", "64" );
+    runner.exec( args );
   }
 
 }

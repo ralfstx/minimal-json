@@ -58,7 +58,7 @@ public class BufferedStringWriterBenchmark extends SimpleBenchmark {
 
   public static void main( String[] args ) throws IOException {
     CaliperRunner runner = new CaliperRunner( BufferedStringWriterBenchmark.class );
-    runner.exec();
+    runner.exec( args );
   }
 
 }
