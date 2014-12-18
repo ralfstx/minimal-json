@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2014 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -82,9 +82,9 @@ public class BufferedWriterBenchmark extends SimpleBenchmark {
 
   public static void main( String[] args ) throws IOException {
     CaliperRunner runner = new CaliperRunner( BufferedWriterBenchmark.class );
-    runner.addParameter( "parser", "null", "gson", "jackson", "minimal-json" );
-    runner.addParameter( "input", "rap", "caliper", "long-string", "numbers-array" );
-    runner.exec();
+    runner.addParameterDefault( "parser", "null", "gson", "jackson", "minimal-json" );
+    runner.addParameterDefault( "input", "rap", "caliper", "long-string", "numbers-array" );
+    runner.exec( args );
   }
 
 }

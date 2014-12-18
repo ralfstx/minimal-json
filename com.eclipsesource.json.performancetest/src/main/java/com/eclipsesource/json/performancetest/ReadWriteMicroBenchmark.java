@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2014 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,9 +73,9 @@ public class ReadWriteMicroBenchmark extends SimpleBenchmark {
 
   public static void main( String[] args ) throws IOException {
     CaliperRunner runner = new CaliperRunner( ReadWriteMicroBenchmark.class );
-    runner.addParameter( "parser", "org-json", "gson", "jackson", "json-simple", "minimal-json" );
-    runner.addParameter( "input", "long-string", "numbers-array" );
-    runner.exec();
+    runner.addParameterDefault( "parser", "org-json", "gson", "jackson", "json-simple", "minimal-json" );
+    runner.addParameterDefault( "input", "long-string", "numbers-array" );
+    runner.exec( args );
   }
 
 }

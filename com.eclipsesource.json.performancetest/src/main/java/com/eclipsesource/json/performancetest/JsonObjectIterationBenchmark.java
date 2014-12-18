@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2014 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,8 +73,8 @@ public class JsonObjectIterationBenchmark extends SimpleBenchmark {
 
   public static void main( String[] args ) throws IOException {
     CaliperRunner runner = new CaliperRunner( JsonObjectIterationBenchmark.class );
-    runner.addParameter( "size", "4", "16", "64" );
-    runner.exec();
+    runner.addParameterDefault( "size", "4", "16", "64" );
+    runner.exec( args );
   }
 
 }
