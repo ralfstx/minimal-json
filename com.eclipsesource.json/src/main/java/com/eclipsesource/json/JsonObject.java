@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2013 EclipseSource.
+ * Copyright (c) 2008, 2014 EclipseSource.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -527,6 +527,119 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     }
     int index = indexOf( name );
     return index != -1 ? values.get( index ) : null;
+  }
+
+  /**
+   * Returns the <code>int</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, the given default value is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>int</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @param defaultValue
+   *          the value to be returned if the requested member is missing
+   * @return the value of the last member with the specified name, or the given default value if
+   *         this object does not contain a member with that name
+   */
+  public int getInt( String name, int defaultValue ) {
+    JsonValue value = get( name );
+    return value != null ? value.asInt() : defaultValue;
+  }
+
+  /**
+   * Returns the <code>long</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, the given default value is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>long</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @param defaultValue
+   *          the value to be returned if the requested member is missing
+   * @return the value of the last member with the specified name, or the given default value if
+   *         this object does not contain a member with that name
+   */
+  public long getLong( String name, long defaultValue ) {
+    JsonValue value = get( name );
+    return value != null ? value.asLong() : defaultValue;
+  }
+
+  /**
+   * Returns the <code>float</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, the given default value is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>float</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @param defaultValue
+   *          the value to be returned if the requested member is missing
+   * @return the value of the last member with the specified name, or the given default value if
+   *         this object does not contain a member with that name
+   */
+  public float getFloat( String name, float defaultValue ) {
+    JsonValue value = get( name );
+    return value != null ? value.asFloat() : defaultValue;
+  }
+
+  /**
+   * Returns the <code>double</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, the given default value is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>double</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @param defaultValue
+   *          the value to be returned if the requested member is missing
+   * @return the value of the last member with the specified name, or the given default value if
+   *         this object does not contain a member with that name
+   */
+  public double getDouble( String name, double defaultValue ) {
+    JsonValue value = get( name );
+    return value != null ? value.asDouble() : defaultValue;
+  }
+
+  /**
+   * Returns the <code>boolean</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, the given default value is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON <code>true</code> or <code>false</code> value, an
+   * exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @param defaultValue
+   *          the value to be returned if the requested member is missing
+   * @return the value of the last member with the specified name, or the given default value if
+   *         this object does not contain a member with that name
+   */
+  public boolean getBoolean( String name, boolean defaultValue ) {
+    JsonValue value = get( name );
+    return value != null ? value.asBoolean() : defaultValue;
+  }
+
+  /**
+   * Returns the <code>String</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, the given default value is returned. If
+   * this object contains multiple members with the given name, the last one is picked. If this
+   * member's value does not represent a JSON string, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @param defaultValue
+   *          the value to be returned if the requested member is missing
+   * @return the value of the last member with the specified name, or the given default value if
+   *         this object does not contain a member with that name
+   */
+  public String getString( String name, String defaultValue ) {
+    JsonValue value = get( name );
+    return value != null ? value.asString() : defaultValue;
   }
 
   /**

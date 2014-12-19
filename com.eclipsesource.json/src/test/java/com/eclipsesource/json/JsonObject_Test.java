@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2013 EclipseSource.
+ * Copyright (c) 2008, 2014 EclipseSource.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,13 @@
  *    Ralf Sternberg - initial API and implementation
  ******************************************************************************/
 package com.eclipsesource.json;
+
+import static com.eclipsesource.json.TestUtil.assertException;
+import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -22,14 +29,6 @@ import org.junit.Test;
 
 import com.eclipsesource.json.JsonObject.HashIndexTable;
 import com.eclipsesource.json.JsonObject.Member;
-
-import static com.eclipsesource.json.TestUtil.assertException;
-import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.same;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 
 public class JsonObject_Test {
@@ -241,6 +240,78 @@ public class JsonObject_Test {
     object.add( "foo", false ).add( "foo", true );
 
     assertEquals( JsonValue.TRUE, object.get( "foo" ) );
+  }
+
+  @Test
+  public void get_int_returnsValueFromMember() {
+    object.add( "foo", 23 );
+
+    assertEquals( 23, object.getInt( "foo", 42 ) );
+  }
+
+  @Test
+  public void get_int_returnsDefaultForMissingMember() {
+    assertEquals( 23, object.getInt( "foo", 23 ) );
+  }
+
+  @Test
+  public void get_long_returnsValueFromMember() {
+    object.add( "foo", 23l );
+
+    assertEquals( 23l, object.getLong( "foo", 42l ) );
+  }
+
+  @Test
+  public void get_long_returnsDefaultForMissingMember() {
+    assertEquals( 23l, object.getLong( "foo", 23l ) );
+  }
+
+  @Test
+  public void get_float_returnsValueFromMember() {
+    object.add( "foo", 3.14f );
+
+    assertEquals( 3.14f, object.getFloat( "foo", 1.41f ), 0 );
+  }
+
+  @Test
+  public void get_float_returnsDefaultForMissingMember() {
+    assertEquals( 3.14f, object.getFloat( "foo", 3.14f ), 0 );
+  }
+
+  @Test
+  public void get_double_returnsValueFromMember() {
+    object.add( "foo", 3.14 );
+
+    assertEquals( 3.14, object.getDouble( "foo", 1.41 ), 0 );
+  }
+
+  @Test
+  public void get_double_returnsDefaultForMissingMember() {
+    assertEquals( 3.14, object.getDouble( "foo", 3.14 ), 0 );
+  }
+
+  @Test
+  public void get_boolean_returnsValueFromMember() {
+    object.add( "foo", true );
+
+    assertTrue( object.getBoolean( "foo", false ) );
+  }
+
+  @Test
+  public void get_boolean_returnsDefaultForMissingMember() {
+    assertFalse( object.getBoolean( "foo", false ) );
+  }
+
+  @Test
+  public void get_string_returnsValueFromMember() {
+    object.add( "foo", "bar" );
+
+    assertEquals( "bar", object.getString( "foo", "default" ) );
+  }
+
+  @Test
+  public void get_string_returnsDefaultForMissingMember() {
+    assertEquals( "default", object.getString( "foo", "default" ) );
   }
 
   @Test
