@@ -1,5 +1,7 @@
 package com.eclipsesource.json.performancetest.jsonrunners;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -8,7 +10,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-public class JacksonRunner implements JsonRunner {
+public class JacksonRunner extends JsonRunner {
 
   private final ObjectMapper mapper;
 
@@ -41,4 +43,23 @@ public class JacksonRunner implements JsonRunner {
     mapper.writeValue( writer, model );
   }
 
+  @Override
+  public Object readFromByteArray( byte[] input ) throws Exception {
+    return mapper.readTree( input );
+  }
+
+  @Override
+  public Object readFromInputStream( InputStream in ) throws Exception {
+    return mapper.readTree( in );
+  }
+
+  @Override
+  public byte[] writeToByteArray( Object model ) throws Exception {
+    return mapper.writeValueAsBytes( model );
+  }
+
+  @Override
+  public void writeToOutputStream( Object model, OutputStream out ) throws Exception {
+    mapper.writeValue( out, model );
+  }
 }

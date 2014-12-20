@@ -20,9 +20,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.eclipsesource.json.JsonObject;
+import com.google.caliper.Arguments;
 import com.google.caliper.Benchmark;
 import com.google.caliper.Runner;
 import com.google.caliper.UserException;
@@ -39,8 +45,7 @@ import static com.eclipsesource.json.performancetest.resources.Resources.readRes
 public class CaliperRunner {
 
   private final Class<? extends Benchmark> benchmark;
-  private final List<String> options = new ArrayList<String>();
-  private final List<String> parameters = new ArrayList<String>();
+  private final Map<String,String[]> parameterDefaults = new HashMap<String,String[]>();
   private final File resultsFile;
 
   public CaliperRunner( Class<? extends Benchmark> benchmark ) {
@@ -48,13 +53,13 @@ public class CaliperRunner {
     this.resultsFile = getResultsFile();
   }
 
-  public void addParameter( String name, String... values ) {
-    parameters.add( name );
-    options.add( "-D" + name + "=" + join( values, "," ) );
+  public void addParameterDefault( String name, String... values ) {
+    Object displaced = parameterDefaults.put( name, values );
+    assert displaced == null : "duplicate parameter default for \"" + name + "\"";
   }
 
-  public void exec() throws IOException {
-    int exitCode = safeRun( getOptions() );
+  public void exec( String[] args ) throws IOException {
+    int exitCode = safeRun( args );
     if( exitCode == 0 && resultsFile != null ) {
       createJsonFile();
       copyHtmlResources( resultsFile.getParentFile() );
@@ -85,13 +90,29 @@ public class CaliperRunner {
     writeToFile( resultsJson, resultsFile );
   }
 
-  String[] getOptions() {
-    if( resultsFile != null ) {
-      options.add( "--saveResults" );
-      options.add( resultsFile.getAbsolutePath() );
+  String[] adjustArgs( String[] args ) {
+    ArrayList<String> adjustedArgs = new ArrayList<String>();
+    adjustedArgs.add( benchmark.getName() );
+    adjustedArgs.addAll( Arrays.asList( args ));
+
+    Arguments parsed = Arguments.parse( adjustedArgs.toArray( new String[0] ) );
+
+    // If a param wasn't specified in 'args', use the default value.
+    for( Map.Entry<String,String[]> pd : parameterDefaults.entrySet() ) {
+      if ( !parsed.getUserParameters().containsKey( pd.getKey() ) ) {
+        adjustedArgs.add( "-D" + pd.getKey() + "=" + join( pd.getValue(), "," ) );
+      }
     }
-    options.add( benchmark.getName() );
-    return options.toArray( new String[0] );
+
+    if( resultsFile != null ) {
+      if( parsed.getSaveResultsFile() != null ) {
+        throw new UserException.DuplicateParameterException( "--saveResults is already used internally" );
+      }
+      adjustedArgs.add( "--saveResults" );
+      adjustedArgs.add( resultsFile.getAbsolutePath() );
+    }
+
+    return adjustedArgs.toArray( new String[0] );
   }
 
   private static void copyHtmlResources( File parent ) throws IOException {
@@ -108,10 +129,10 @@ public class CaliperRunner {
     }
   }
 
-  private static int safeRun( String[] args ) {
+  private int safeRun( String[] args ) {
     // see caliper.Runner.main( String[] )
     try {
-      new Runner().run( args );
+      new Runner().run( adjustArgs( args ) );
       return 0;
     } catch( DisplayUsageException e ) {
       e.display();
@@ -164,5 +185,4 @@ public class CaliperRunner {
     }
     return buffer.toString();
   }
-
 }

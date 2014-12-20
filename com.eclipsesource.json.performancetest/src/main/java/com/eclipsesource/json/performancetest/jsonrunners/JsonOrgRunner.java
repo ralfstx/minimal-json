@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 
-public class JsonOrgRunner implements JsonRunner {
+public class JsonOrgRunner extends JsonRunner {
 
   @Override
   public Object readFromString( String string ) throws JSONException {
