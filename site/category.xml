@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+	<description>To install these features, point Eclipse at this site.</description>
+	<category-def label="minimal-json update site" name="minimal-json update site">
+		<description>Eclipse p2 repo (update site) for minimal-json</description>
+	</category-def>
+	<bundle id="minimal-json">
+		<category name="minimal-json update site" />
+	</bundle>
+	<bundle id="minimal-json.source">
+		<category name="minimal-json update site" />
+	</bundle>
+</site>

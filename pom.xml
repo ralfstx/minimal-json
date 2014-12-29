@@ -13,6 +13,248 @@
   <modules>
     <module>com.eclipsesource.json</module>
     <module>com.eclipsesource.json.performancetest</module>
+    <module>site</module>
   </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <tychoVersion>0.20.0</tychoVersion>
+    <tychoExtrasVersion>${tychoVersion}</tychoExtrasVersion>
+    <BUILD_ALIAS>Alpha1</BUILD_ALIAS>
+    <targetEclipseVersion>4.4 (Luna)</targetEclipseVersion>
+    <memoryOptions1>-Xms512m -Xmx1024m -XX:PermSize=256m</memoryOptions1>
+    <memoryOptions2>-XX:MaxPermSize=256m</memoryOptions2>
+    <systemProperties></systemProperties>
+    <platformSystemProperties></platformSystemProperties>
+    <applejdkProperties></applejdkProperties>
+    <maven.antrun.plugin.version>1.3</maven.antrun.plugin.version>
+    <update.site.name>${project.artifactId}</update.site.name>
+    <!-- In the update site's site/pom.xml (that calls jbosstools-maven-plugins/tycho-plugins/repository-utils)
+         you can override this value to be Nightly Build, Development Milestone, or Stable Release, or set to &amp;shy; (soft hyphen) to leave blank -->
+    <update.site.description>&amp;shy;</update.site.description>
+    <tycho.scmUrl>scm:git:https://github.com/ralfstx/minimal-json.git</tycho.scmUrl>
+
+    <!-- upstream sites required by this build -->
+    <jbosstools-locus-site>https://repository.jboss.org/nexus/content/unzip/unzip/org/jboss/tools/locus/update.site/1.1.1.Final/update.site-1.1.1.Final.zip-unzip/</jbosstools-locus-site>
+    <eclipse-site>http://download.eclipse.org/releases/luna/</eclipse-site>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-packaging-plugin</artifactId>
+        <version>${tychoVersion}</version>
+        <configuration>
+          <format>'${BUILD_ALIAS}-v'yyyyMMdd-HHmm</format>
+          <sourceReferences>
+            <generate>true</generate>
+          </sourceReferences>
+          <archiveSite>true</archiveSite>
+          <environments>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.eclipse.tycho.extras</groupId>
+            <artifactId>tycho-sourceref-jgit</artifactId>
+            <version>${tychoExtrasVersion}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tychoVersion}</version>
+        <extensions>true</extensions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tychoVersion}</version>
+        <configuration>
+          <resolver>p2</resolver>
+          <ignoreTychoRepositories>true</ignoreTychoRepositories>
+          <environments>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
+
+      <!-- to skip running tests (compile only) use commandline flag: -Dmaven.test.skip
+        To allow all tests in a pom to pass/fail, use commandline flag: -fae (fail
+        at end) -->
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <version>${tychoVersion}</version>
+        <configuration>
+          <useUIHarness>true</useUIHarness>
+          <useUIThread>true</useUIThread>
+          <!-- THE FOLLOWING LINE MUST NOT BE BROKEN BY AUTOFORMATTING -->
+          <!-- tycho.testArgLine repeated to keep jacoco configuration for jacoco-maven-plugin -->
+          <argLine>${tycho.testArgLine} ${memoryOptions1} ${memoryOptions2} ${applejdkProperties} ${platformSystemProperties} ${systemProperties} -Dusage_reporting_enabled=false -Dorg.eclipse.ui.testsDisableWorkbenchAutoSave=true</argLine>
+          <!-- https://docs.sonatype.org/display/TYCHO/How+to+run+SWTBot+tests+with+Tycho -->
+          <!-- set useUIThread=true for regular ui tests -->
+          <!-- set useUIThread=false for swtbot tests -->
+
+          <includes>
+            <include>**/AllTests.class</include>
+            <include>**/*AllTests*.class</include>
+            <include>**/*AllBotTests*.class</include>
+            <include>**/*TestSuite*.class</include>
+          </includes>
+          <!-- Workaround for JBIDE-16161/Eclipse bug 424104 -->
+          <dependencies>
+              <dependency>
+              <type>eclipse-feature</type>
+              <artifactId>org.eclipse.e4.rcp</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+          </dependencies>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-compiler-plugin</artifactId>
+        <version>${tychoVersion}</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <!-- source for bundles -->
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+        <version>${tychoVersion}</version>
+        <executions>
+          <execution>
+            <id>plugin-source</id>
+            <goals>
+              <goal>plugin-source</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.tycho.extras</groupId>
+        <artifactId>tycho-source-feature-plugin</artifactId>
+        <version>${tychoExtrasVersion}</version>
+        <executions>
+          <execution>
+            <id>source-feature</id>
+            <phase>package</phase>
+            <goals>
+              <goal>source-feature</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-plugin</artifactId>
+        <version>${tychoVersion}</version>
+        <executions>
+          <execution>
+            <id>attached-p2-metadata</id>
+            <phase>package</phase>
+            <goals>
+              <goal>p2-metadata</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- to resolve p2 dependencies at build time -->
+  <repositories>
+    <!-- get mockito from JBoss Locus site -->
+    <repository>
+      <id>mockito-site</id>
+      <url>${jbosstools-locus-site}</url>
+      <layout>p2</layout>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        </releases>
+    </repository>
+    <!-- needed for osgi dependencies and junit -->
+    <repository>
+      <id>eclipse-site</id>
+      <url>${eclipse-site}</url>
+      <layout>p2</layout>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        </releases>
+    </repository>
+  </repositories>
 
 </project>
