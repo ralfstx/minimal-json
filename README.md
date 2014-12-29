@@ -141,4 +141,4 @@ A continuous integration build is running at [Travis-CI](https://travis-ci.org/r
 License
 -------
 
-The code is available under the terms of the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html).
+The code is available under the terms of the [MIT License](http://opensource.org/licenses/MIT).
