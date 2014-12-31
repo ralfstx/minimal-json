@@ -23,8 +23,6 @@ package com.eclipsesource.json.performancetest;
 
 import static com.eclipsesource.json.performancetest.resources.Resources.readResource;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,7 +30,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.Writer;
 
 import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JsonRunner;
@@ -124,9 +121,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
   public void timeWriteToWriter( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       StringWriter output = new StringWriter();
-      Writer writer = new BufferedWriter( output );
-      runner.writeToWriter( model, writer );
-      writer.close();
+      runner.writeToWriter( model, output );
       if( output.getBuffer().length() == 0 ) {
         throw new RuntimeException();
       }
@@ -136,8 +131,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
   public void timeWriteToOutputStream( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      runner.writeToOutputStream( model, new BufferedOutputStream( output ) );
-      output.close();
+      runner.writeToOutputStream( model, output );
       if( output.size() == 0 ) {
         throw new RuntimeException();
       }
