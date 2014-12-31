@@ -27,7 +27,6 @@ import java.io.Writer;
 
 class JsonWriter {
 
-  private static final int CONTROL_CHARACTERS_START = 0x0000;
   private static final int CONTROL_CHARACTERS_END = 0x001f;
 
   private static final char[] QUOT_CHARS = { '\\', '"' };
@@ -56,42 +55,49 @@ class JsonWriter {
     writer.write( '"' );
     int length = string.length();
     int start = 0;
-    char[] chars = new char[ length ];
-    string.getChars( 0, length, chars, 0 );
     for( int index = 0; index < length; index++ ) {
-      char[] replacement = getReplacementChars( chars[index] );
+      char[] replacement = getReplacementChars( string.charAt( index ) );
       if( replacement != null ) {
-        writer.write( chars, start, index - start );
+        writer.write( string, start, index - start );
         writer.write( replacement );
-        start = index+1;
+        start = index + 1;
       }
     }
-    writer.write( chars, start, length - start );
+    writer.write( string, start, length - start );
     writer.write( '"' );
   }
 
   private static char[] getReplacementChars( char ch ) {
-    char[] replacement = null;
-    if( ch == '"' ) {
-      replacement = QUOT_CHARS;
-    } else if( ch == '\\' ) {
-      replacement = BS_CHARS;
-    } else if( ch == '\n' ) {
-      replacement = LF_CHARS;
-    } else if( ch == '\r' ) {
-      replacement = CR_CHARS;
-    } else if( ch == '\t' ) {
-      replacement = TAB_CHARS;
-    } else if( ch == '\u2028' ) {
-      replacement = UNICODE_2028_CHARS;
-    } else if( ch == '\u2029' ) {
-      replacement = UNICODE_2029_CHARS;
-    } else if( ch >= CONTROL_CHARACTERS_START && ch <= CONTROL_CHARACTERS_END ) {
-      replacement = new char[] { '\\', 'u',  '0', '0', '0', '0' };
-      replacement[4] = HEX_DIGITS[ ch >> 4 & 0x000f ];
-      replacement[5] = HEX_DIGITS[ ch & 0x000f ];
+    if( ch > '\\' ) {
+      if( ch < '\u2028' || ch > '\u2029') {
+        // The lower range contains 'a' .. 'z'. Only 2 checks required.
+        return null;
+      }
+      return ch == '\u2028' ? UNICODE_2028_CHARS : UNICODE_2029_CHARS;
     }
-    return replacement;
+    if( ch == '\\' ) {
+      return BS_CHARS;
+    }
+    if( ch > '"' ) {
+      // This range contains '0' .. '9' and 'A' .. 'Z'. Need 3 checks to get here.
+      return null;
+    }
+    if( ch == '"' ) {
+      return QUOT_CHARS;
+    }
+    if( ch > CONTROL_CHARACTERS_END ) {
+      return null;
+    }
+    if( ch == '\n' ) {
+      return LF_CHARS;
+    }
+    if( ch == '\r' ) {
+      return CR_CHARS;
+    }
+    if( ch == '\t' ) {
+      return TAB_CHARS;
+    }
+    return new char[] { '\\', 'u', '0', '0', HEX_DIGITS[ch >> 4 & 0x000f], HEX_DIGITS[ch & 0x000f] };
   }
 
   protected void writeObject( JsonObject object ) throws IOException {
