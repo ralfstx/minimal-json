@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2014 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 
-public class SimpleRunner implements JsonRunner {
+public class SimpleRunner extends JsonRunner {
 
   @Override
   public Object readFromString( String json ) {

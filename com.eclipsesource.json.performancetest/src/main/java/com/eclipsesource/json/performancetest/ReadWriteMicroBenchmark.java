@@ -41,6 +41,7 @@ public class ReadWriteMicroBenchmark extends SimpleBenchmark {
 
   private JsonRunner runner;
   private String json;
+  private byte[] jsonBytes;
   private Object model;
 
   @Param String input;
@@ -49,6 +50,7 @@ public class ReadWriteMicroBenchmark extends SimpleBenchmark {
   @Override
   protected void setUp() throws Exception {
     json = readResource( "input/" + input + ".json" );
+    jsonBytes = json.getBytes( JsonRunner.UTF8 );
     runner = JsonRunnerFactory.findByName( parser );
     model = runner.readFromString( json );
   }
@@ -62,10 +64,28 @@ public class ReadWriteMicroBenchmark extends SimpleBenchmark {
     }
   }
 
+  public void timeReadFromByteArray( int reps ) throws Exception {
+    for( int i = 0; i < reps; i++ ) {
+      Object model = runner.readFromByteArray( jsonBytes );
+      if( model == null ) {
+        throw new NullPointerException();
+      }
+    }
+  }
+
   public void timeWriteToString( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       String string = runner.writeToString( model );
       if( string == null ) {
+        throw new NullPointerException();
+      }
+    }
+  }
+
+  public void timeWriteToByteArray( int reps ) throws Exception {
+    for( int i = 0; i < reps; i++ ) {
+      byte[] byteArray = runner.writeToByteArray( model );
+      if( byteArray == null ) {
         throw new NullPointerException();
       }
     }

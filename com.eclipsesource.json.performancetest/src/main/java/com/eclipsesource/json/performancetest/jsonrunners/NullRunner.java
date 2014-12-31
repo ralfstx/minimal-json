@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2014 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,8 @@
  ******************************************************************************/
 package com.eclipsesource.json.performancetest.jsonrunners;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -28,10 +30,17 @@ import java.io.Writer;
 /**
  * A dummy JsonRunner that only returns fixed values. Used to determine the overhead of a benchmark.
  */
-public class NullRunner implements JsonRunner {
+public class NullRunner extends JsonRunner {
+
+  private static final byte[] X_BYTE = {'x'};
 
   @Override
   public Object readFromString( String string ) throws Exception {
+    return new Object();
+  }
+
+  @Override
+  public Object readFromByteArray( byte[] input ) throws Exception {
     return new Object();
   }
 
@@ -41,13 +50,28 @@ public class NullRunner implements JsonRunner {
   }
 
   @Override
+  public Object readFromInputStream( InputStream in ) throws Exception {
+    return new Object();
+  }
+
+  @Override
   public String writeToString( Object model ) throws Exception {
     return "x";
   }
 
   @Override
+  public byte[] writeToByteArray( Object model ) throws Exception {
+    return X_BYTE;
+  }
+
+  @Override
   public void writeToWriter( Object model, Writer writer ) throws Exception {
     writer.write( 'x' );
+  }
+
+  @Override
+  public void writeToOutputStream( Object model, OutputStream out ) throws Exception {
+    out.write( 'x' );
   }
 
 }

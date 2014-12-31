@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2014 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 
-public class JsonOrgRunner implements JsonRunner {
+public class JsonOrgRunner extends JsonRunner {
 
   @Override
   public Object readFromString( String string ) throws JSONException {

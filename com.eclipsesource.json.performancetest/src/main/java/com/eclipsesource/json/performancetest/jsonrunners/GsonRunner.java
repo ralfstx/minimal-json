@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2014 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 
-public class GsonRunner implements JsonRunner {
+public class GsonRunner extends JsonRunner {
 
   private final Gson gson;
 
