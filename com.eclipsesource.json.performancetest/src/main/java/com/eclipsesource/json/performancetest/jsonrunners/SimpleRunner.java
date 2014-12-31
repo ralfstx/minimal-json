@@ -7,7 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 
-public class SimpleRunner implements JsonRunner {
+public class SimpleRunner extends JsonRunner {
 
   @Override
   public Object readFromString( String json ) {

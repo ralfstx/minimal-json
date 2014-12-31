@@ -7,7 +7,7 @@ import java.io.Writer;
 import com.eclipsesource.json.JsonValue;
 
 
-public class MinimalJsonRunner implements JsonRunner {
+public class MinimalJsonRunner extends JsonRunner {
 
   @Override
   public Object readFromString( String string ) throws IOException {
