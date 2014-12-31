@@ -1,19 +1,19 @@
 Performance Tests for minimal-json
 ==================================
 
-Download required libraries
----------------------------
-
-    $ cd com.eclipsesource.json.performancetest
-    $ mvn -DoutputDirectory=lib dependency:copy-dependencies
-
-This command copies all dependencies to `lib/`.
-
 Run benchmarks
 --------------
 
-To run a benchmark, use the benchmark's main method. This will create a file `Benchmark.json` in
-the `results` folder, where `Benchmark` is the benchmark's simple class name.
+Each benchmark is defined in a class that "extends SimpleBenchmark".
+
+    $ mvn compile
+    $ ./run <benchmark-class-name> [caliper-args...]
+
+If you're on Windows:
+
+    $ mvn compile
+    $ mvn -DoutputDirectory=lib dependency:copy-dependencies
+    $ java -cp target/classes;lib/* <benchmark-class-name> [caliper-args...]
 
 Benchmarks use caliper v0.5-rc1 (v1.0 works different, uploads results to the cloud instead of
 creating JSON files). Benchmarks are executed by CaliperRunner. This class delegates to caliper's
