@@ -16,6 +16,15 @@
   </div>
 
   <script src="d3.v3.min.js" charset="utf-8"></script>
+  <script>
+    var upstream_url = "http://d3js.org/d3.v3.min.js"
+    if( typeof d3 === 'undefined' ) {
+      document.write( '<p>Couldn\'t find "d3.v3.min.js" locally.')
+      document.write( '  Loading from "'+upstream_url+'", which is slightly slower.<'+'/p>')
+      document.write( '<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"><'+'/script>' );
+    }
+  </script>
+
   <script src="benchmarks.js" charset="utf-8"></script>
   <script>
     window.onload = function() {
