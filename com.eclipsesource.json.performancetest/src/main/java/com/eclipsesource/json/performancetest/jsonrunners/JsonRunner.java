@@ -21,6 +21,7 @@
  ******************************************************************************/
 package com.eclipsesource.json.performancetest.jsonrunners;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -56,9 +57,9 @@ public abstract class JsonRunner {
   public abstract void writeToWriter( Object model, Writer writer ) throws Exception;
 
   public void writeToOutputStream( Object model, OutputStream out ) throws Exception {
-    OutputStreamWriter writer = new OutputStreamWriter( new OutputStreamWrapper( out ), UTF8 );
+    BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( new OutputStreamWrapper( out ), UTF8 ) );
     writeToWriter( model, writer );
-    writer.flush(); // OutputStreamWriter has an internal buffer
+    writer.flush();
   }
 
   /*
