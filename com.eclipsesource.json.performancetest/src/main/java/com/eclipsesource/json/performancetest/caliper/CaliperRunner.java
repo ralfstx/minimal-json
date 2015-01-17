@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,7 @@ import com.google.caliper.UserException.DisplayUsageException;
 public class CaliperRunner {
 
   private final Class<? extends Benchmark> benchmark;
-  private final Map<String, String[]> parameterDefaults = new HashMap<String, String[]>();
+  private final Map<String, String[]> parameterDefaults = new HashMap<>();
   private final File resultsFile;
 
   public CaliperRunner( Class<? extends Benchmark> benchmark ) {
@@ -102,7 +102,7 @@ public class CaliperRunner {
   }
 
   String[] adjustArgs( String[] args ) {
-    List<String> adjustedArgs = new ArrayList<String>();
+    List<String> adjustedArgs = new ArrayList<>();
     adjustedArgs.add( benchmark.getName() );
     adjustedArgs.addAll( Arrays.asList( args ) );
     Arguments parsed = Arguments.parse( adjustedArgs.toArray( new String[0] ) );

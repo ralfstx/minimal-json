@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,11 +46,11 @@ public class ListVsHashLookupBenchmark extends SimpleBenchmark {
   @Override
   protected void setUp() throws IOException {
     names = new String[ size ];
-    arrayList = new ArrayList<String>();
+    arrayList = new ArrayList<>();
     hashedList32 = new ExampleArrayListWithHash( 32 );
     hashedList64 = new ExampleArrayListWithHash( 64 );
     hashedList128 = new ExampleArrayListWithHash( 128 );
-    hashMap = new HashMap<String, Integer>();
+    hashMap = new HashMap<>();
     for( int index = 0; index < size; index++ ) {
       names[index] = Integer.toHexString( index );
       arrayList.add( names[index] );
@@ -63,7 +63,7 @@ public class ListVsHashLookupBenchmark extends SimpleBenchmark {
 
   public void timeFillArrayList( int reps ) {
     for( int r = 0; r < reps; r++ ) {
-      arrayList = new ArrayList<String>();
+      arrayList = new ArrayList<>();
       for( int index = 0; index < size; index++ ) {
         arrayList.add( names[index] );
       }
@@ -99,7 +99,7 @@ public class ListVsHashLookupBenchmark extends SimpleBenchmark {
 
   public void timeFillHashMap( int reps ) {
     for( int r = 0; r < reps; r++ ) {
-      hashMap = new HashMap<String, Integer>();
+      hashMap = new HashMap<>();
       for( int index = 0; index < size; index++ ) {
         hashMap.put( names[index], Integer.valueOf( index ) );
       }
