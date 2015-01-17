@@ -29,9 +29,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
@@ -123,11 +123,9 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
 
   public void timeWriteToWriter( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
-      ByteArrayOutputStream output = new ByteArrayOutputStream();
-      Writer writer = new BufferedWriter( new OutputStreamWriter( output ) );
-      runner.writeToWriter( model, writer );
-      writer.close();
-      if( output.size() == 0 ) {
+      StringWriter output = new StringWriter();
+      runner.writeToWriter( model, output );
+      if( output.getBuffer().length() == 0 ) {
         throw new RuntimeException();
       }
     }
@@ -136,8 +134,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
   public void timeWriteToOutputStream( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      runner.writeToOutputStream( model, new BufferedOutputStream( output ) );
-      output.close();
+      runner.writeToOutputStream( model, output );
       if( output.size() == 0 ) {
         throw new RuntimeException();
       }
