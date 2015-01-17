@@ -15,9 +15,12 @@
     </form>
   </div>
 
-  <script src="d3.v3.min.js" charset="utf-8"></script>
+  <script src="../lib/d3.v3.min.js" charset="utf-8"></script>
   <script src="benchmarks.js" charset="utf-8"></script>
   <script>
+    if( typeof d3 === "undefined" ) {
+      document.write( "<p>Error: Couldn't find file <em>d3.v3.min.js</em>.</p>" );
+    }
     window.onload = function() {
       benchmarks.init();
     };
