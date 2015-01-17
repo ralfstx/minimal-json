@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
 import com.eclipsesource.json.performancetest.jsonrunners.JsonRunner;
@@ -58,7 +59,7 @@ public class BufferedWriterBenchmark extends SimpleBenchmark {
   public void timeWriter( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      OutputStreamWriter writer = new OutputStreamWriter( output );
+      Writer writer = new OutputStreamWriter( output );
       runner.writeToWriter( model, writer );
       writer.close();
       if( output.size() == 0 ) {
@@ -70,10 +71,9 @@ public class BufferedWriterBenchmark extends SimpleBenchmark {
   public void timeBufferedWriter( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      OutputStreamWriter writer = new OutputStreamWriter( output );
-      BufferedWriter bufferedWriter = new BufferedWriter( writer );
-      runner.writeToWriter( model, bufferedWriter );
-      bufferedWriter.close();
+      Writer writer = new BufferedWriter( new OutputStreamWriter( output ) );
+      runner.writeToWriter( model, writer );
+      writer.close();
       if( output.size() == 0 ) {
         throw new RuntimeException();
       }
