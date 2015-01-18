@@ -208,9 +208,9 @@ var benchmarks = {};
   benchmarks.Chart = function( measurements, options ) {
     this.measurements = measurements;
     this.options = mergeObjects( {
-      width: 800,
+      width: 840,
       height: -1,
-      margin: { top: 20, right: 150, bottom: 30, left: 150 },
+      margin: { top: 20, right: 150, bottom: 30, left: 185 },
       colors: measurements.length > 10 ? d3.scale.category10().range() : d3.scale.category20().range(),
       unit: benchmarks.selectBestUnit( measurements )
     }, options );
