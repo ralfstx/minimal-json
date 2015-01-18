@@ -33,8 +33,8 @@ import com.eclipsesource.json.JsonObject.Member;
 
 
 /**
- * Represents a JSON object, i.e. an unordered set of name/value pairs, where the names are strings
- * and the values are JSON values.
+ * Represents a JSON object, a set of name/value pairs, where the names are strings and the values
+ * are JSON values.
  * <p>
  * Members can be added using the <code>add(String, ...)</code> methods which accept instances of
  * {@link JsonValue}, strings, primitive numbers, and boolean values. To modify certain values of an
@@ -48,7 +48,6 @@ import com.eclipsesource.json.JsonObject.Member;
  * obtained from the method {@link #names()}. This class also supports iterating over the members in
  * document order using an {@link #iterator()} or an enhanced for loop:
  * </p>
- *
  * <pre>
  * for( Member member : jsonObject ) {
  *   String name = member.getName();
@@ -654,7 +653,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Returns the number of members (i.e. name/value pairs) in this object.
+   * Returns the number of members (name/value pairs) in this object.
    *
    * @return the number of members in this object
    */
@@ -772,7 +771,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Represents a member of a JSON object, i.e. a pair of name and value.
+   * Represents a member of a JSON object, a pair of a name and a value.
    */
   public static class Member {
 

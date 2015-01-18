@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ import java.util.List;
 
 
 /**
- * Represents a JSON array, i.e. an ordered collection of JSON values.
+ * Represents a JSON array, an ordered collection of JSON values.
  * <p>
  * Elements can be added using the <code>add(...)</code> methods which accept instances of
  * {@link JsonValue}, strings, primitive numbers, and boolean values. To replace an element of an
