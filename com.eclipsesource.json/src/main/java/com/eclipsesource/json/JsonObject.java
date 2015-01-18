@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -676,7 +676,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * this object and will reflect subsequent changes. It cannot be used to modify this object.
    * Attempts to modify the returned list will result in an exception.
    *
-   * @returns a list of the names in this object
+   * @return a list of the names in this object
    */
   public List<String> names() {
     return Collections.unmodifiableList( names );
