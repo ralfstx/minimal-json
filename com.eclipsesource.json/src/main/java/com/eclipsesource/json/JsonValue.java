@@ -402,7 +402,9 @@ public abstract class JsonValue implements Serializable {
    *           if an I/O error occurs in the writer
    */
   public void writeTo( Writer writer ) throws IOException {
-    write( new JsonWriter( writer ) );
+    WritingBuffer buffer = new WritingBuffer( writer, 128 );
+    write( new JsonWriter( buffer ) );
+    buffer.flush();
   }
 
   /**
@@ -414,15 +416,14 @@ public abstract class JsonValue implements Serializable {
    */
   @Override
   public String toString() {
-    StringWriter stringWriter = new StringWriter();
-    JsonWriter jsonWriter = new JsonWriter( stringWriter );
+    StringWriter writer = new StringWriter();
     try {
-      write( jsonWriter );
+      writeTo( writer );
     } catch( IOException exception ) {
       // StringWriter does not throw IOExceptions
       throw new RuntimeException( exception );
     }
-    return stringWriter.toString();
+    return writer.toString();
   }
 
   /**
