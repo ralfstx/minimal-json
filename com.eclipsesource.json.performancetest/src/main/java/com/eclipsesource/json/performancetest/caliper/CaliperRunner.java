@@ -34,7 +34,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +54,7 @@ import com.google.caliper.UserException.DisplayUsageException;
 public class CaliperRunner {
 
   private final Class<? extends Benchmark> benchmark;
-  private final Map<String, String[]> parameterDefaults = new HashMap<>();
+  private final Map<String, String[]> parameterDefaults = new LinkedHashMap<>();
   private final File resultsFile;
 
   public CaliperRunner( Class<? extends Benchmark> benchmark ) {
