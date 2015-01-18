@@ -119,23 +119,37 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
   }
 
   public void timeWriteToWriter( int reps ) throws Exception {
+    int outputLength = getOutputLength();
     for( int i = 0; i < reps; i++ ) {
-      StringWriter output = new StringWriter();
+      StringWriter output = new StringWriter( outputLength );
       runner.writeToWriter( model, output );
-      if( output.getBuffer().length() == 0 ) {
+      if( output.getBuffer().length() != outputLength ) {
         throw new RuntimeException();
       }
     }
   }
 
+  private int getOutputLength() throws Exception {
+    StringWriter output = new StringWriter();
+    runner.writeToWriter( model, output );
+    return output.getBuffer().length();
+  }
+
   public void timeWriteToOutputStream( int reps ) throws Exception {
+    int outputSize = getOutputSize();
     for( int i = 0; i < reps; i++ ) {
-      ByteArrayOutputStream output = new ByteArrayOutputStream();
+      ByteArrayOutputStream output = new ByteArrayOutputStream( outputSize );
       runner.writeToOutputStream( model, output );
-      if( output.size() == 0 ) {
+      if( output.size() != outputSize ) {
         throw new RuntimeException();
       }
     }
+  }
+
+  private int getOutputSize() throws Exception {
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    runner.writeToOutputStream( model, output );
+    return output.size();
   }
 
   public static void main( String[] args ) throws IOException {
