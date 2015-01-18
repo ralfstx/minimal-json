@@ -6,10 +6,10 @@ minimal-json
 A fast and minimal JSON parser and writer for Java.
 It's not an object mapper, but a bare-bones library that aims at being
 
-* **minimal**: only one package, fair amount of classes, no dependencies
-* **fast**: performance comparable or better than other state-of-the-art JSON parsers (see below)
-* **leightweight**: object representation with minimal memory footprint (e.g. no HashMaps involved)
-* **easy to use**: reading, writing and modifying JSON shouldn't require lots of code (short names, fluent style)
+* **minimal**: no dependencies, single package with just a few classes, small download size (< 25kB)
+* **fast**: high performance comparable with other state-of-the-art parsers (see below)
+* **leightweight**: object representation with minimal memory footprint (e.g. no HashMaps)
+* **easy to use**: reading, writing and modifying JSON with few lines of code (short names, fluent style)
 
 Minimal-json is fully covered by unit tests, and field-tested by the [Eclipse RAP project](http://eclipse.org/rap).
 
@@ -100,9 +100,8 @@ Concurrency
 -----------
 
 The JSON structures in this library (`JsonObject` and `JsonArray`) are **not thread-safe**.
-When instances of these classes must be accessed from multiple threads,
-while at least one of these threads modifies the contents,
-the application must ensure that all access to the instance is properly synchronized.
+This is a deliberate choice for simplicity and performance as most of the time, the instances are only modified from a single thread.
+When JSON data structures must be accessed from multiple threads, while at least one of these threads modifies the contents, the application must ensure proper synchronization.
 
 Iterators will throw a `ConcurrentModificationException` when the contents of
 a JSON structure have been modified after the creation of the iterator.
@@ -110,23 +109,23 @@ a JSON structure have been modified after the creation of the iterator.
 Performance
 -----------
 
+I've spent days benchmarking and tuning minimal-json's reading and writing performance. You can see from the charts below that it performs quite reasonably. But damn, it's not quite as fast as Jackson! However, given that Jackson is a very complex machine compared to minimal-json, I think for the minimalism of this parser, the results are quite good.
+
 Below is the result of a performance comparison with other parsers, namely
-[org.json](http://www.json.org/java/index.html),
-[Gson](http://code.google.com/p/google-gson/),
-[Jackson](http://wiki.fasterxml.com/JacksonHome), and
-[JSON.simple](1.1.1).
-In this benchmark, an example JSON text (~30kB) is parsed into a Java object and then serialized to JSON again.
+[org.json](http://www.json.org/java/index.html) 20141113,
+[Gson](http://code.google.com/p/google-gson/) 2.3.1,
+[Jackson](http://wiki.fasterxml.com/JacksonHome) 2.5.0, and
+[JSON.simple](https://code.google.com/p/json-simple/) 1.1.1.
+In this benchmark, two example JSON texts are parsed into a Java object and then serialized to JSON again.
 All benchmarks can be found in [com.eclipsesource.json.performancetest](https://github.com/ralfstx/minimal-json/tree/master/com.eclipsesource.json.performancetest).
 
-Although minimal-json cannot outperform Jackson's exceptional writing performance
-(which is, to my knowledge, mostly achieved by caching),
-it offers a very good reading and writing performance.
+[rap.json](https://github.com/ralfstx/minimal-json/blob/master/com.eclipsesource.json.performancetest/src/main/resources/input/rap.json), ~ 30kB
 
-![Read/Write performance compared to other parsers](https://raw.github.com/ralfstx/minimal-json/master/com.eclipsesource.json.performancetest/performance.png "Read/Write performance compared to other parsers")
+![Read/Write performance compared to other parsers](https://raw.github.com/ralfstx/minimal-json/master/com.eclipsesource.json.performancetest/performance-rap.png "Read/Write performance compared to other parsers")
 
-Disclaimer: This benchmark is restricted to a single use case and to my limited knowledge on the other libraries.
-It probably ignores better ways to use these libraries.
-The purpose of this benchmark is only to ensure a reasonable reading and writing performance compared to other state-of-the-art parsers.
+[caliper.json](https://github.com/ralfstx/minimal-json/blob/master/com.eclipsesource.json.performancetest/src/main/resources/input/caliper.json), ~ 83kB
+
+![Read/Write performance compared to other parsers](https://raw.github.com/ralfstx/minimal-json/master/com.eclipsesource.json.performancetest/performance-caliper.png "Read/Write performance compared to other parsers")
 
 Build
 -----
