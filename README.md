@@ -127,6 +127,15 @@ All benchmarks can be found in [com.eclipsesource.json.performancetest](https://
 
 ![Read/Write performance compared to other parsers](https://raw.github.com/ralfstx/minimal-json/master/com.eclipsesource.json.performancetest/performance-caliper.png "Read/Write performance compared to other parsers")
 
+Who is using minimal-json?
+-----
+
+The following projects are using minimal-json:
+
+ * [Eclipse RAP project](http://eclipse.org/rap)
+ * [jshint-eclipse](https://github.com/eclipsesource/jshint-eclipse)
+ * [tern.java](https://github.com/angelozerr/tern.java)
+
 Build
 -----
 
