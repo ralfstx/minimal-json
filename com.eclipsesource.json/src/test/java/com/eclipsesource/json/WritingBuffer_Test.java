@@ -44,20 +44,36 @@ public class WritingBuffer_Test {
   }
 
   @Test
-  public void testWriteChar() throws IOException {
-    writer.write( 'x' );
+  public void testFlushEmpty() throws IOException {
     writer.flush();
 
-    assertEquals( "x", wrapped.toString() );
+    assertEquals( "", wrapped.toString() );
+  }
+
+  @Test
+  public void testWriteChar() throws IOException {
+    writer.write( 'c' );
+    writer.flush();
+
+    assertEquals( "c", wrapped.toString() );
+  }
+
+  @Test
+  public void testWriteChar_fit() throws IOException {
+    writer.write( createString( BUFFER_SIZE - 1 ) );
+    writer.write( 'c' );
+    writer.flush();
+
+    assertEquals( createString( BUFFER_SIZE - 1 ) + "c", wrapped.toString() );
   }
 
   @Test
   public void testWriteChar_exceeding() throws IOException {
     writer.write( createString( BUFFER_SIZE ) );
-    writer.write( 'x' );
+    writer.write( 'c' );
     writer.flush();
 
-    assertEquals( createString( BUFFER_SIZE + 1 ), wrapped.toString() );
+    assertEquals( createString( BUFFER_SIZE ) + "c", wrapped.toString() );
   }
 
   @Test
