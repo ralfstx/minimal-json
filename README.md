@@ -9,9 +9,10 @@ It's not an object mapper, but a bare-bones library that aims at being
 * **minimal**: no dependencies, single package with just a few classes, small download size (< 25kB)
 * **fast**: high performance comparable with other state-of-the-art parsers (see below)
 * **leightweight**: object representation with minimal memory footprint (e.g. no HashMaps)
-* **easy to use**: reading, writing and modifying JSON with few lines of code (short names, fluent style)
+* **easy to use**: reading, writing and modifying JSON with minimal code (short names, fluent style)
+* **OSGi ready**: directly usable in OSGi environments (the JAR contains a valid OSGi bundle manifest)
 
-Minimal-json is fully covered by unit tests, and field-tested by the [Eclipse RAP project](http://eclipse.org/rap).
+Minimal-json is fully covered by unit tests, and field-tested by the [Eclipse RAP project](http://eclipse.org/rap) and others (see below).
 
 Code Examples
 -------------
@@ -132,9 +133,24 @@ Who is using minimal-json?
 
 Here are some projects that use minimal-json:
 
- * [Eclipse RAP](http://eclipse.org/rap)
- * [jshint-eclipse](https://github.com/eclipsesource/jshint-eclipse)
- * [tern.java](https://github.com/angelozerr/tern.java)
+* [Hazelcast](http://hazelcast.org/)
+* [Eclipse RAP](http://eclipse.org/rap)
+* [Box.com Java SDK](http://opensource.box.com/box-java-sdk/)
+* [jshint-eclipse](https://github.com/eclipsesource/jshint-eclipse)
+* [tern.java](https://github.com/angelozerr/tern.java)
+
+Include
+-------
+
+You can include minimal-json from Maven Central by adding this dependency to your `pom.xml`:
+
+```xml
+<dependency>
+  <groupId>com.eclipsesource.minimal-json</groupId>
+  <artifactId>minimal-json</artifactId>
+  <version>0.9.2</version>
+</dependency>
+```
 
 Build
 -----
