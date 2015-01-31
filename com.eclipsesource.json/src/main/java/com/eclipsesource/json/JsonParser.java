@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -244,7 +244,7 @@ class JsonParser {
         }
         hexChars[i] = (char)current;
       }
-      captureBuffer.append( (char)Integer.parseInt( String.valueOf( hexChars ), 16 ) );
+      captureBuffer.append( (char)Integer.parseInt( new String( hexChars ), 16 ) );
       break;
     default:
       throw expected( "valid escape sequence" );
@@ -318,9 +318,6 @@ class JsonParser {
   }
 
   private void read() throws IOException {
-    if( isEndOfText() ) {
-      throw error( "Unexpected end of input" );
-    }
     if( index == fill ) {
       if( captureStart != -1 ) {
         captureBuffer.append( buffer, captureStart, fill - captureStart );
