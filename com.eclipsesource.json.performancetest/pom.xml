@@ -98,6 +98,11 @@
       <version>2.5.0</version>
     </dependency>
     <dependency>
+      <groupId>net.minidev</groupId>
+      <artifactId>json-smart</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.caliper</groupId>
       <artifactId>caliper</artifactId>
       <version>0.5-rc1</version>

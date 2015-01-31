@@ -69,7 +69,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     }
   }
 
-  public void timeReadFromByteArray( int reps ) throws Exception {
+  public void timeReadFromBytes( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       Object model = runner.readFromByteArray( jsonBytes );
       if( model == null ) {
@@ -89,7 +89,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     }
   }
 
-  public void timeReadFromInputStream( int reps ) throws Exception {
+  public void timeReadFromStream( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       InputStream inputStream = new ByteArrayInputStream( jsonBytes );
       Object model = runner.readFromInputStream( inputStream );
@@ -109,7 +109,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     }
   }
 
-  public void timeWriteToByteArray( int reps ) throws Exception {
+  public void timeWriteToBytes( int reps ) throws Exception {
     for( int i = 0; i < reps; i++ ) {
       byte[] byteArray = runner.writeToByteArray( model );
       if( byteArray == null ) {
@@ -135,7 +135,7 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
     return output.getBuffer().length();
   }
 
-  public void timeWriteToOutputStream( int reps ) throws Exception {
+  public void timeWriteToStream( int reps ) throws Exception {
     int outputSize = getOutputSize();
     for( int i = 0; i < reps; i++ ) {
       ByteArrayOutputStream output = new ByteArrayOutputStream( outputSize );
@@ -154,7 +154,8 @@ public class ReadWriteBenchmark extends SimpleBenchmark {
 
   public static void main( String[] args ) throws IOException {
     CaliperRunner runner = new CaliperRunner( ReadWriteBenchmark.class );
-    runner.addParameterDefault( "parser", "org-json", "gson", "jackson", "json-simple", "minimal-json" );
+    runner.addParameterDefault( "parser", "org-json", "gson", "jackson", "json-simple",
+                                "json-smart", "minimal-json" );
     runner.addParameterDefault( "input", "rap", "caliper" );
     runner.exec( args );
   }

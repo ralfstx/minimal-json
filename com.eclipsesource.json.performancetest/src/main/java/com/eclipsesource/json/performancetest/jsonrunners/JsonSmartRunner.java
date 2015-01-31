@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +21,45 @@
  ******************************************************************************/
 package com.eclipsesource.json.performancetest.jsonrunners;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.Writer;
 
-public class JsonRunnerFactory {
+import net.minidev.json.JSONAware;
+import net.minidev.json.JSONStreamAware;
+import net.minidev.json.JSONValue;
 
-  public static JsonRunner findByName( String name ) {
-    if( "null".equals( name ) ) {
-      return new NullRunner();
-    } else if( "org-json".equals( name ) ) {
-      return new JsonOrgRunner();
-    } else if( "gson".equals( name ) ) {
-      return new GsonRunner();
-    } else if( "jackson".equals( name ) ) {
-      return new JacksonRunner();
-    } else if( "json-simple".equals( name ) ) {
-      return new SimpleRunner();
-    } else if( "json-smart".equals( name ) ) {
-      return new JsonSmartRunner();
-    } else if( "minimal-json".equals( name ) ) {
-      return new MinimalJsonRunner();
-    } else {
-      throw new IllegalArgumentException( "Unknown parser: " + name );
-    }
+
+public class JsonSmartRunner extends JsonRunner {
+
+  @Override
+  public Object readFromString( String string ) throws Exception {
+    return JSONValue.parse( string );
+  }
+
+  @Override
+  public Object readFromByteArray( byte[] bytes ) throws Exception {
+    return JSONValue.parse( bytes );
+  }
+
+  @Override
+  public Object readFromReader( Reader reader ) throws Exception {
+    return JSONValue.parse( reader );
+  }
+
+  @Override
+  public Object readFromInputStream( InputStream in ) throws Exception {
+    return JSONValue.parse( in );
+  }
+
+  @Override
+  public String writeToString( Object model ) throws Exception {
+    return ((JSONAware)model).toJSONString();
+  }
+
+  @Override
+  public void writeToWriter( Object model, Writer writer ) throws Exception {
+    ((JSONStreamAware)model).writeJSONString( writer );
   }
 
 }
