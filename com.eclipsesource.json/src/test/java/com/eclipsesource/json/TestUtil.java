@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,17 +43,20 @@ public class TestUtil {
 
   @SuppressWarnings( "unchecked" )
   public static <T extends Exception> T assertException( Class<T> type, Runnable runnable ) {
-    Exception exception = catchException( runnable );
+    Exception exception = catchException( runnable, type );
     assertNotNull( "Expected exception: " + type.getName(), exception );
-    assertSame( "exception type", type, exception.getClass() );
     return (T)exception;
   }
 
-  private static Exception catchException( Runnable runnable ) {
+  private static Exception catchException( Runnable runnable, Class<? extends Exception> type ) {
     try {
       runnable.run();
       return null;
     } catch( Exception exception ) {
+      if( !type.isAssignableFrom( exception.getClass() ) ) {
+        // It must be a RuntimeException, since Runnable.run does not throw checked exceptions
+        throw(RuntimeException) exception;
+      }
       return exception;
     }
   }
