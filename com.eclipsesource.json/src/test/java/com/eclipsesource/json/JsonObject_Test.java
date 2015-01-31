@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,8 @@ package com.eclipsesource.json;
 import static com.eclipsesource.json.TestUtil.assertException;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -37,6 +36,7 @@ import java.util.NoSuchElementException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 
 import com.eclipsesource.json.JsonObject.HashIndexTable;
 import com.eclipsesource.json.JsonObject.Member;
@@ -673,12 +673,66 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void write_delegatesToJsonWriter() throws IOException {
+  public void write_empty() throws IOException {
     JsonWriter writer = mock( JsonWriter.class );
+    object.write( writer );
+
+    InOrder inOrder = inOrder( writer );
+    inOrder.verify( writer ).writeBeginObject();
+    inOrder.verify( writer ).writeEndObject();
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  @Test
+  public void write_withSingleValue() throws IOException {
+    JsonWriter writer = mock( JsonWriter.class );
+    object.add( "a", 23 );
 
     object.write( writer );
 
-    verify( writer ).writeObject( same( object ) );
+    InOrder inOrder = inOrder( writer );
+    inOrder.verify( writer ).writeBeginObject();
+    inOrder.verify( writer ).writeString("a");
+    inOrder.verify( writer ).writeNameValueSeparator();
+    inOrder.verify( writer ).write( "23" );
+    inOrder.verify( writer ).writeEndObject();
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  @Test
+  public void write_withMultipleValues() throws IOException {
+    JsonWriter writer = mock( JsonWriter.class );
+    object.add( "a", 23 );
+    object.add( "b", 3.14f );
+    object.add( "c", "foo" );
+    object.add( "d", true );
+    object.add( "e", ( String )null );
+
+    object.write( writer );
+
+    InOrder inOrder = inOrder( writer );
+    inOrder.verify( writer ).writeBeginObject();
+    inOrder.verify( writer ).writeString("a");
+    inOrder.verify( writer ).writeNameValueSeparator();
+    inOrder.verify( writer ).write( "23" );
+    inOrder.verify( writer ).writeObjectValueSeparator();
+    inOrder.verify( writer ).writeString("b");
+    inOrder.verify( writer ).writeNameValueSeparator();
+    inOrder.verify( writer ).write( "3.14" );
+    inOrder.verify( writer ).writeObjectValueSeparator();
+    inOrder.verify( writer ).writeString("c");
+    inOrder.verify( writer ).writeNameValueSeparator();
+    inOrder.verify( writer ).writeString( "foo" );
+    inOrder.verify( writer ).writeObjectValueSeparator();
+    inOrder.verify( writer ).writeString("d");
+    inOrder.verify( writer ).writeNameValueSeparator();
+    inOrder.verify( writer ).write( "true" );
+    inOrder.verify( writer ).writeObjectValueSeparator();
+    inOrder.verify( writer ).writeString("e");
+    inOrder.verify( writer ).writeNameValueSeparator();
+    inOrder.verify( writer ).write( "null" );
+    inOrder.verify( writer ).writeEndObject();
+    inOrder.verifyNoMoreInteractions();
   }
 
   @Test

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -100,21 +100,6 @@ class JsonWriter {
     return new char[] { '\\', 'u', '0', '0', HEX_DIGITS[ch >> 4 & 0x000f], HEX_DIGITS[ch & 0x000f] };
   }
 
-  protected void writeObject( JsonObject object ) throws IOException {
-    writeBeginObject();
-    boolean first = true;
-    for( JsonObject.Member member : object ) {
-      if( !first ) {
-        writeObjectValueSeparator();
-      }
-      writeString( member.getName() );
-      writeNameValueSeparator();
-      member.getValue().write( this );
-      first = false;
-    }
-    writeEndObject();
-  }
-
   protected void writeBeginObject() throws IOException {
     writer.write( '{' );
   }
@@ -129,19 +114,6 @@ class JsonWriter {
 
   protected void writeObjectValueSeparator() throws IOException {
     writer.write( ',' );
-  }
-
-  protected void writeArray( JsonArray array ) throws IOException {
-    writeBeginArray();
-    boolean first = true;
-    for( JsonValue value : array ) {
-      if( !first ) {
-        writeArrayValueSeparator();
-      }
-      value.write( this );
-      first = false;
-    }
-    writeEndArray();
   }
 
   protected void writeBeginArray() throws IOException {

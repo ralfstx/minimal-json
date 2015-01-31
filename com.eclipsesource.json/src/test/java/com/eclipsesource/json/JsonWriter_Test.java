@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -150,68 +150,12 @@ public class JsonWriter_Test {
   }
 
   @Test
-  public void writeObject_empty() throws IOException {
-    writer.writeObject( new JsonObject() );
-
-    assertEquals( "{}", output.toString() );
-  }
-
-  @Test
-  public void writeObject_withSingleValue() throws IOException {
-    JsonObject object = new JsonObject().add( "a", 23 );
-
-    writer.writeObject( object );
-
-    assertEquals( "{\"a\":23}", output.toString() );
-  }
-
-  @Test
-  public void writeObject_withMultipleValues() throws IOException {
-    JsonObject object = new JsonObject();
-    object.add( "a", 23 );
-    object.add( "b", 3.14f );
-    object.add( "c", "foo" );
-    object.add( "d", true );
-    object.add( "e", ( String )null );
-
-    writer.writeObject( object );
-
-    assertEquals( "{\"a\":23,\"b\":3.14,\"c\":\"foo\",\"d\":true,\"e\":null}",
-                  output.toString() );
-  }
-
-  @Test
   public void writeArrayParts() throws IOException {
     writer.writeBeginArray();
     writer.writeArrayValueSeparator();
     writer.writeEndArray();
 
     assertEquals( "[,]", output.toString() );
-  }
-
-  @Test
-  public void writeArray_empty() throws IOException {
-    writer.writeArray( new JsonArray() );
-
-    assertEquals( "[]", output.toString() );
-  }
-
-  @Test
-  public void writeArray_withSingleValue() throws IOException {
-    JsonArray array = new JsonArray().add( 23 );
-
-    writer.writeArray( array );
-
-    assertEquals( "[23]", output.toString() );
-  }
-
-  @Test
-  public void writeArray_withMultipleValues() throws IOException {
-    JsonArray array = new JsonArray().add( 23 ).add( "foo" ).add( false );
-
-    writer.writeArray( array );
-
-    assertEquals( "[23,\"foo\",false]", output.toString() );
   }
 
   private static String string( char ... chars ) {
