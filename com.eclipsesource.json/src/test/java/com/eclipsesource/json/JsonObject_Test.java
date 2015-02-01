@@ -678,8 +678,8 @@ public class JsonObject_Test {
     object.write( writer );
 
     InOrder inOrder = inOrder( writer );
-    inOrder.verify( writer ).writeBeginObject();
-    inOrder.verify( writer ).writeEndObject();
+    inOrder.verify( writer ).writeObjectOpen();
+    inOrder.verify( writer ).writeObjectClose();
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -691,11 +691,11 @@ public class JsonObject_Test {
     object.write( writer );
 
     InOrder inOrder = inOrder( writer );
-    inOrder.verify( writer ).writeBeginObject();
-    inOrder.verify( writer ).writeString("a");
-    inOrder.verify( writer ).writeNameValueSeparator();
-    inOrder.verify( writer ).write( "23" );
-    inOrder.verify( writer ).writeEndObject();
+    inOrder.verify( writer ).writeObjectOpen();
+    inOrder.verify( writer ).writeMemberName( "a" );
+    inOrder.verify( writer ).writeMemberSeparator();
+    inOrder.verify( writer ).writeNumber( "23" );
+    inOrder.verify( writer ).writeObjectClose();
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -706,32 +706,32 @@ public class JsonObject_Test {
     object.add( "b", 3.14f );
     object.add( "c", "foo" );
     object.add( "d", true );
-    object.add( "e", ( String )null );
+    object.add( "e", (String)null );
 
     object.write( writer );
 
     InOrder inOrder = inOrder( writer );
-    inOrder.verify( writer ).writeBeginObject();
-    inOrder.verify( writer ).writeString("a");
-    inOrder.verify( writer ).writeNameValueSeparator();
-    inOrder.verify( writer ).write( "23" );
-    inOrder.verify( writer ).writeObjectValueSeparator();
-    inOrder.verify( writer ).writeString("b");
-    inOrder.verify( writer ).writeNameValueSeparator();
-    inOrder.verify( writer ).write( "3.14" );
-    inOrder.verify( writer ).writeObjectValueSeparator();
-    inOrder.verify( writer ).writeString("c");
-    inOrder.verify( writer ).writeNameValueSeparator();
+    inOrder.verify( writer ).writeObjectOpen();
+    inOrder.verify( writer ).writeMemberName( "a" );
+    inOrder.verify( writer ).writeMemberSeparator();
+    inOrder.verify( writer ).writeNumber( "23" );
+    inOrder.verify( writer ).writeObjectSeparator();
+    inOrder.verify( writer ).writeMemberName( "b" );
+    inOrder.verify( writer ).writeMemberSeparator();
+    inOrder.verify( writer ).writeNumber( "3.14" );
+    inOrder.verify( writer ).writeObjectSeparator();
+    inOrder.verify( writer ).writeMemberName( "c" );
+    inOrder.verify( writer ).writeMemberSeparator();
     inOrder.verify( writer ).writeString( "foo" );
-    inOrder.verify( writer ).writeObjectValueSeparator();
-    inOrder.verify( writer ).writeString("d");
-    inOrder.verify( writer ).writeNameValueSeparator();
-    inOrder.verify( writer ).write( "true" );
-    inOrder.verify( writer ).writeObjectValueSeparator();
-    inOrder.verify( writer ).writeString("e");
-    inOrder.verify( writer ).writeNameValueSeparator();
-    inOrder.verify( writer ).write( "null" );
-    inOrder.verify( writer ).writeEndObject();
+    inOrder.verify( writer ).writeObjectSeparator();
+    inOrder.verify( writer ).writeMemberName( "d" );
+    inOrder.verify( writer ).writeMemberSeparator();
+    inOrder.verify( writer ).writeLiteral( "true" );
+    inOrder.verify( writer ).writeObjectSeparator();
+    inOrder.verify( writer ).writeMemberName( "e" );
+    inOrder.verify( writer ).writeMemberSeparator();
+    inOrder.verify( writer ).writeLiteral( "null" );
+    inOrder.verify( writer ).writeObjectClose();
     inOrder.verifyNoMoreInteractions();
   }
 

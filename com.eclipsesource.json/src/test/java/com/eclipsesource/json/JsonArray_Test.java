@@ -534,8 +534,8 @@ public class JsonArray_Test {
     array.write( writer );
 
     InOrder inOrder = inOrder( writer );
-    inOrder.verify( writer ).writeBeginArray();
-    inOrder.verify( writer ).writeEndArray();
+    inOrder.verify( writer ).writeArrayOpen();
+    inOrder.verify( writer ).writeArrayClose();
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -547,9 +547,9 @@ public class JsonArray_Test {
     array.write( writer );
 
     InOrder inOrder = inOrder( writer );
-    inOrder.verify( writer ).writeBeginArray();
-    inOrder.verify( writer ).write( "23" );
-    inOrder.verify( writer ).writeEndArray();
+    inOrder.verify( writer ).writeArrayOpen();
+    inOrder.verify( writer ).writeNumber( "23" );
+    inOrder.verify( writer ).writeArrayClose();
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -561,11 +561,13 @@ public class JsonArray_Test {
     array.write( writer );
 
     InOrder inOrder = inOrder( writer );
-    inOrder.verify( writer ).writeBeginArray();
-    inOrder.verify( writer ).write( "23" );
+    inOrder.verify( writer ).writeArrayOpen();
+    inOrder.verify( writer ).writeNumber( "23" );
+    inOrder.verify( writer ).writeArraySeparator();
     inOrder.verify( writer ).writeString( "foo" );
-    inOrder.verify( writer ).write( "false" );
-    inOrder.verify( writer ).writeEndArray();
+    inOrder.verify( writer ).writeArraySeparator();
+    inOrder.verify( writer ).writeLiteral( "false" );
+    inOrder.verify( writer ).writeArrayClose();
     inOrder.verifyNoMoreInteractions();
   }
 

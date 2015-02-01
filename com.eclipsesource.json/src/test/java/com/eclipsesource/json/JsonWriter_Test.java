@@ -42,10 +42,17 @@ public class JsonWriter_Test {
   }
 
   @Test
-  public void write_passesThrough() throws IOException {
-    writer.write( "foo" );
+  public void writeLiteral() throws IOException {
+    writer.writeLiteral( "foo" );
 
     assertEquals( "foo", output.toString() );
+  }
+
+  @Test
+  public void writeNumber() throws IOException {
+    writer.writeNumber( "23" );
+
+    assertEquals( "23", output.toString() );
   }
 
   @Test
@@ -58,6 +65,39 @@ public class JsonWriter_Test {
   @Test
   public void writeSting_escapesBackslashes() throws IOException {
     writer.writeString( "foo\\bar" );
+
+    assertEquals( "\"foo\\\\bar\"", output.toString() );
+  }
+
+  @Test
+  public void writeArrayParts() throws IOException {
+    writer.writeArrayOpen();
+    writer.writeArraySeparator();
+    writer.writeArrayClose();
+
+    assertEquals( "[,]", output.toString() );
+  }
+
+  @Test
+  public void writeObjectParts() throws IOException {
+    writer.writeObjectOpen();
+    writer.writeMemberSeparator();
+    writer.writeObjectSeparator();
+    writer.writeObjectClose();
+
+    assertEquals( "{:,}", output.toString() );
+  }
+
+  @Test
+  public void writeMemberName_empty() throws IOException {
+    writer.writeMemberName( "" );
+
+    assertEquals( "\"\"", output.toString() );
+  }
+
+  @Test
+  public void writeMemberName_escapesBackslashes() throws IOException {
+    writer.writeMemberName( "foo\\bar" );
 
     assertEquals( "\"foo\\\\bar\"", output.toString() );
   }
@@ -139,26 +179,7 @@ public class JsonWriter_Test {
     assertEquals( "\"x\\\\\"", output.toString() );
   }
 
-  @Test
-  public void writeObjectParts() throws IOException {
-    writer.writeBeginObject();
-    writer.writeNameValueSeparator();
-    writer.writeObjectValueSeparator();
-    writer.writeEndObject();
-
-    assertEquals( "{:,}", output.toString() );
-  }
-
-  @Test
-  public void writeArrayParts() throws IOException {
-    writer.writeBeginArray();
-    writer.writeArrayValueSeparator();
-    writer.writeEndArray();
-
-    assertEquals( "[,]", output.toString() );
-  }
-
-  private static String string( char ... chars ) {
+  private static String string( char... chars ) {
     String string = String.valueOf( chars );
     return string;
   }

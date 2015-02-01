@@ -47,12 +47,55 @@ class JsonWriter {
     this.writer = writer;
   }
 
-  void write( String string ) throws IOException {
+  protected void writeLiteral( String value ) throws IOException {
+    writer.write( value );
+  }
+
+  protected void writeNumber( String string ) throws IOException {
     writer.write( string );
   }
 
-  void writeString( String string ) throws IOException {
+  protected void writeString( String string ) throws IOException {
     writer.write( '"' );
+    writeJsonString( string );
+    writer.write( '"' );
+  }
+
+  protected void writeArrayOpen() throws IOException {
+    writer.write( '[' );
+  }
+
+  protected void writeArrayClose() throws IOException {
+    writer.write( ']' );
+  }
+
+  protected void writeArraySeparator() throws IOException {
+    writer.write( ',' );
+  }
+
+  protected void writeObjectOpen() throws IOException {
+    writer.write( '{' );
+  }
+
+  protected void writeObjectClose() throws IOException {
+    writer.write( '}' );
+  }
+
+  protected void writeMemberName( String name ) throws IOException {
+    writer.write( '"' );
+    writeJsonString( name );
+    writer.write( '"' );
+  }
+
+  protected void writeMemberSeparator() throws IOException {
+    writer.write( ':' );
+  }
+
+  protected void writeObjectSeparator() throws IOException {
+    writer.write( ',' );
+  }
+
+  protected void writeJsonString( String string ) throws IOException {
     int length = string.length();
     int start = 0;
     for( int index = 0; index < length; index++ ) {
@@ -64,7 +107,6 @@ class JsonWriter {
       }
     }
     writer.write( string, start, length - start );
-    writer.write( '"' );
   }
 
   private static char[] getReplacementChars( char ch ) {
@@ -98,34 +140,6 @@ class JsonWriter {
       return TAB_CHARS;
     }
     return new char[] { '\\', 'u', '0', '0', HEX_DIGITS[ch >> 4 & 0x000f], HEX_DIGITS[ch & 0x000f] };
-  }
-
-  protected void writeBeginObject() throws IOException {
-    writer.write( '{' );
-  }
-
-  protected void writeEndObject() throws IOException {
-    writer.write( '}' );
-  }
-
-  protected void writeNameValueSeparator() throws IOException {
-    writer.write( ':' );
-  }
-
-  protected void writeObjectValueSeparator() throws IOException {
-    writer.write( ',' );
-  }
-
-  protected void writeBeginArray() throws IOException {
-    writer.write( '[' );
-  }
-
-  protected void writeEndArray() throws IOException {
-    writer.write( ']' );
-  }
-
-  protected void writeArrayValueSeparator() throws IOException {
-    writer.write( ',' );
   }
 
 }

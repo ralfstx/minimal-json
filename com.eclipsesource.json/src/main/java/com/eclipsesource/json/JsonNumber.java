@@ -43,7 +43,7 @@ class JsonNumber extends JsonValue {
 
   @Override
   void write( JsonWriter writer ) throws IOException {
-    writer.write( string );
+    writer.writeNumber( string );
   }
 
   @Override

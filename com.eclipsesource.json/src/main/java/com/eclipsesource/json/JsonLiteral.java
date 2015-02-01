@@ -45,7 +45,7 @@ class JsonLiteral extends JsonValue {
 
   @Override
   void write( JsonWriter writer ) throws IOException {
-    writer.write( value );
+    writer.writeLiteral( value );
   }
 
   @Override

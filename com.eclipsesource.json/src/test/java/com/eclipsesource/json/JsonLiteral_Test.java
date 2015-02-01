@@ -71,7 +71,7 @@ public class JsonLiteral_Test {
 
     NULL.write( writer );
 
-    verify( writer ).write( "null" );
+    verify( writer ).writeLiteral( "null" );
     verifyNoMoreInteractions( writer );
   }
 
@@ -81,7 +81,7 @@ public class JsonLiteral_Test {
 
     TRUE.write( writer );
 
-    verify( writer ).write( "true" );
+    verify( writer ).writeLiteral( "true" );
     verifyNoMoreInteractions( writer );
   }
 
@@ -91,7 +91,7 @@ public class JsonLiteral_Test {
 
     FALSE.write( writer );
 
-    verify( writer ).write( "false" );
+    verify( writer ).writeLiteral( "false" );
     verifyNoMoreInteractions( writer );
   }
 

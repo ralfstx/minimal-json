@@ -451,17 +451,17 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
 
   @Override
   void write( JsonWriter writer ) throws IOException {
-    writer.writeBeginArray();
+    writer.writeArrayOpen();
     Iterator<JsonValue> iterator = iterator();
     boolean first = true;
     while( iterator.hasNext() ) {
       if( !first ) {
-        writer.writeArrayValueSeparator();
+        writer.writeArraySeparator();
       }
       iterator.next().write( writer );
       first = false;
     }
-    writer.writeEndArray();
+    writer.writeArrayClose();
   }
 
   @Override
