@@ -446,7 +446,7 @@ public abstract class JsonValue implements Serializable {
     return super.hashCode();
   }
 
-  protected abstract void write( JsonWriter writer ) throws IOException;
+  abstract void write( JsonWriter writer ) throws IOException;
 
   private static String cutOffPointZero( String string ) {
     if( string.endsWith( ".0" ) ) {

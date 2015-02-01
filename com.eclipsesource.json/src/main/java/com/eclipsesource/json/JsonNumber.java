@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ class JsonNumber extends JsonValue {
   }
 
   @Override
-  protected void write( JsonWriter writer ) throws IOException {
+  void write( JsonWriter writer ) throws IOException {
     writer.write( string );
   }
 

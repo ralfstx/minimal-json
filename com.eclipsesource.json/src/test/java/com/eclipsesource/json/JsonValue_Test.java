@@ -270,7 +270,7 @@ public class JsonValue_Test {
   public void isXxx_returnsFalseForIncompatibleType() {
     JsonValue jsonValue = new JsonValue() {
       @Override
-      protected void write( JsonWriter writer ) throws IOException {
+      void write( JsonWriter writer ) throws IOException {
       }
     };
 

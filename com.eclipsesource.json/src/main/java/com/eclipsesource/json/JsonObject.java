@@ -710,7 +710,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   @Override
-  protected void write( JsonWriter writer ) throws IOException {
+  void write( JsonWriter writer ) throws IOException {
     writer.writeObject( this );
   }
 

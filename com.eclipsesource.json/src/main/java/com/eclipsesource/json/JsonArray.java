@@ -450,7 +450,7 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   }
 
   @Override
-  protected void write( JsonWriter writer ) throws IOException {
+  void write( JsonWriter writer ) throws IOException {
     writer.writeArray( this );
   }
 
