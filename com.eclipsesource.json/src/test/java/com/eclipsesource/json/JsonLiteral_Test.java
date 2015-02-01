@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,143 +21,150 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import static com.eclipsesource.json.JsonLiteral.*;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
-import java.io.StringWriter;
 
-import org.junit.Before;
 import org.junit.Test;
 
 
 public class JsonLiteral_Test {
 
-  private StringWriter stringWriter;
-  private JsonWriter jsonWriter;
-
-  @Before
-  public void setUp() {
-    stringWriter = new StringWriter();
-    jsonWriter = new JsonWriter( stringWriter );
-  }
-
-  @Test
-  public void write_NULL() throws IOException {
-    JsonValue.NULL.write( jsonWriter );
-
-    assertEquals( "null", stringWriter.toString() );
-  }
-
-  @Test
-  public void write_TRUE() throws IOException {
-    JsonValue.TRUE.write( jsonWriter );
-
-    assertEquals( "true", stringWriter.toString() );
-  }
-
-  @Test
-  public void write_FALSE() throws IOException {
-    JsonValue.FALSE.write( jsonWriter );
-
-    assertEquals( "false", stringWriter.toString() );
-  }
-
-  @Test
-  public void toString_NULL() {
-    assertEquals( "null", JsonValue.NULL.toString() );
-  }
-
-  @Test
-  public void toString_TRUE() {
-    assertEquals( "true", JsonValue.TRUE.toString() );
-  }
-
-  @Test
-  public void toString_FALSE() {
-    assertEquals( "false", JsonValue.FALSE.toString() );
-  }
-
-  @Test
-  public void asBoolean() {
-    assertTrue( JsonValue.TRUE.asBoolean() );
-    assertFalse( JsonValue.FALSE.asBoolean() );
-  }
-
-  @Test( expected = UnsupportedOperationException.class )
-  public void asBoolean_failsIfNotBoolean() {
-    new JsonLiteral( "foo" ).asBoolean();
-  }
-
   @Test
   public void isNull() {
-    assertTrue( JsonValue.NULL.isNull() );
-    assertFalse( JsonValue.TRUE.isNull() );
-    assertFalse( JsonValue.FALSE.isNull() );
-  }
+    assertTrue( NULL.isNull() );
 
-  @Test
-  public void isBoolean() {
-    assertFalse( JsonValue.NULL.isBoolean() );
-    assertTrue( JsonValue.TRUE.isBoolean() );
-    assertTrue( JsonValue.FALSE.isBoolean() );
+    assertFalse( TRUE.isNull() );
+    assertFalse( FALSE.isNull() );
   }
 
   @Test
   public void isTrue() {
-    assertFalse( JsonValue.NULL.isTrue() );
-    assertTrue( JsonValue.TRUE.isTrue() );
-    assertFalse( JsonValue.FALSE.isTrue() );
+    assertTrue( TRUE.isTrue() );
+
+    assertFalse( NULL.isTrue() );
+    assertFalse( FALSE.isTrue() );
   }
 
   @Test
   public void isFalse() {
-    assertFalse( JsonValue.NULL.isFalse() );
-    assertFalse( JsonValue.TRUE.isFalse() );
-    assertTrue( JsonValue.FALSE.isFalse() );
+    assertTrue( FALSE.isFalse() );
+
+    assertFalse( NULL.isFalse() );
+    assertFalse( TRUE.isFalse() );
   }
 
   @Test
-  public void equals_trueForSameInstance() {
-    JsonLiteral literal = new JsonLiteral( "foo" );
-    assertTrue( literal.equals( literal ) );
+  public void isBoolean() {
+    assertTrue( TRUE.isBoolean() );
+    assertTrue( FALSE.isBoolean() );
+
+    assertFalse( NULL.isBoolean() );
   }
 
   @Test
-  public void equals_trueForEqualObjects() {
-    assertTrue( new JsonLiteral( "foo" ).equals( new JsonLiteral( "foo" ) ) );
+  public void NULL_write() throws IOException {
+    JsonWriter writer = mock( JsonWriter.class );
+
+    NULL.write( writer );
+
+    verify( writer ).write( "null" );
+    verifyNoMoreInteractions( writer );
   }
 
   @Test
-  public void equals_falseForDifferentArrays() {
-    assertFalse( new JsonLiteral( "foo" ).equals( new JsonLiteral( "bar" ) ) );
+  public void TRUE_write() throws IOException {
+    JsonWriter writer = mock( JsonWriter.class );
+
+    TRUE.write( writer );
+
+    verify( writer ).write( "true" );
+    verifyNoMoreInteractions( writer );
   }
 
   @Test
-  public void equals_falseForNull() {
-    assertFalse( new JsonLiteral( "foo" ).equals( null ) );
+  public void FALSE_write() throws IOException {
+    JsonWriter writer = mock( JsonWriter.class );
+
+    FALSE.write( writer );
+
+    verify( writer ).write( "false" );
+    verifyNoMoreInteractions( writer );
   }
 
   @Test
-  public void equals_falseForSubclass() {
-    assertFalse( new JsonLiteral( "foo" ).equals( new JsonLiteral( "foo" ) {} ) );
+  public void NULL_toString() {
+    assertEquals( "null", NULL.toString() );
   }
 
   @Test
-  public void hashCode_equalsForEqualObjects() {
-    assertTrue( new JsonLiteral( "foo" ).hashCode() == new JsonLiteral( "foo" ).hashCode() );
+  public void TRUE_toString() {
+    assertEquals( "true", TRUE.toString() );
   }
 
   @Test
-  public void hashCode_differsForDifferingObjects() {
-    assertFalse( new JsonLiteral( "foo" ).hashCode() == new JsonLiteral( "bar" ).hashCode() );
+  public void FALSE_toString() {
+    assertEquals( "false", FALSE.toString() );
   }
 
   @Test
-  public void canBeSerializedAndDeserialized() throws Exception {
-    assertEquals( JsonValue.NULL, serializeAndDeserialize( JsonValue.NULL ) );
-    assertEquals( JsonValue.TRUE, serializeAndDeserialize( JsonValue.TRUE ) );
-    assertEquals( JsonValue.FALSE, serializeAndDeserialize( JsonValue.FALSE ) );
+  public void NULL_equals() {
+    assertTrue( NULL.equals( NULL ) );
+
+    assertFalse( NULL.equals( null ) );
+    assertFalse( NULL.equals( TRUE ) );
+    assertFalse( NULL.equals( FALSE ) );
+  }
+
+  @Test
+  public void TRUE_equals() {
+    assertTrue( TRUE.equals( TRUE ) );
+
+    assertFalse( TRUE.equals( null ) );
+    assertFalse( TRUE.equals( FALSE ) );
+    assertFalse( TRUE.equals( Boolean.TRUE ) );
+  }
+
+  @Test
+  public void FALSE_equals() {
+    assertTrue( FALSE.equals( FALSE ) );
+
+    assertFalse( FALSE.equals( null ) );
+    assertFalse( FALSE.equals( TRUE ) );
+    assertFalse( FALSE.equals( Boolean.FALSE ) );
+  }
+
+  @Test
+  public void NULL_isSerializable() throws Exception {
+    assertEquals( NULL, serializeAndDeserialize( NULL ) );
+    assertTrue( serializeAndDeserialize( NULL ).isNull() );
+  }
+
+  @Test
+  public void TRUE_isSerializable() throws Exception {
+    assertEquals( TRUE, serializeAndDeserialize( TRUE ) );
+    assertTrue( serializeAndDeserialize( TRUE ).isBoolean() );
+    assertTrue( serializeAndDeserialize( TRUE ).isTrue() );
+  }
+
+  @Test
+  public void FALSE_isSerializable() throws Exception {
+    assertEquals( FALSE, serializeAndDeserialize( FALSE ) );
+    assertTrue( serializeAndDeserialize( FALSE ).isBoolean() );
+    assertTrue( serializeAndDeserialize( FALSE ).isFalse() );
+  }
+
+  @Test
+  public void sameAfterDeserialization() throws Exception {
+    JsonArray array = new JsonArray().add( NULL ).add( NULL );
+
+    JsonArray deserialized = serializeAndDeserialize( array );
+
+    assertNotSame( NULL, deserialized.get( 0 ) );
+    assertSame( deserialized.get( 0 ), deserialized.get( 1 ) );
   }
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,20 @@ import java.io.IOException;
 @SuppressWarnings( "serial" ) // use default serial UID
 class JsonLiteral extends JsonValue {
 
-  private final String value;
+  static final JsonValue NULL = new JsonLiteral( "null" );
+  static final JsonValue TRUE = new JsonLiteral( "true" );
+  static final JsonValue FALSE = new JsonLiteral( "false" );
 
-  JsonLiteral( String value ) {
+  private final String value;
+  private final boolean isNull;
+  private final boolean isTrue;
+  private final boolean isFalse;
+
+  private JsonLiteral( String value  ) {
     this.value = value;
+    isNull = "null".equals( value );
+    isTrue = "true".equals( value );
+    isFalse = "false".equals( value );
   }
 
   @Override
@@ -44,33 +54,33 @@ class JsonLiteral extends JsonValue {
   }
 
   @Override
-  public boolean asBoolean() {
-    return isBoolean() ? isTrue() : super.asBoolean();
+  public int hashCode() {
+    return value.hashCode();
   }
 
   @Override
   public boolean isNull() {
-    return this == NULL;
-  }
-
-  @Override
-  public boolean isBoolean() {
-    return this == TRUE || this == FALSE;
+    return isNull;
   }
 
   @Override
   public boolean isTrue() {
-    return this == TRUE;
+    return isTrue;
   }
 
   @Override
   public boolean isFalse() {
-    return this == FALSE;
+    return isFalse;
   }
 
   @Override
-  public int hashCode() {
-    return value.hashCode();
+  public boolean isBoolean() {
+    return isTrue || isFalse;
+  }
+
+  @Override
+  public boolean asBoolean() {
+    return isNull ? super.asBoolean() : isTrue;
   }
 
   @Override

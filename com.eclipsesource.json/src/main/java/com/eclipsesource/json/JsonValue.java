@@ -66,17 +66,17 @@ public abstract class JsonValue implements Serializable {
   /**
    * Represents the JSON literal <code>true</code>.
    */
-  public static final JsonValue TRUE = new JsonLiteral( "true" );
+  public static final JsonValue TRUE = JsonLiteral.TRUE;
 
   /**
    * Represents the JSON literal <code>false</code>.
    */
-  public static final JsonValue FALSE = new JsonLiteral( "false" );
+  public static final JsonValue FALSE = JsonLiteral.FALSE;
 
   /**
-   * The JSON literal <code>null</code>.
+   * Represents the JSON literal <code>null</code>.
    */
-  public static final JsonValue NULL = new JsonLiteral( "null" );
+  public static final JsonValue NULL = JsonLiteral.NULL;
 
   JsonValue() {
     // prevent subclasses outside of this package
@@ -233,8 +233,8 @@ public abstract class JsonValue implements Serializable {
   /**
    * Detects whether this value represents a boolean value.
    *
-   * @return <code>true</code> if this value represents either the JSON literal
-   *         <code>true</code> or <code>false</code>
+   * @return <code>true</code> if this value represents either the JSON literal <code>true</code> or
+   *         <code>false</code>
    */
   public boolean isBoolean() {
     return false;
@@ -243,8 +243,7 @@ public abstract class JsonValue implements Serializable {
   /**
    * Detects whether this value represents the JSON literal <code>true</code>.
    *
-   * @return <code>true</code> if this value represents the JSON literal
-   *         <code>true</code>
+   * @return <code>true</code> if this value represents the JSON literal <code>true</code>
    */
   public boolean isTrue() {
     return false;
@@ -253,8 +252,7 @@ public abstract class JsonValue implements Serializable {
   /**
    * Detects whether this value represents the JSON literal <code>false</code>.
    *
-   * @return <code>true</code> if this value represents the JSON literal
-   *         <code>false</code>
+   * @return <code>true</code> if this value represents the JSON literal <code>false</code>
    */
   public boolean isFalse() {
     return false;
@@ -263,8 +261,7 @@ public abstract class JsonValue implements Serializable {
   /**
    * Detects whether this value represents the JSON literal <code>null</code>.
    *
-   * @return <code>true</code> if this value represents the JSON literal
-   *         <code>null</code>
+   * @return <code>true</code> if this value represents the JSON literal <code>null</code>
    */
   public boolean isNull() {
     return false;
@@ -283,8 +280,8 @@ public abstract class JsonValue implements Serializable {
   }
 
   /**
-   * Returns this JSON value as {@link JsonArray}, assuming that this value represents a JSON
-   * array. If this is not the case, an exception is thrown.
+   * Returns this JSON value as {@link JsonArray}, assuming that this value represents a JSON array.
+   * If this is not the case, an exception is thrown.
    *
    * @return a JSONArray for this value
    * @throws UnsupportedOperationException

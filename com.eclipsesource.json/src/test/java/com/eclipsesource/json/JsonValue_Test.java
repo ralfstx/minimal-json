@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,13 @@ import org.junit.Test;
 
 
 public class JsonValue_Test {
+
+  @Test
+  public void testConstantsAreLiterals() {
+    assertSame( JsonLiteral.NULL, JsonValue.NULL );
+    assertSame( JsonLiteral.TRUE, JsonValue.TRUE );
+    assertSame( JsonLiteral.FALSE, JsonValue.FALSE );
+  }
 
   @Test
   public void valueOf_int() {
