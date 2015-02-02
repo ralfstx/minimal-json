@@ -386,11 +386,10 @@ public abstract class JsonValue implements Serializable {
   }
 
   /**
-   * Writes the JSON representation for this object to the given writer.
+   * Writes the JSON representation of this value to the given writer in its minimal form, without
+   * any additional whitespace.
    * <p>
-   * Single elements are passed directly to the given writer. Therefore, if the writer is not
-   * buffered, wrapping it in a {@link java.io.BufferedWriter BufferedWriter} can drastically
-   * improve writing performance.
+   * Writing performance can be improved by using a {@link java.io.BufferedWriter BufferedWriter}.
    * </p>
    *
    * @param writer
@@ -399,8 +398,25 @@ public abstract class JsonValue implements Serializable {
    *           if an I/O error occurs in the writer
    */
   public void writeTo( Writer writer ) throws IOException {
+    writeTo( writer, null );
+  }
+
+  /**
+   * Writes the JSON representation of this value to the given writer using the given formatting.
+   * <p>
+   * Writing performance can be improved by using a {@link java.io.BufferedWriter BufferedWriter}.
+   * </p>
+   *
+   * @param writer
+   *          the writer to write this value to
+   * @param config
+   *          a configuration that controls the formatting or <code>null</code> for the minimal form
+   * @throws IOException
+   *           if an I/O error occurs in the writer
+   */
+  public void writeTo( Writer writer, WriterConfig config ) throws IOException {
     WritingBuffer buffer = new WritingBuffer( writer, 128 );
-    write( new JsonWriter( buffer ) );
+    write( config == null ? new JsonWriter( buffer ) : config.createWriter( buffer ) );
     buffer.flush();
   }
 
@@ -413,9 +429,20 @@ public abstract class JsonValue implements Serializable {
    */
   @Override
   public String toString() {
+    return toString( null );
+  }
+
+  /**
+   * Returns the JSON string for this value using the given formatting.
+   *
+   * @param config
+   *          a configuration that controls the formatting or <code>null</code> for the minimal form
+   * @return a JSON string that represents this value
+   */
+  public String toString( WriterConfig config ) {
     StringWriter writer = new StringWriter();
     try {
-      writeTo( writer );
+      writeTo( writer, config );
     } catch( IOException exception ) {
       // StringWriter does not throw IOExceptions
       throw new RuntimeException( exception );
