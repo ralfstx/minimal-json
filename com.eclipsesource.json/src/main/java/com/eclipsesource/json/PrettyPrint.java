@@ -27,8 +27,11 @@ import java.util.Arrays;
 
 
 /**
- * Configures human readable JSON output. Whitespace will be inserted after comma and colon
- * characters. An indentation of two spaces is used by default.
+ * Enables human readable JSON output by inserting whitespace between values.after commas and colons.
+ * Example:
+ * <pre>
+ * jsonValue.writeTo(writer, PrettyPrint.singleLine());
+ * </pre>
  */
 public class PrettyPrint extends WriterConfig {
 
@@ -40,6 +43,8 @@ public class PrettyPrint extends WriterConfig {
 
   /**
    * Print every value on a separate line. Use tabs (<code>\t</code>) for indentation.
+   *
+   * @return A PrettyPrint instance for wrapped mode with tab indentation
    */
   public static PrettyPrint singleLine() {
     return new PrettyPrint( null );
@@ -47,18 +52,24 @@ public class PrettyPrint extends WriterConfig {
 
   /**
    * Print every value on a separate line. Use the given number of spaces for indentation.
+   *
+   * @param number
+   *          the number of spaces to use
+   * @return A PrettyPrint instance for wrapped mode with spaces indentation
    */
-  public static PrettyPrint indentWithSpaces( int n ) {
-    if( n < 0 ) {
-      throw new IllegalArgumentException( "Negative number" );
+  public static PrettyPrint indentWithSpaces( int number ) {
+    if( number < 0 ) {
+      throw new IllegalArgumentException( "number is negative" );
     }
-    char[] chars = new char[n];
+    char[] chars = new char[number];
     Arrays.fill( chars, ' ' );
     return new PrettyPrint( chars );
   }
 
   /**
-   * Do not break lines.
+   * Do not break lines, but still insert whitespace between values.
+   *
+   * @return A PrettyPrint instance for single-line mode
    */
   public static PrettyPrint indentWithTabs() {
     return new PrettyPrint( new char[] { '\t' } );
