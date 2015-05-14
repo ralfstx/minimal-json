@@ -23,6 +23,7 @@ package com.eclipsesource.json.performancetest.jsonrunners;
 
 import static com.eclipsesource.json.performancetest.resources.Resources.readResource;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayInputStream;
@@ -63,13 +64,14 @@ public class JsonRunner_Test {
         { "gson" },
         { "jackson" },
         { "json-simple" },
+        { "json-smart" },
         { "minimal-json" } } );
   }
 
   @Before
   public void setUp() throws Exception {
     runner = JsonRunnerFactory.findByName( name );
-    json = readResource("input/caliper.json");
+    json = readResource("input/test.json");
     jsonBytes = json.getBytes( JsonRunner.UTF8 );
     minimalJsonModel = JsonValue.readFrom( json );
   }
