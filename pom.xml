@@ -4,7 +4,7 @@
 
   <groupId>com.eclipsesource.minimal-json</groupId>
   <artifactId>parent</artifactId>
-  <version>0.9.3-SNAPSHOT</version>
+  <version>0.9.3</version>
   <packaging>pom</packaging>
   <name>parent</name>
 
@@ -17,7 +17,7 @@
     <url>https://github.com/ralfstx/minimal-json</url>
     <connection>scm:git:git@github.com:ralfstx/minimal-json.git</connection>
     <developerConnection>scm:git:git@github.com:ralfstx/minimal-json.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>0.9.3</tag>
   </scm>
 
   <distributionManagement>
