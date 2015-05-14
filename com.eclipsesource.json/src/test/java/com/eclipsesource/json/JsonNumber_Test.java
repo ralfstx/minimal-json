@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,7 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import static com.eclipsesource.json.TestUtil.assertException;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
 
@@ -42,9 +43,13 @@ public class JsonNumber_Test {
     writer = new JsonWriter( output );
   }
 
-  @Test( expected = NullPointerException.class )
+  @Test
   public void constructor_failsWithNull() {
-    new JsonNumber( null );
+    assertException( NullPointerException.class, "string is null", new Runnable() {
+      public void run() {
+        new JsonNumber( null );
+      }
+    } );
   }
 
   @Test

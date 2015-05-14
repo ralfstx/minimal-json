@@ -33,6 +33,8 @@ import java.io.Writer;
 
 import org.junit.Test;
 
+import com.eclipsesource.json.TestUtil.RunnableEx;
+
 
 public class JsonValue_Test {
 
@@ -182,6 +184,39 @@ public class JsonValue_Test {
     value.writeTo( writer );
 
     assertEquals( "{}", writer.toString() );
+  }
+
+  @Test
+  public void writeTo_failsWithNullWriter() {
+    final JsonValue value = new JsonObject();
+
+    assertException( NullPointerException.class, "writer is null", new RunnableEx() {
+      public void run() throws IOException {
+        value.writeTo( null, WriterConfig.MINIMAL );
+      }
+    } );
+  }
+
+  @Test
+  public void writeTo_failsWithNullConfig() {
+    final JsonValue value = new JsonObject();
+
+    assertException( NullPointerException.class, "config is null", new RunnableEx() {
+      public void run() throws IOException {
+        value.writeTo( new StringWriter(), null );
+      }
+    } );
+  }
+
+  @Test
+  public void toString_failsWithNullConfig() {
+    final JsonValue value = new JsonObject();
+
+    assertException( NullPointerException.class, "config is null", new RunnableEx() {
+      public void run() throws IOException {
+        value.toString( null );
+      }
+    } );
   }
 
   @Test

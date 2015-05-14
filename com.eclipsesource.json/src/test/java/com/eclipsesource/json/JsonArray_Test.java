@@ -310,9 +310,13 @@ public class JsonArray_Test {
     assertSame( array, array.add( JsonValue.NULL ) );
   }
 
-  @Test( expected = NullPointerException.class )
+  @Test
   public void add_json_failsWithNull() {
-    array.add( (JsonValue)null );
+    assertException( NullPointerException.class,  "value is null", new Runnable() {
+      public void run() {
+        array.add( (JsonValue)null );
+      }
+    } );
   }
 
   @Test
@@ -477,11 +481,15 @@ public class JsonArray_Test {
     assertEquals( "[{}]", array.toString() );
   }
 
-  @Test( expected = NullPointerException.class )
+  @Test
   public void set_json_failsWithNull() {
     array.add( false );
 
-    array.set( 0, (JsonValue)null );
+    assertException( NullPointerException.class, "value is null", new Runnable() {
+      public void run() {
+        array.set( 0, (JsonValue)null );
+      }
+    } );
   }
 
   @Test( expected = IndexOutOfBoundsException.class )

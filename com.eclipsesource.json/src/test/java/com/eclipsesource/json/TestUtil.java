@@ -21,7 +21,8 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,28 +37,40 @@ public class TestUtil {
                                                          String message,
                                                          Runnable runnable )
   {
+    return assertException( type, message, adapt( runnable ) );
+  }
+
+  public static <T extends Exception> T assertException( Class<T> type,
+                                                         String message,
+                                                         RunnableEx runnable )
+
+  {
     T exception = assertException( type, runnable );
-    assertEquals( "message", message, exception.getMessage() );
+    assertEquals( "exception message", message, exception.getMessage() );
+    return exception;
+  }
+
+  public static <T extends Exception> T assertException( Class<T> type, Runnable runnable ) {
+    return assertException( type, adapt( runnable ) );
+  }
+
+  public static <T extends Exception> T assertException( Class<T> type, RunnableEx runnable ) {
+    T exception = catchException( runnable, type );
+    assertNotNull( "Expected exception: " + type.getName(), exception );
     return exception;
   }
 
   @SuppressWarnings( "unchecked" )
-  public static <T extends Exception> T assertException( Class<T> type, Runnable runnable ) {
-    Exception exception = catchException( runnable, type );
-    assertNotNull( "Expected exception: " + type.getName(), exception );
-    return (T)exception;
-  }
-
-  private static Exception catchException( Runnable runnable, Class<? extends Exception> type ) {
+  private static <T extends Exception> T catchException( RunnableEx runnable, Class<T> type ) {
     try {
       runnable.run();
       return null;
     } catch( Exception exception ) {
-      if( !type.isAssignableFrom( exception.getClass() ) ) {
-        // It must be a RuntimeException, since Runnable.run does not throw checked exceptions
-        throw(RuntimeException) exception;
+      if( type.isAssignableFrom( exception.getClass() ) ) {
+        return (T)exception;
       }
-      return exception;
+      String message = "Unexpected exception: " + exception.getMessage();
+      throw new RuntimeException( message, exception );
     }
   }
 
@@ -75,6 +88,18 @@ public class TestUtil {
   public static Object deserialize( byte[] bytes ) throws IOException, ClassNotFoundException {
     ByteArrayInputStream inputStream = new ByteArrayInputStream( bytes );
     return new ObjectInputStream( inputStream ).readObject();
+  }
+
+  private static RunnableEx adapt( final Runnable runnable ) {
+    return new RunnableEx() {
+      public void run() {
+        runnable.run();
+      }
+    };
+  }
+
+  public static interface RunnableEx {
+    void run() throws Exception;
   }
 
 }
