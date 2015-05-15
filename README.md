@@ -1,7 +1,9 @@
 minimal-json
 ============
 
-[![Build Status](https://travis-ci.org/ralfstx/minimal-json.png?branch=master)](https://travis-ci.org/ralfstx/minimal-json)
+[![License](https://img.shields.io/github/license/ralfstx/minimal-json.svg)](https://github.com/ralfstx/minimal-json/blob/master/LICENSE)
+[![Maven Central](https://img.shields.io/maven-central/v/com.eclipsesource.minimal-json/minimal-json.svg)](http://search.maven.org/#search|ga|1|g%3A%22com.eclipsesource.minimal-json%22%20a%3A%22minimal-json%22)
+[![Build Status](https://img.shields.io/travis/ralfstx/minimal-json.svg)](http://travis-ci.org/ralfstx/minimal-json)
 
 A fast and minimal JSON parser and writer for Java.
 It's not an object mapper, but a bare-bones library that aims at being
@@ -9,15 +11,14 @@ It's not an object mapper, but a bare-bones library that aims at being
 * **minimal**: no dependencies, single package with just a few classes, small download size (< 25kB)
 * **fast**: high performance comparable with other state-of-the-art parsers (see below)
 * **leightweight**: object representation with minimal memory footprint (e.g. no HashMaps)
-* **easy to use**: reading, writing and modifying JSON with minimal code (short names, fluent style)
-* **OSGi ready**: directly usable in OSGi environments (the JAR contains a valid OSGi bundle manifest)
+* **simple**: reading, writing and modifying JSON with minimal code (short names, fluent style)
 
-Minimal-json is fully covered by unit tests, and field-tested by the [Eclipse RAP project](http://eclipse.org/rap) and others (see below).
+Minimal-json is fully covered by unit tests, and field-tested by the [Eclipse RAP project](http://eclipse.org/rap) and others (see below). The JAR contains a **valid OSGi** bundle manifest and can be used in OSGi environments without modifications.
 
 Code Examples
 -------------
 
-### Read JSON from a String or a Reader:
+### Read JSON from a String or a Reader
 
 Reading is buffered already, so you *don't* need to wrap your reader in a BufferedReader.
 
@@ -26,13 +27,25 @@ JsonObject jsonObject = JsonObject.readFrom( string );
 JsonArray jsonArray = JsonArray.readFrom( reader );
 ```
 
-### Access the contents of a JSON object:
+### Access the contents of a JSON object
+
+The `get` method returns a `JsonValue` if the element exists. Depending on the type, you can get corresponding Java values using the methods `asString`, `asBoolean`, etc.
 
 ```java
 String name = jsonObject.get( "name" ).asString();
 int age = jsonObject.get( "age" ).asInt(); // asLong(), asFloat(), asDouble(), ...
+```
 
-// or iterate over the members:
+you can use a default value if the element does not exist:
+
+```java
+String name = jsonObject.getString( "name", "unknown" );
+int age = jsonObject.getInt( "age", -1 );
+```
+
+you can also iterate over the members:
+
+```java
 for( Member member : jsonObject ) {
   String name = member.getName();
   JsonValue value = member.getValue();
@@ -40,7 +53,7 @@ for( Member member : jsonObject ) {
 }
 ```
 
-### Access the contents of a JSON array:
+### Access the contents of a JSON array
 
 ```java
 String name = jsonArray.get( 0 ).asString();
@@ -52,7 +65,7 @@ for( JsonValue value : jsonArray ) {
 }
 ```
 
-### Access nested contents:
+### Access nested contents
 
 ```java
 // Example: { "friends": [ { "name": "John", "age": 23 }, ... ], ... }
@@ -61,7 +74,7 @@ String name = friends.get( 0 ).asObject().get( "name" ).asString();
 int age = friends.get( 0 ).asObject().get( "age" ).asInt();
 ```
 
-### Create JSON objects and arrays:
+### Create JSON objects and arrays
 
 ```java
 JsonObject jsonObject = new JsonObject().add( "name", "John" ).add( "age", 23 );
@@ -71,7 +84,7 @@ JsonArray jsonArray = new JsonArray().add( "John" ).add( 23 );
 // -> [ "John", 23 ]
 ```
 
-### Modify JSON objects and arrays:
+### Modify JSON objects and arrays
 
 ```java
 jsonObject.set( "age", 24 );
@@ -81,28 +94,26 @@ jsonObject.remove( "age" );
 jsonArray.remove( 1 );
 ```
 
-### Write JSON to a Writer:
+### Write JSON to a Writer or a String
 
-Writing is not buffered (to avoid buffering twice), so you *should* use a BufferedWriter.
+These methods can be used on all JsonValues:
 
 ```java
-jsonObject.writeTo( writer );
-jsonArray.writeTo( writer );
+jsonValue.writeTo( writer );
+String json = jsonValue.toString();
 ```
 
-### Export JSON as a String:
+Enable formatted output:
 
 ```java
-jsonObject.toString();
-jsonArray.toString();
+jsonValue.writeTo( writer, WriterConfig.PRETTY_PRINT );
+String json = jsonValue.toString( WriterConfig.PRETTY_PRINT );
 ```
 
 Concurrency
 -----------
 
-The JSON structures in this library (`JsonObject` and `JsonArray`) are **not thread-safe**.
-This is a deliberate choice for simplicity and performance as most of the time, the instances are only modified from a single thread.
-When JSON data structures must be accessed from multiple threads, while at least one of these threads modifies the contents, the application must ensure proper synchronization.
+The JSON structures in this library (`JsonObject` and `JsonArray`) are deliberately **not thread-safe** to keep them fast and simple. In the rare case that JSON data structures must be accessed from multiple threads, while at least one of these threads modifies the contents, the application must ensure proper synchronization.
 
 Iterators will throw a `ConcurrentModificationException` when the contents of
 a JSON structure have been modified after the creation of the iterator.
@@ -155,9 +166,8 @@ You can include minimal-json from Maven Central by adding this dependency to you
 Build
 -----
 
-To build minimal-json on your machine, simply checkout the repository, `cd` into it and call maven:
+To build minimal-json on your machine, checkout the repository, `cd` into it, and call:
 ```
-cd minimal-json
 mvn clean install
 ```
 A continuous integration build is running at [Travis-CI](https://travis-ci.org/ralfstx/minimal-json).
