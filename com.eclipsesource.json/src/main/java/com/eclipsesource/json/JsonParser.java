@@ -25,14 +25,27 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
+import com.eclipsesource.json.CollectionFactory.ElementReader;
+import com.eclipsesource.json.CollectionFactory.MemberReader;
+
 
 class JsonParser {
 
   private static final int MIN_BUFFER_SIZE = 10;
   private static final int DEFAULT_BUFFER_SIZE = 1024;
 
+  private static final CollectionFactory defaultFactory = new CollectionFactory() {
+	public ElementReader createElementReader() {
+		return new JsonArray();
+	}
+	public MemberReader createMemberReader() {
+		return new JsonObject();
+	}
+  };
+
   private final Reader reader;
   private final char[] buffer;
+  private final CollectionFactory collectionFactory;
   private int bufferOffset;
   private int index;
   private int fill;
@@ -51,18 +64,23 @@ class JsonParser {
    *                       |  index           fill
    */
 
-  JsonParser(String string) {
-    this(new StringReader(string),
-         Math.max(MIN_BUFFER_SIZE, Math.min(DEFAULT_BUFFER_SIZE, string.length())));
+  JsonParser( String string ) {
+    this(new StringReader(string), defaultFactory,
+          Math.max( MIN_BUFFER_SIZE, Math.min( DEFAULT_BUFFER_SIZE, string.length() ) ) );
   }
 
-  JsonParser(Reader reader) {
-    this(reader, DEFAULT_BUFFER_SIZE);
+  JsonParser( Reader reader ) {
+    this( reader, defaultFactory, DEFAULT_BUFFER_SIZE );
   }
 
-  JsonParser(Reader reader, int buffersize) {
+  JsonParser( Reader reader, CollectionFactory factory ) {
+	this( reader, factory, DEFAULT_BUFFER_SIZE );
+  }
+
+  JsonParser( Reader reader, CollectionFactory factory, int buffersize) {
     this.reader = reader;
-    buffer = new char[buffersize];
+    buffer = new char[ buffersize ];
+    collectionFactory = factory;
     line = 1;
     captureStart = -1;
   }
@@ -109,16 +127,16 @@ class JsonParser {
     }
   }
 
-  private JsonArray readArray() throws IOException {
+  private ElementReader readArray() throws IOException {
     read();
-    JsonArray array = new JsonArray();
+    ElementReader array = collectionFactory.createElementReader();
     skipWhiteSpace();
     if (readChar(']')) {
       return array;
     }
     do {
       skipWhiteSpace();
-      array.add(readValue());
+      array.addElement(readValue());
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar(']')) {
@@ -127,9 +145,9 @@ class JsonParser {
     return array;
   }
 
-  private JsonObject readObject() throws IOException {
+  private MemberReader readObject() throws IOException {
     read();
-    JsonObject object = new JsonObject();
+    MemberReader object = collectionFactory.createMemberReader();
     skipWhiteSpace();
     if (readChar('}')) {
       return object;
@@ -142,7 +160,7 @@ class JsonParser {
         throw expected("':'");
       }
       skipWhiteSpace();
-      object.add(name, readValue());
+      object.addMember(name, readValue());
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar('}')) {
@@ -396,5 +414,4 @@ class JsonParser {
   private boolean isEndOfText() {
     return current == -1;
   }
-
 }

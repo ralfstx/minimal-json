@@ -29,8 +29,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.eclipsesource.json.CollectionFactory.MemberReader;
 import com.eclipsesource.json.JsonObject.Member;
-
 
 /**
  * Represents a JSON object, a set of name/value pairs, where the names are strings and the values
@@ -69,8 +69,8 @@ import com.eclipsesource.json.JsonObject.Member;
  * This class is <strong>not supposed to be extended</strong> by clients.
  * </p>
  */
-@SuppressWarnings("serial") // use default serial UID
-public class JsonObject extends JsonValue implements Iterable<Member> {
+@SuppressWarnings( "serial" ) // use default serial UID
+public class JsonObject extends MemberReader implements Iterable<Member> {
 
   private final List<String> names;
   private final List<JsonValue> values;
@@ -331,6 +331,24 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     names.add(name);
     values.add(value);
     return this;
+  }
+
+  /**
+   * Appends a new member, with the specified name and the specified JSON value, but cannot be used
+   * for method chaining.
+   * <p>
+   * This method is identical in behavior to <code>add</code> except for not returning itself for
+   * method chaining.
+   * </p>
+   *
+   * @param name
+   *          the name of the member to add
+   * @param value
+   *          the value of the member to add, must not be <code>null</code>
+   */
+  @Override
+  public void addMember( String name, JsonValue value ) {
+	  add( name, value );
   }
 
   /**

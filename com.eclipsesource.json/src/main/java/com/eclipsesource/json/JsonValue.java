@@ -102,6 +102,10 @@ public abstract class JsonValue implements Serializable {
     return new JsonParser(reader).parse();
   }
 
+  public static JsonValue readFrom( Reader reader, CollectionFactory factory ) throws IOException {
+	return new JsonParser( reader, factory ).parse();
+  }
+
   /**
    * Reads a JSON value from the given string.
    *
