@@ -22,13 +22,19 @@
 package com.eclipsesource.json;
 
 import static com.eclipsesource.json.TestUtil.assertException;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 import org.hamcrest.core.StringStartsWith;
 import org.junit.Test;
+
+import com.eclipsesource.json.CollectionFactory.ElementReader;
 
 
 public class JsonParser_Test {
@@ -451,8 +457,46 @@ public class JsonParser_Test {
     assertParseException(5, "Unexpected character", "falsex");
   }
 
-  private static void assertParseException(int offset, String message, final String json) {
-    ParseException exception = assertException(ParseException.class, new Runnable() {
+  @SuppressWarnings("boxing")
+  private static class RouteList extends ElementReader {
+	@Override
+	void addElement(JsonValue value) {
+	  assertTrue(value.isNumber());
+	  bus_routes.add(value.asInt());
+	}
+	int getRoute(int index) {
+      return bus_routes.get(index);
+	}
+	int getNumRoutes() {
+      return bus_routes.size();
+	}
+	ArrayList<Integer> bus_routes = new ArrayList<Integer>();
+  }
+
+  @Test
+  public void streaming_nestedArrayReader() throws IOException {
+	final CollectionFactory factory = new CollectionFactory() {
+      public ElementReader createElementReader(int nesting, String name) {
+    	System.out.println(nesting);
+    	if (nesting != 1) {
+    		return new JsonArray();
+    	}
+	    return new RouteList();
+      }
+      public MemberReader createMemberReader(int nesting, String name) {
+	    return new JsonObject();
+	  }
+	};
+	StringReader reader = new StringReader("{\"area\":\"Boston\", \"routes\":[39, 66, 47]}");
+    JsonValue json = new JsonParser(reader, factory).parse();
+    assertEquals("Boston", json.asObject().getString("area", null));
+    RouteList mbta_routes = (RouteList) json.asObject().get("routes");
+    assertEquals(3, mbta_routes.getNumRoutes());
+    assertEquals(66, mbta_routes.getRoute(1));
+  }
+
+  private static void assertParseException( int offset, String message, final String json ) {
+    ParseException exception = assertException( ParseException.class, new Runnable() {
       public void run() {
         parse(json);
       }

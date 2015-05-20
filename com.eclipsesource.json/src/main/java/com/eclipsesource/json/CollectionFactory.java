@@ -21,17 +21,27 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import java.io.IOException;
+
 public interface CollectionFactory {
 
   abstract class ElementReader extends JsonValue {
 	abstract void addElement( JsonValue value );
+	@Override
+	void write(JsonWriter writer) throws IOException {
+	  writer.writeString("Compacted JSON array.");
+	}
   }
 
   abstract class MemberReader extends JsonValue {
 	abstract void addMember( String name, JsonValue value );
+	@Override
+	void write(JsonWriter writer) throws IOException {
+	  writer.writeString("Compacted JSON object.");
+	}
   }
 
-  ElementReader createElementReader();
+  ElementReader createElementReader(int nesting, String name);
 
-  MemberReader createMemberReader();
+  MemberReader createMemberReader(int nesting, String name);
 }

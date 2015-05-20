@@ -35,10 +35,10 @@ class JsonParser {
   private static final int DEFAULT_BUFFER_SIZE = 1024;
 
   private static final CollectionFactory defaultFactory = new CollectionFactory() {
-	public ElementReader createElementReader() {
+	public ElementReader createElementReader(int nesting, String name) {
 		return new JsonArray();
 	}
-	public MemberReader createMemberReader() {
+	public MemberReader createMemberReader(int nesting, String name) {
 		return new JsonObject();
 	}
   };
@@ -52,6 +52,8 @@ class JsonParser {
   private int line;
   private int lineOffset;
   private int current;
+  private int nesting = -1;
+  private String name;
   private StringBuilder captureBuffer;
   private int captureStart;
 
@@ -75,6 +77,10 @@ class JsonParser {
 
   JsonParser( Reader reader, CollectionFactory factory ) {
 	this( reader, factory, DEFAULT_BUFFER_SIZE );
+  }
+
+  JsonParser( Reader reader, int buffersize) {
+    this( reader, defaultFactory, buffersize );
   }
 
   JsonParser( Reader reader, CollectionFactory factory, int buffersize) {
@@ -128,10 +134,12 @@ class JsonParser {
   }
 
   private ElementReader readArray() throws IOException {
+	nesting ++;
     read();
-    ElementReader array = collectionFactory.createElementReader();
+    ElementReader array = collectionFactory.createElementReader(nesting, name);
     skipWhiteSpace();
-    if (readChar(']')) {
+    if( readChar( ']' ) ) {
+      nesting --;
       return array;
     }
     do {
@@ -142,19 +150,22 @@ class JsonParser {
     if (!readChar(']')) {
       throw expected("',' or ']'");
     }
+    nesting --;
     return array;
   }
 
   private MemberReader readObject() throws IOException {
+	nesting ++;
     read();
-    MemberReader object = collectionFactory.createMemberReader();
+    MemberReader object = collectionFactory.createMemberReader(nesting, name);
     skipWhiteSpace();
-    if (readChar('}')) {
+    if( readChar( '}' ) ) {
+      nesting --;
       return object;
     }
     do {
       skipWhiteSpace();
-      String name = readName();
+      name = readName();
       skipWhiteSpace();
       if (!readChar(':')) {
         throw expected("':'");
@@ -166,6 +177,7 @@ class JsonParser {
     if (!readChar('}')) {
       throw expected("',' or '}'");
     }
+    nesting --;
     return object;
   }
 
