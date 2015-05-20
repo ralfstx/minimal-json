@@ -102,6 +102,26 @@ public abstract class JsonValue implements Serializable {
     return new JsonParser(reader).parse();
   }
 
+  /**
+   * Reads a JSON value from the given reader, using the specified factory for JSON Array and Object
+   * representations.
+   * <p>
+   * The specified {@link CollectionFactory} may provide custom implementations of JSON arrays or
+   * objects, depending on nesting level and/or most recent field name. Such custom implementations
+   * may filter or extract content from object members or array elements, effectively making use of
+   * a streaming API.
+   * </p>
+   *
+   * @param reader
+   *          the reader to read the JSON value from
+   * @param factory
+   *          a {@code CollectionFactory} to provide implementations of JSON arrays and objects
+   * @return the JSON value that has been read
+   * @throws IOException
+   *           if an I/O error occurs in the reader
+   * @throws ParseException
+   *           if the input is not valid JSON
+   */
   public static JsonValue readFrom( Reader reader, CollectionFactory factory ) throws IOException {
 	return new JsonParser( reader, factory ).parse();
   }
