@@ -34,15 +34,6 @@ class JsonParser {
   private static final int MIN_BUFFER_SIZE = 10;
   private static final int DEFAULT_BUFFER_SIZE = 1024;
 
-  private static final CollectionFactory defaultFactory = new CollectionFactory() {
-	public ElementReader createElementReader(int nesting, String name) {
-		return new JsonArray();
-	}
-	public MemberReader createMemberReader(int nesting, String name) {
-		return new JsonObject();
-	}
-  };
-
   private final Reader reader;
   private final char[] buffer;
   private final CollectionFactory collectionFactory;
@@ -67,12 +58,12 @@ class JsonParser {
    */
 
   JsonParser( String string ) {
-    this(new StringReader(string), defaultFactory,
+    this( new StringReader( string ), null,
           Math.max( MIN_BUFFER_SIZE, Math.min( DEFAULT_BUFFER_SIZE, string.length() ) ) );
   }
 
   JsonParser( Reader reader ) {
-    this( reader, defaultFactory, DEFAULT_BUFFER_SIZE );
+    this( reader, null, DEFAULT_BUFFER_SIZE );
   }
 
   JsonParser( Reader reader, CollectionFactory factory ) {
@@ -80,7 +71,7 @@ class JsonParser {
   }
 
   JsonParser( Reader reader, int buffersize) {
-    this( reader, defaultFactory, buffersize );
+    this( reader, null, buffersize );
   }
 
   JsonParser( Reader reader, CollectionFactory factory, int buffersize) {
@@ -136,7 +127,12 @@ class JsonParser {
   private ElementReader readArray() throws IOException {
 	nesting ++;
     read();
-    ElementReader array = collectionFactory.createElementReader(nesting, name);
+    ElementReader array;
+    if ( collectionFactory == null ) {
+      array = new JsonArray();
+    } else {
+      array = collectionFactory.createElementReader( nesting, name );
+    }
     skipWhiteSpace();
     if( readChar( ']' ) ) {
       nesting --;
@@ -157,7 +153,12 @@ class JsonParser {
   private MemberReader readObject() throws IOException {
 	nesting ++;
     read();
-    MemberReader object = collectionFactory.createMemberReader(nesting, name);
+    MemberReader object;
+    if ( collectionFactory == null ) {
+      object = new JsonObject();
+    } else {
+      object = collectionFactory.createMemberReader( nesting, name );
+    }
     skipWhiteSpace();
     if( readChar( '}' ) ) {
       nesting --;
