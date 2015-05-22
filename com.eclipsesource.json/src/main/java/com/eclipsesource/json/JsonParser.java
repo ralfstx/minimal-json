@@ -29,7 +29,7 @@ import com.eclipsesource.json.CollectionFactory.ElementReader;
 import com.eclipsesource.json.CollectionFactory.MemberReader;
 
 
-class JsonParser {
+class JsonParser implements ParserContext {
 
   private static final int MIN_BUFFER_SIZE = 10;
   private static final int DEFAULT_BUFFER_SIZE = 1024;
@@ -37,6 +37,7 @@ class JsonParser {
   private final Reader reader;
   private final char[] buffer;
   private final CollectionFactory collectionFactory;
+  private boolean is_array;
   private int bufferOffset;
   private int index;
   private int fill;
@@ -125,13 +126,14 @@ class JsonParser {
   }
 
   private ElementReader readArray() throws IOException {
+	is_array = true;
 	nesting ++;
     read();
     ElementReader array;
     if ( collectionFactory == null ) {
       array = new JsonArray();
     } else {
-      array = collectionFactory.createElementReader( nesting, name );
+      array = collectionFactory.createElementReader( this );
     }
     skipWhiteSpace();
     if( readChar( ']' ) ) {
@@ -140,7 +142,7 @@ class JsonParser {
     }
     do {
       skipWhiteSpace();
-      array.addElement(readValue());
+      array.addElement( readValue(), this );
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar(']')) {
@@ -151,13 +153,14 @@ class JsonParser {
   }
 
   private MemberReader readObject() throws IOException {
+	is_array = false;
 	nesting ++;
     read();
     MemberReader object;
     if ( collectionFactory == null ) {
       object = new JsonObject();
     } else {
-      object = collectionFactory.createMemberReader( nesting, name );
+      object = collectionFactory.createMemberReader( this );
     }
     skipWhiteSpace();
     if( readChar( '}' ) ) {
@@ -172,7 +175,7 @@ class JsonParser {
         throw expected("':'");
       }
       skipWhiteSpace();
-      object.addMember(name, readValue());
+      object.addMember( name, readValue(), this );
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar('}')) {
@@ -403,11 +406,29 @@ class JsonParser {
     return error("Expected " + expected);
   }
 
-  private ParseException error(String message) {
-    int absIndex = bufferOffset + index;
-    int column = absIndex - lineOffset;
-    int offset = isEndOfText() ? absIndex : absIndex - 1;
-    return new ParseException(message, offset, line, column - 1);
+  public int getNesting() {
+	return nesting;
+  }
+
+  public String getFieldName() {
+	return is_array ? null : name;
+  }
+
+  public int getLine() {
+	return line;
+  }
+
+  public int getOffset() {
+	int absIndex = bufferOffset + index;
+    return isEndOfText() ? absIndex : absIndex - 1;
+  }
+
+  public int getColumn() {
+	return bufferOffset + index - lineOffset - 1;
+  }
+
+  private ParseException error( String message ) {
+    return new ParseException( message, getOffset(), line, getColumn() );
   }
 
   private boolean isWhiteSpace() {

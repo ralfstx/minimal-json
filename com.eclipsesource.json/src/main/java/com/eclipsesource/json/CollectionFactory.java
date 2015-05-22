@@ -26,10 +26,11 @@ import java.io.IOException;
 /**
  * Provides implementations for JSON array and object representations.
  * <p>
- * Implementations of this interface my choose to return custom implementations of {@code ElementReader}
- * or {@code MemeberReader} as opposed to {@link JsonArray} and {@code JsonObject} respectively, depending
- * on nesting level and/or most recent field name. Providing a custom {@code CollectionFactory} to {@link
- * JsonValue#readFrom} allows clients to effectively use minimal-json as a hybrid streaming API.
+ * Implementations of this interface my choose to return custom implementations of {@code
+ * ElementReader} or {@code MemeberReader} as opposed to {@link JsonArray} and {@code JsonObject}
+ * respectively, depending on nesting level and/or field name. Providing a custom {@code
+ * CollectionFactory} to {@link JsonValue#readFrom} allows clients to effectively use minimal-json
+ * as a hybrid streaming API.
  * </p>
  */
 public interface CollectionFactory {
@@ -39,6 +40,7 @@ public interface CollectionFactory {
    * <p>
    * Implementations other than {@link JsonArray} may extract content from or filter array
    * elements as a means to reduce memory footprint and increased performance.
+   * </p>
    */
   public abstract class ElementReader extends JsonValue {
 
@@ -46,9 +48,9 @@ public interface CollectionFactory {
 	 * Called when an element of a JSON array has been parsed from the JSON stream.
 	 *
 	 * @param value
-	 *           a parsed element of the current JSON array
+	 *          a parsed element of the current JSON array
 	 */
-	abstract void addElement( JsonValue value );
+	abstract protected void addElement( JsonValue value, ParserContext context );
 
 	/**
 	 * Unless implemented, replaces the JSON array with a stripping note.
@@ -63,7 +65,8 @@ public interface CollectionFactory {
    * The most abstract kind of JSON array.
    * <p>
    * Implementations other than {@link JsonArray} may extract content from or filter array
-   * elements as a means to reduce memory footprint and increaesd performance.
+   * elements as a means to reduce memory footprint and increased performance.
+   * </p>
    */
   public abstract class MemberReader extends JsonValue {
 
@@ -71,11 +74,11 @@ public interface CollectionFactory {
 	 * Called when a member of a JSON object has been parsed from the JSON stream.
 	 *
 	 * @param name
-	 *           the field name of the object's member
+	 *          the field name of the object's member
 	 * @param value
-	 *           the JSON value of the object's member
+	 *          the JSON value of the object's member
 	 */
-	abstract void addMember( String name, JsonValue value );
+	abstract protected void addMember( String name, JsonValue value, ParserContext context );
 
 	/**
 	 * Unless implemented, replaces the JSON object with a stripping note.
@@ -89,31 +92,31 @@ public interface CollectionFactory {
   /**
    * Implementations must return a new {@code JSONArray} or a custom kind of {@code ElementReader}.
    * <p>
-   * A custom {@code ElementReader} can be useful for filtering or extracting from the streamed JSON
-   * array. This may offer performance benefits because not all elements of the JSON array need to
-   * be retained in memory in the form of {@code JSONValue} objects.
+   * A custom {@code ElementReader} can be useful for filtering, extracting from, or annotating the
+   * streamed JSON array. Filtering or extracting from the stream may offer performance benefits
+   * because not all elements of the JSON array need to be retained in memory in the form of {@code
+   * JSONValue} objects. {@code context} provides access to the current parser state, including
+   * position in the input stream, nesting level, and field name.
+   * </p>
    *
-   * @param nesting
-   *           nesting level, starting from {@code 0} for elements of outermost arrays
-   * @param name
-   *           most recent field name, e.g. field name of parent object of parent array
+   * @param context
+   *          logical and absolute parser state, for deciding what array representation to return
+   *
    * @return implementation of {@code ElementReader} depending on nesting and/or field name
    */
-  public abstract ElementReader createElementReader(int nesting, String name);
+  public ElementReader createElementReader(ParserContext context);
 
   /**
    * Implementations must return a new {@code JSONObject} or a custom kind of {@code MemberReader}.
    * <p>
-   * A custom {@code MemberReader} can be useful for filtering or extracting from the streamed JSON
-   * object. This may offer performance benefits because not all members of the JSON object need to
-   * be retained in memory in the form of {@code JSONValue} objects.
+   * Factory method like {@link #createElementReader} but for object representations.
+   * </p>
    *
-   * @param nesting
-   *           nesting level, starting from {@code 0} for elements of outermost objects
-   * @param name
-   *           most recent field name, e.g. field name of parent object of parent array
+   * @param context
+   *          logical and absolute parser state, for deciding what object representation to return
+   *
    * @return implementation of {@code ElementReader} depending on nesting and/or field name
    */
-  public abstract MemberReader createMemberReader(int nesting, String name);
+  public MemberReader createMemberReader(ParserContext context);
 
 }

@@ -333,21 +333,8 @@ public class JsonObject extends MemberReader implements Iterable<Member> {
     return this;
   }
 
-  /**
-   * Appends a new member, with the specified name and the specified JSON value, but cannot be used
-   * for method chaining.
-   * <p>
-   * This method is identical in behavior to <code>add</code> except for not returning itself for
-   * method chaining.
-   * </p>
-   *
-   * @param name
-   *          the name of the member to add
-   * @param value
-   *          the value of the member to add, must not be <code>null</code>
-   */
   @Override
-  public void addMember( String name, JsonValue value ) {
+  final protected void addMember( String name, JsonValue value, ParserContext context ) {
 	  add( name, value );
   }
 

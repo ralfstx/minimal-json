@@ -460,7 +460,7 @@ public class JsonParser_Test {
   @SuppressWarnings("boxing")
   private static class RouteList extends ElementReader {
 	@Override
-	void addElement(JsonValue value) {
+	protected void addElement(JsonValue value, ParserContext context) {
 	  assertTrue(value.isNumber());
 	  bus_routes.add(value.asInt());
 	}
@@ -476,14 +476,13 @@ public class JsonParser_Test {
   @Test
   public void streaming_nestedArrayReader() throws IOException {
 	final CollectionFactory factory = new CollectionFactory() {
-      public ElementReader createElementReader(int nesting, String name) {
-    	System.out.println(nesting);
-    	if (nesting != 1) {
+      public ElementReader createElementReader(ParserContext context) {
+    	if (context.getNesting() != 1) {
     		return new JsonArray();
     	}
 	    return new RouteList();
       }
-      public MemberReader createMemberReader(int nesting, String name) {
+      public MemberReader createMemberReader(ParserContext context) {
 	    return new JsonObject();
 	  }
 	};

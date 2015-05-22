@@ -239,14 +239,8 @@ public class JsonArray extends ElementReader implements Iterable<JsonValue> {
     return this;
   }
 
-  /**
-   * Appends the specified JSON value, but cannot be used for method chaining.
-   *
-   * @param value
-   *          the JsonValue to add to the array, must not be <code>null</code>
-   */
   @Override
-  public void addElement( JsonValue value ) {
+  final protected void addElement( JsonValue value, ParserContext context ) {
 	add( value );
   }
 
