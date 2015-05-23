@@ -25,7 +25,6 @@ import static com.eclipsesource.json.TestUtil.assertException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -461,8 +460,7 @@ public class JsonParser_Test {
   private static class RouteList extends ElementReader {
 	@Override
 	protected void addElement(JsonValue value, ParserContext context) {
-	  assertTrue(value.isNumber());
-	  bus_routes.add(value.asInt());
+	  bus_routes.add(value.asObject().get("id").asInt());
 	}
 	int getRoute(int index) {
       return bus_routes.get(index);
@@ -474,19 +472,20 @@ public class JsonParser_Test {
   }
 
   @Test
-  public void streaming_nestedArrayReader() throws IOException {
+  public void streaming_nestedBusRouteArrayReader() throws IOException {
 	final CollectionFactory factory = new CollectionFactory() {
       public ElementReader createElementReader(ParserContext context) {
-    	if (context.getNesting() != 1) {
-    		return new JsonArray();
+    	if (context.getNesting() == 1 && "routes".equals(context.getFieldName())) {
+    	  return new RouteList();
     	}
-	    return new RouteList();
+	    return new JsonArray();
       }
       public MemberReader createMemberReader(ParserContext context) {
 	    return new JsonObject();
 	  }
 	};
-	StringReader reader = new StringReader("{\"area\":\"Boston\", \"routes\":[39, 66, 47]}");
+	StringReader reader = new StringReader("{\"area\":\"Boston\",\"routes\":[{\"id\":39,\"to\":" +
+	    "\"Back Bay\"},{\"to\":\"Dudley Sta.\",\"id\":66},{\"id\":47,\"to\":\"Central Sq.\"}]}");
     JsonValue json = new JsonParser(reader, factory).parse();
     assertEquals("Boston", json.asObject().getString("area", null));
     RouteList mbta_routes = (RouteList) json.asObject().get("routes");
