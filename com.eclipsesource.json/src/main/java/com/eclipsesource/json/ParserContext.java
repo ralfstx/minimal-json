@@ -44,7 +44,7 @@ public interface ParserContext {
   public int getOffset();
 
   /**
-   * @return zero-based column position in the input stream
+   * @return column position in the input stream, starting with {@code 1} for the first column
    */
   public int getColumn();
 
