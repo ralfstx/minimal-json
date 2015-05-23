@@ -37,7 +37,6 @@ class JsonParser implements ParserContext {
   private final Reader reader;
   private final char[] buffer;
   private final CollectionFactory collectionFactory;
-  private boolean is_array;
   private int bufferOffset;
   private int index;
   private int fill;
@@ -126,7 +125,6 @@ class JsonParser implements ParserContext {
   }
 
   private ElementReader readArray() throws IOException {
-	is_array = true;
 	nesting ++;
     read();
     ElementReader array;
@@ -142,6 +140,7 @@ class JsonParser implements ParserContext {
     }
     do {
       skipWhiteSpace();
+      name = null;
       array.addElement( readValue(), this );
       skipWhiteSpace();
     } while (readChar(','));
@@ -153,7 +152,6 @@ class JsonParser implements ParserContext {
   }
 
   private MemberReader readObject() throws IOException {
-	is_array = false;
 	nesting ++;
     read();
     MemberReader object;
@@ -411,7 +409,7 @@ class JsonParser implements ParserContext {
   }
 
   public String getFieldName() {
-	return is_array ? null : name;
+	return name;
   }
 
   public int getLine() {
