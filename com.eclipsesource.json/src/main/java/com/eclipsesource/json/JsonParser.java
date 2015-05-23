@@ -132,6 +132,7 @@ class JsonParser implements ParserContext {
       array = new JsonArray();
     } else {
       array = collectionFactory.createElementReader( this );
+      name = null;
     }
     skipWhiteSpace();
     if( readChar( ']' ) ) {
@@ -140,8 +141,9 @@ class JsonParser implements ParserContext {
     }
     do {
       skipWhiteSpace();
+      JsonValue value = readValue();
       name = null;
-      array.addElement( readValue(), this );
+      array.addElement( value, this );
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar(']')) {
@@ -167,13 +169,15 @@ class JsonParser implements ParserContext {
     }
     do {
       skipWhiteSpace();
-      name = readName();
+      String name = this.name = readName();
       skipWhiteSpace();
       if (!readChar(':')) {
         throw expected("':'");
       }
       skipWhiteSpace();
-      object.addMember( name, readValue(), this );
+      JsonValue value = readValue();
+      this.name = name;
+      object.addMember( name, value, this );
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar('}')) {

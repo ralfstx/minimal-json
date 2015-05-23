@@ -29,7 +29,7 @@ public interface ParserContext {
   public int getNesting();
 
   /**
-   * @return field name of the current member or of the closest ancestor of the current element
+   * @return field name of the current member insertion or null when adding root or element values
    */
   public String getFieldName();
 
