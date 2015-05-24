@@ -231,16 +231,16 @@ public class JsonArray extends ElementReader implements Iterable<JsonValue> {
    *          the JsonValue to add to the array, must not be <code>null</code>
    * @return the array itself, to enable method chaining
    */
-  public JsonArray add(JsonValue value) {
-    if (value == null) {
-      throw new NullPointerException("value is null");
+  final public JsonArray add( JsonValue value ) {
+    if( value == null ) {
+      throw new NullPointerException( "value is null" );
     }
     values.add(value);
     return this;
   }
 
   @Override
-  final protected void addElement( JsonValue value, ParserContext context ) {
+  protected void addElement( JsonValue value, ParserContext context ) {
 	add( value );
   }
 

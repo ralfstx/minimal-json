@@ -320,9 +320,9 @@ public class JsonObject extends MemberReader implements Iterable<Member> {
    *          the value of the member to add, must not be <code>null</code>
    * @return the object itself, to enable method chaining
    */
-  public JsonObject add(String name, JsonValue value) {
-    if (name == null) {
-      throw new NullPointerException("name is null");
+  final public JsonObject add( String name, JsonValue value ) {
+    if( name == null ) {
+      throw new NullPointerException( "name is null" );
     }
     if (value == null) {
       throw new NullPointerException("value is null");
@@ -334,7 +334,7 @@ public class JsonObject extends MemberReader implements Iterable<Member> {
   }
 
   @Override
-  final protected void addMember( String name, JsonValue value, ParserContext context ) {
+  protected void addMember( String name, JsonValue value, ParserContext context ) {
 	  add( name, value );
   }
 

@@ -44,7 +44,7 @@ public class JsonStreamingTest {
   }
 
   @Test
-  public void streaming_nestedElementDistiller() throws IOException {
+  public void withNestedElementDistiller() throws IOException {
 	final CollectionFactory factory = new CollectionFactory() {
       public ElementReader createElementReader(ParserContext context) {
     	if (context.getNesting() == 1 && "routes".equals(context.getFieldName())) {
@@ -58,11 +58,39 @@ public class JsonStreamingTest {
 	};
 	StringReader reader = new StringReader("{\"area\":\"Boston\",\"routes\":[{\"id\":39,\"to\":" +
 	    "\"Back Bay\"},{\"to\":\"Dudley Sta.\",\"id\":66},{\"id\":47,\"to\":\"Central Sq.\"}]}");
-    JsonValue json = new JsonParser(reader, factory).parse();
+    JsonValue json = JsonValue.readFrom(reader, factory);
     assertEquals("Boston", json.asObject().getString("area", null));
     RouteList mbta_routes = (RouteList) json.asObject().get("routes");
     assertEquals(3, mbta_routes.bus_routes.size());
     assertEquals(66, mbta_routes.bus_routes.get(1).intValue());
+  }
+
+  @Test
+  public void withElementFilterByOverride() throws IOException {
+	StringReader reader = new StringReader("{\"all\":[1,2,3,4,5],\"odd\":[1,2,3,4,5]}");
+	final CollectionFactory factory = new CollectionFactory() {
+      public ElementReader createElementReader(ParserContext context) {
+    	if ("odd".equals(context.getFieldName())) {
+    	  return new JsonArray() {
+    		@Override
+    		final protected void addElement(JsonValue value, ParserContext context) {
+    		  if (value.asInt() % 2 == 1) {
+    		    add(value);
+    		  }
+    		}
+    	  };
+    	}
+	    return new JsonArray();
+      }
+	  public MemberReader createMemberReader(ParserContext context) {
+	    return new JsonObject();
+	  }
+	};
+	JsonObject filtered = JsonValue.readFrom(reader, factory).asObject();
+	assertEquals(5, filtered.get("all").asArray().size());
+	JsonArray odd = filtered.get("odd").asArray();
+	assertEquals(3, odd.size());
+	assertEquals(3, odd.get(1).asInt());
   }
 
   private static class EditorPosition {
@@ -168,7 +196,7 @@ public class JsonStreamingTest {
   	  }
     };
 	StringReader reader = new StringReader(content);
-	JsonValue json = new JsonParser(reader, factory).parse();
+	JsonValue json = JsonValue.readFrom(reader, factory);
 	if (json instanceof ArrayAnnotator) {
       return ((ArrayAnnotator) json).array;
 	} else if (json instanceof ObjectAnnotator) {
@@ -178,7 +206,7 @@ public class JsonStreamingTest {
   }
 
   @Test
-  public void streaming_positionAnnotator() throws IOException {
+  public void withPositionAnnotator() throws IOException {
 	String c;
 	c = "{\"id\":15, \"clients\":[4, 17, 10], \"address\":{\n" +
 	    "  \"street\":\"1 Main St.\", \"town\":\"Springfield\"} }";
