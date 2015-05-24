@@ -28,13 +28,9 @@ import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 
 import org.hamcrest.core.StringStartsWith;
 import org.junit.Test;
-
-import com.eclipsesource.json.CollectionFactory.ElementReader;
-import com.eclipsesource.json.CollectionFactory.MemberReader;
 
 
 public class JsonParser_Test {
@@ -455,130 +451,6 @@ public class JsonParser_Test {
     assertParseException(3, "Expected 's'", "falx");
     assertParseException(4, "Expected 'e'", "falsx");
     assertParseException(5, "Unexpected character", "falsex");
-  }
-
-  @SuppressWarnings("boxing")
-  private static class RouteList extends ElementReader {
-	@Override
-	protected void addElement(JsonValue value, ParserContext context) {
-	  bus_routes.add(value.asObject().get("id").asInt());
-	}
-	ArrayList<Integer> bus_routes = new ArrayList<Integer>();
-  }
-
-  @Test
-  public void streaming_nestedElementDistiller() throws IOException {
-	final CollectionFactory factory = new CollectionFactory() {
-      public ElementReader createElementReader(ParserContext context) {
-    	if (context.getNesting() == 1 && "routes".equals(context.getFieldName())) {
-    	  return new RouteList();
-    	}
-	    return new JsonArray();
-      }
-      public MemberReader createMemberReader(ParserContext context) {
-	    return new JsonObject();
-	  }
-	};
-	StringReader reader = new StringReader("{\"area\":\"Boston\",\"routes\":[{\"id\":39,\"to\":" +
-	    "\"Back Bay\"},{\"to\":\"Dudley Sta.\",\"id\":66},{\"id\":47,\"to\":\"Central Sq.\"}]}");
-    JsonValue json = new JsonParser(reader, factory).parse();
-    assertEquals("Boston", json.asObject().getString("area", null));
-    RouteList mbta_routes = (RouteList) json.asObject().get("routes");
-    assertEquals(3, mbta_routes.bus_routes.size());
-    assertEquals(66, mbta_routes.bus_routes.get(1).intValue());
-  }
-
-  private static class EditorContent {
-	final static int ATOMIC = 0, ARRAY = 1, OBJECT = 2;
-    int last_line, last_column, type = ATOMIC;
-  }
-
-  private static class ComplexEditorContent extends EditorContent {
-    final int first_line, first_column;
-	final ArrayList<EditorContent> children = new ArrayList<EditorContent>();
-	ComplexEditorContent(int type, int first_line, int first_column) {
-	  this.type = type;
-	  this.first_line = first_line;
-	  this.first_column = first_column;
-	}
-	void addChild(JsonValue value, ParserContext context) {
-	  EditorContent entity = null;
-      if (value instanceof ElementReader) {
-        entity = ((ArrayAnnotator) value).array;
-      } else if (value instanceof MemberReader) {
-        entity = ((ObjectAnnotator) value).object;
-      } else {
-        entity = new EditorContent();
-      }
-      entity.last_line = context.getLine();
-      entity.last_column = context.getColumn();
-      children.add(entity);
-	}
-  }
-
-  private static class ArrayAnnotator extends ElementReader {
-    final ComplexEditorContent array;
-    ArrayAnnotator(int line, int column) {
-	  array = new ComplexEditorContent(EditorContent.ARRAY, line, column);
-    }
-    @Override
-    final protected void addElement(JsonValue value, ParserContext context) {
-      array.addChild(value, context);
-    }
-  }
-
-  private static class ObjectAnnotator extends MemberReader {
-    final ComplexEditorContent object;
-    ObjectAnnotator(int line, int column) {
-	  object = new ComplexEditorContent(EditorContent.OBJECT, line, column);
-    }
-    @Override
-    final protected void addMember(String name, JsonValue value, ParserContext context) {
-      object.addChild(value, context);
-    }
-  }
-
-  private static ComplexEditorContent annotateContent(String content) throws IOException {
-    final CollectionFactory factory = new CollectionFactory() {
-      public ElementReader createElementReader(ParserContext context) {
-        return new ArrayAnnotator(context.getLine(), context.getColumn());
-  	  }
-      public MemberReader createMemberReader(ParserContext context) {
-  	    return new ObjectAnnotator(context.getLine(), context.getColumn());
-  	  }
-    };
-	StringReader reader = new StringReader(content);
-	JsonValue json = new JsonParser(reader, factory).parse();
-	if (json instanceof ArrayAnnotator) {
-      return ((ArrayAnnotator) json).array;
-	} else if (json instanceof ObjectAnnotator) {
-	  return ((ObjectAnnotator) json).object;
-	}
-	return null;
-  }
-
-  @Test
-  public void streaming_positionAnnotator() throws IOException {
-	String c;
-	c = "{\"id\":15, \"clients\":[4, 17, 10], \"address\":{\n" +
-	    "  \"street\":\"1 Main St.\", \"town\":\"Springfield\"} }";
-	ComplexEditorContent parent = annotateContent(c);
-	assertEquals(1, parent.first_column);
-	assertEquals(3, parent.children.size());
-	ArrayList<EditorContent> children = parent.children;
-	assertEquals(EditorContent.ATOMIC, children.get(0).type);
-	ComplexEditorContent array = (ComplexEditorContent) children.get(1);
-	assertEquals(EditorContent.ARRAY, array.type);
-	assertEquals(1, array.first_line);
-	assertEquals(21, array.first_column);
-	assertEquals(1, array.last_line);
-	assertEquals(31, array.last_column);
-	ComplexEditorContent object = (ComplexEditorContent) children.get(2);
-	assertEquals(EditorContent.OBJECT, object.type);
-	assertEquals(1, object.first_line);
-	assertEquals(44, object.first_column);
-	assertEquals(2, object.last_line);
-	assertEquals(46, object.last_column);
   }
 
   private static void assertParseException( int offset, String message, final String json ) {
