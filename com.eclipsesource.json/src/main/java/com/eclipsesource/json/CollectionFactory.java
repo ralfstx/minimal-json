@@ -49,8 +49,10 @@ public interface CollectionFactory {
 	 *
 	 * @param value
 	 *          a parsed element of the current JSON array
+	 * @throws IOException
+	 *          forwarded from failed skipping reads
 	 */
-	abstract protected void addElement( JsonValue value, ParserContext context );
+	abstract protected void addElement( JsonValue value, ParserContext context ) throws IOException;
 
 	/**
 	 * Unless implemented, replaces the JSON array with a stripping note.
@@ -77,8 +79,11 @@ public interface CollectionFactory {
 	 *          the field name of the object's member
 	 * @param value
 	 *          the JSON value of the object's member
+	 * @throws IOException
+	 *          forwarded from failed skipping reads
 	 */
-	abstract protected void addMember( String name, JsonValue value, ParserContext context );
+	abstract protected void addMember( String name, JsonValue value, ParserContext context )
+	    throws IOException;
 
 	/**
 	 * Unless implemented, replaces the JSON object with a stripping note.
@@ -101,7 +106,6 @@ public interface CollectionFactory {
    *
    * @param context
    *          logical and absolute parser state, for deciding what array representation to return
-   *
    * @return implementation of {@code ElementReader} depending on nesting and/or field name
    */
   public ElementReader createElementReader(ParserContext context);
@@ -114,7 +118,6 @@ public interface CollectionFactory {
    *
    * @param context
    *          logical and absolute parser state, for deciding what object representation to return
-   *
    * @return implementation of {@code ElementReader} depending on nesting and/or field name
    */
   public MemberReader createMemberReader(ParserContext context);

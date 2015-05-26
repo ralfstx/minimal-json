@@ -21,6 +21,9 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import java.io.IOException;
+
+
 public interface ParserContext {
 
   /**
@@ -47,5 +50,53 @@ public interface ParserContext {
    * @return column position in the input stream, starting with {@code 1} for the first column
    */
   public int getColumn();
+
+  /**
+   * Skips the next element of the current JSON array.
+   * <p>
+   * If there is no next element to be skipped inside this array context, this method has no effect
+   * and returns false. Because members of JSON objects are unordered, it is illegal to call this
+   * method from inside an object context. Use {@link #skipAll()} instead if all required members
+   * have been read from the current object.
+   * <p>
+   * @return true if the element was skipped or false if there is no next element
+   * @throws IOException
+   *           if an I/O error occurs in the writer
+   * @throws IllegalStateException
+   *           if this method was called from the context of a JSON object
+   */
+  public boolean skipNext() throws IOException;
+
+  /**
+   * Skips the next <em>n</em> elements of the current JSON array.
+   * <p>
+   * If there are fewer elements to be skipped inside this array context than specified by
+   * <em>n</em>, then all elements are skipped until the end of the array is reached. The actual
+   * number of elements that were skipped is indicated by the return value of this method. Because
+   * members of JSON objects are unordered, it is illegal to call this method from inside an object
+   * context. Use {@link #skipAll()} instead if all required members have been read from the current
+   * object.
+   * <p>
+   * @param n the number of elements to be skipped
+   * @return the number of skipped elements, can be less than <em>n</em> at the end of the array
+   * @throws IOException
+   *           if an I/O error occurs in the writer
+   * @throws IllegalStateException
+   *           if this method was called from the context of a JSON object
+   */
+  public int skipNext( int n ) throws IOException;
+
+  /**
+   * Skips all remaining elements or members of the current JSON array or object.
+   * <p>
+   * The number of elements that were skipped is indicated by the return value of this method.
+   * Repeated calls to this method from within the same object or array context have the same effect
+   * on the parse as calling this method once.
+   * <p>
+   * @return the number of skipped elements or members
+   * @throws IOException
+   *           if an I/O error occurs in the writer
+   */
+  public int skipAll() throws IOException;
 
 }

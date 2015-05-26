@@ -408,6 +408,64 @@ class JsonParser implements ParserContext {
     return error("Expected " + expected);
   }
 
+  private void skipInner() throws IOException {
+    boolean is_literal = false;
+	int n_obj = 0, n_arr = 0;
+	do {
+	  read();
+	  switch ( current ) {
+	  case '{':
+	    n_obj ++;
+	    break;
+	  case '[':
+	    n_arr ++;
+	    break;
+	  case '}':
+	    -- n_obj;
+		break;
+      case ']':
+		-- n_arr;
+		break;
+      case '"':
+	    is_literal = !is_literal;
+	    break;
+	  case '\\':
+	    read();
+	    break;
+	  default:
+	  }
+	} while( is_literal || n_obj > 0 || n_arr > 0 ||
+        current != ',' && current != ']' && current != '}' );
+  }
+
+  private int skip( int n_skip ) throws IOException {
+	int n_skipped = 0;
+    skipWhiteSpace();
+    while ( current == ',' ) {
+      skipWhiteSpace();
+      skipInner();
+      if ( ++n_skipped == n_skip ) {
+        break;
+      }
+    }
+	return n_skipped;
+  }
+
+  public int skipAll() throws IOException {
+    return skip(0);
+  }
+
+  public int skipNext( int n ) throws IOException {
+	if ( name != null ) {
+	  throw new IllegalStateException( "Attempted to skip element inside object" );
+	}
+	return skip(n);
+  }
+
+  public boolean skipNext() throws IOException {
+	return skipNext( 1 ) == 1;
+  }
+
   public int getNesting() {
 	return nesting;
   }

@@ -21,7 +21,9 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import static com.eclipsesource.json.TestUtil.assertException;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -231,5 +233,131 @@ public class JsonStreamingTest {
 	assertEquals(EditorContent.ARRAY, root.click(new EditorPosition(1, 21)).type);
 	ComplexEditorContent address = (ComplexEditorContent) root.click(new EditorPosition(2, 46));
 	assertEquals(2, address.children.size());
+  }
+
+  private static class SkippingReaderFactory implements CollectionFactory {
+	int n_skip, idx;
+	boolean is_object;
+	void skip ( ParserContext context ) {
+      try {
+    	if ( n_skip == 0 ) {
+          context.skipAll();
+    	} else {
+		  context.skipNext( n_skip );
+    	}
+	  } catch ( IOException e ) { }
+	  idx = 0;
+	}
+	public ElementReader createElementReader( ParserContext context ) {
+	  return new JsonArray() {
+		@Override
+		protected void addElement( JsonValue value, ParserContext context ) {
+		  if ( !is_object && 0 == idx++ ) {
+		    skip( context );
+		  }
+		  add( value );
+		}
+	  };
+	}
+	public MemberReader createMemberReader( ParserContext context ) {
+      return new JsonObject() {
+        @Override
+        protected void addMember( String name, JsonValue value, ParserContext context ) {
+	      if ( is_object && 0 == idx++ ) {
+	        skip( context );
+	      }
+	      add( name, value );
+	    }
+      };
+	}
+  }
+
+  private static JsonArray skipElements( String json, int n_skip ) throws IOException {
+    SkippingReaderFactory factory = new SkippingReaderFactory();
+    factory.n_skip = n_skip;
+	StringReader reader = new StringReader( json );
+    return JsonValue.readFrom( reader, factory ).asArray();
+  }
+
+  @Test
+  public void skipNext_repeatedlyByOneAndFromLast() throws IOException {
+	JsonArray array = skipElements( "[1, 4,8, 7, 9]", 1 );
+	assertEquals( 1, array.get( 0 ).asInt() );
+	assertEquals( 8, array.get( 1 ).asInt() );
+	assertEquals( 9, array.get( 2 ).asInt() );
+  }
+
+  @Test
+  public void skipNext_repeatedlyWideAndFromLast() throws IOException {
+	JsonArray array = skipElements( "[1, 4,8, 7, 9]", 3 );
+	assertEquals( 1, array.get( 0 ).asInt() );
+	assertEquals( 9, array.get( 1 ).asInt() );
+  }
+
+  @Test
+  public void skipNext_fromBeforeAndBeyondLast() throws IOException {
+	JsonArray array = skipElements( "[1, 4,8, 7, 9]", 5 );
+	assertEquals( 1, array.get( 0 ).asInt() );
+	assertEquals( 1, array.size() );
+  }
+
+  @Test
+  public void skipAll_isIdempotent() throws IOException {
+    final CollectionFactory factory = new CollectionFactory() {
+      public ElementReader createElementReader( ParserContext context ) {
+        return new JsonArray();
+      }
+      public MemberReader createMemberReader( ParserContext context ) {
+    	return new JsonObject() {
+	      @Override
+	      protected void addMember( String name, JsonValue value, ParserContext context ) {
+            if ( name.equals( "id" ) ) {
+              try {
+                context.skipAll();
+                context.skipAll();
+              } catch ( IOException e ) {
+                fail();
+              }
+            }
+	    	add( name, value );
+		  }
+		};
+      }
+    };
+    StringReader json = new StringReader( "[1,2 ,3, 4,2, {\"id\":42,\"color\":\"blue\"}, 10]" );
+    JsonArray array = JsonValue.readFrom( json, factory ).asArray();
+    assertEquals( 7, array.size() );
+    assertEquals( 10, array.get( 6 ).asInt() );
+    JsonObject object = array.get( 5 ).asObject();
+    assertEquals( 42, object.getInt( "id", 0 ) );
+    assertEquals( null, object.get("color") );
+  }
+
+  @Test
+  public void skip_leavesLastDelimiterCurrent() {
+    assertException( ParseException.class, new Runnable() {
+	  public void run() {
+        try {
+          skipElements( "[1, 4,8, 7, 9 } ", 0 );
+	      fail();
+		} catch (IOException e) { }
+	  }
+	} );
+  }
+
+  @Test
+  public void skipNext_failsFromObjectContext() {
+	final SkippingReaderFactory factory = new SkippingReaderFactory();
+	factory.is_object = true;
+	factory.n_skip = 1;
+	final StringReader reader = new StringReader( "[1,4,8,{\"id\":1}]" );
+	assertException( IllegalStateException.class, new Runnable() {
+	  public void run() {
+        try {
+	      JsonValue.readFrom( reader, factory );
+	      fail();
+		} catch (IOException e) { }
+	  }
+	} );
   }
 }
