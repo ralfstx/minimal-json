@@ -149,6 +149,7 @@ Here are some projects that use minimal-json:
 * [Box.com Java SDK](http://opensource.box.com/box-java-sdk/)
 * [jshint-eclipse](https://github.com/eclipsesource/jshint-eclipse)
 * [tern.java](https://github.com/angelozerr/tern.java)
+* [Human JSON](https://github.com/laktak/hjson-java)
 
 Include
 -------
