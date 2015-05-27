@@ -95,30 +95,38 @@ public interface CollectionFactory {
   }
 
   /**
-   * Implementations must return a new {@code JSONArray} or a custom kind of {@code ElementReader}.
+   * Implementations must return a new {@code JSONArray} or a custom kind of {@code ElementReader},
+   * or null for skipping the current array.
    * <p>
    * A custom {@code ElementReader} can be useful for filtering, extracting from, or annotating the
    * streamed JSON array. Filtering or extracting from the stream may offer performance benefits
    * because not all elements of the JSON array need to be retained in memory in the form of {@code
    * JSONValue} objects. {@code context} provides access to the current parser state, including
-   * position in the input stream, nesting level, and field name.
+   * position in the input, nesting level, and field name.
+   * </p>
+   * <p>
+   * Returning <em>null</em> on a particular context causes the parser to skip the entire object and
+   * to not insert the corresponding member or element into the enclosing object or array. If the
+   * skipped array is outermost, {@link JsonValue#readFrom(java.io.Reader, CollectionFactory)}
+   * returns <em>null</em>.
    * </p>
    *
    * @param context
    *          logical and absolute parser state, for deciding what array representation to return
-   * @return implementation of {@code ElementReader} depending on nesting and/or field name
+   * @return implementation of {@code ElementReader} or null depending on nesting and/or field name
    */
   public ElementReader createElementReader(ParserContext context);
 
   /**
-   * Implementations must return a new {@code JSONObject} or a custom kind of {@code MemberReader}.
+   * Implementations must return a new {@code JSONObject} or a custom kind of {@code MemberReader},
+   * or null for skipping the current object.
    * <p>
-   * Factory method like {@link #createElementReader} but for object representations.
+   * Factory interface method like {@link #createElementReader} but for object representations.
    * </p>
    *
    * @param context
    *          logical and absolute parser state, for deciding what object representation to return
-   * @return implementation of {@code ElementReader} depending on nesting and/or field name
+   * @return implementation of {@code MemberReader} or null depending on nesting and/or field name
    */
   public MemberReader createMemberReader(ParserContext context);
 

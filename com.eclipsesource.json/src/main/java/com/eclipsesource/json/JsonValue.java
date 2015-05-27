@@ -109,14 +109,15 @@ public abstract class JsonValue implements Serializable {
    * The specified {@link CollectionFactory} may provide custom implementations of JSON arrays or
    * objects, depending on nesting level and/or most recent field name. Such custom implementations
    * may filter or extract content from object members or array elements, effectively making use of
-   * a streaming API.
+   * a streaming API. If the specified CollectionFactory returns <em>null</em> for the outermost
+   * collection, this method returns <em>null</em>.
    * </p>
    *
    * @param reader
    *          the reader to read the JSON value from
    * @param factory
    *          a {@code CollectionFactory} to provide implementations of JSON arrays and objects
-   * @return the JSON value that has been read
+   * @return the JSON value that has been read, or null
    * @throws IOException
    *           if an I/O error occurs in the reader
    * @throws ParseException

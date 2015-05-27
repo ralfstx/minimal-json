@@ -360,4 +360,26 @@ public class JsonStreamingTest {
 	  }
 	} );
   }
+
+  @Test
+  public void skipByNullFromFactory() throws IOException {
+    CollectionFactory factory = new CollectionFactory() {
+      public ElementReader createElementReader(ParserContext context) {
+        return "prev".equals(context.getFieldName()) ? null : new JsonArray();
+      }
+      public MemberReader createMemberReader(ParserContext context) {
+        return new JsonObject();
+      }
+    };
+    StringReader json = new StringReader( "[{\"player\":\"Mario\",\"rank\":2,\"prev\":[1,5,4]}," +
+        "{\"player\":\"Lara\",\"rank\":1,\"prev\":[2,3,5],\"trophies\":[\"gold\",\"bronze\"]}]" );
+    JsonArray array = JsonValue.readFrom( json, factory ).asArray();
+    assertEquals(2, array.size());
+    JsonObject mario = array.get(0).asObject();
+    assertEquals("Mario", mario.get("player").asString());
+    assertEquals(null, mario.get("prev"));
+    JsonObject lara = array.get(1).asObject();
+    assertEquals(null, lara.get("prev"));
+    assertEquals(2, lara.get("trophies").asArray().size());
+  }
 }

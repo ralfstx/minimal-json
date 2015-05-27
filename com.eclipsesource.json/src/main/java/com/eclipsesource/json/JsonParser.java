@@ -128,26 +128,32 @@ class JsonParser implements ParserContext {
 	nesting ++;
     read();
     ElementReader array;
-    if ( collectionFactory == null ) {
+    if( collectionFactory == null ) {
       array = new JsonArray();
     } else {
       array = collectionFactory.createElementReader( this );
       name = null;
     }
-    skipWhiteSpace();
-    if( readChar( ']' ) ) {
-      nesting --;
-      return array;
+    if( array == null ) {
+      skipAll();
+    } else {
+      skipWhiteSpace();
+      if( readChar( ']' ) ) {
+        nesting --;
+        return array;
+      }
+      do {
+        skipWhiteSpace();
+        JsonValue value = readValue();
+        name = null;
+        if( value != null ) {
+          array.addElement( value, this );
+        }
+        skipWhiteSpace();
+      } while( readChar( ',' ) );
     }
-    do {
-      skipWhiteSpace();
-      JsonValue value = readValue();
-      name = null;
-      array.addElement( value, this );
-      skipWhiteSpace();
-    } while (readChar(','));
-    if (!readChar(']')) {
-      throw expected("',' or ']'");
+    if( !readChar( ']' ) ) {
+      throw expected( "',' or ']'" );
     }
     nesting --;
     return array;
@@ -157,31 +163,37 @@ class JsonParser implements ParserContext {
 	nesting ++;
     read();
     MemberReader object;
-    if ( collectionFactory == null ) {
+    if( collectionFactory == null ) {
       object = new JsonObject();
     } else {
       object = collectionFactory.createMemberReader( this );
     }
-    skipWhiteSpace();
-    if( readChar( '}' ) ) {
-      nesting --;
-      return object;
-    }
-    do {
+    if( object == null ) {
+      skipAll();
+    } else {
       skipWhiteSpace();
-      String name = this.name = readName();
-      skipWhiteSpace();
-      if (!readChar(':')) {
-        throw expected("':'");
+      if( readChar( '}' ) ) {
+        nesting --;
+        return object;
       }
-      skipWhiteSpace();
-      JsonValue value = readValue();
-      this.name = name;
-      object.addMember( name, value, this );
-      skipWhiteSpace();
-    } while (readChar(','));
-    if (!readChar('}')) {
-      throw expected("',' or '}'");
+      do {
+        skipWhiteSpace();
+        String name = this.name = readName();
+        skipWhiteSpace();
+        if( !readChar( ':' ) ) {
+          throw expected( "':'" );
+        }
+        skipWhiteSpace();
+        JsonValue value = readValue();
+        this.name = name;
+        if( value != null ) {
+          object.addMember( name, value, this );
+        }
+        skipWhiteSpace();
+      } while( readChar( ',' ) );
+    }
+    if( !readChar( '}' ) ) {
+      throw expected( "',' or '}'" );
     }
     nesting --;
     return object;
@@ -441,10 +453,13 @@ class JsonParser implements ParserContext {
   private int skip( int n_skip ) throws IOException {
 	int n_skipped = 0;
     skipWhiteSpace();
-    while ( current == ',' ) {
+    if( current != ',' && current != ']' && current != '}' ) {
+      skipInner();
+    }
+    while( current == ',' ) {
       skipWhiteSpace();
       skipInner();
-      if ( ++n_skipped == n_skip ) {
+      if( ++n_skipped == n_skip ) {
         break;
       }
     }
@@ -452,14 +467,14 @@ class JsonParser implements ParserContext {
   }
 
   public int skipAll() throws IOException {
-    return skip(0);
+    return skip( 0 );
   }
 
   public int skipNext( int n ) throws IOException {
-	if ( name != null ) {
+	if( name != null ) {
 	  throw new IllegalStateException( "Attempted to skip element inside object" );
 	}
-	return skip(n);
+	return skip( n );
   }
 
   public boolean skipNext() throws IOException {
