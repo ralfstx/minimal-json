@@ -455,19 +455,17 @@ class JsonParser implements ParserContext {
     skipWhiteSpace();
     if( current != ',' && current != ']' && current != '}' ) {
       skipInner();
+      n_skipped = 1;
     }
-    while( current == ',' ) {
+    while( current == ',' && n_skipped++ != n_skip ) {
       skipWhiteSpace();
       skipInner();
-      if( ++n_skipped == n_skip ) {
-        break;
-      }
     }
 	return n_skipped;
   }
 
   public int skipAll() throws IOException {
-    return skip( 0 );
+    return skip( -1 );
   }
 
   public int skipNext( int n ) throws IOException {
