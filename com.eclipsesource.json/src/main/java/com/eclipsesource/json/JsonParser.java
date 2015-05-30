@@ -472,6 +472,9 @@ class JsonParser implements ParserContext {
 	if( name != null ) {
 	  throw new IllegalStateException( "Attempted to skip element inside object" );
 	}
+	if ( n < 1 ) {
+      throw new IllegalArgumentException( "Number of elements to skip must be greater than zero " );
+	}
 	return skip( n );
   }
 
