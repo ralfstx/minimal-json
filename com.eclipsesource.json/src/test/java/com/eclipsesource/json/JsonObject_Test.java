@@ -115,6 +115,16 @@ public class JsonObject_Test {
     assertEquals( new JsonObject().add( "a", 23 ), JsonObject.readFrom( "{ \"a\": 23 }" ) );
   }
 
+  @Test( expected = ParseException.class )
+  public void readFrom_illegalJson() {
+    JsonObject.readFrom( "This is not JSON" );
+  }
+
+  @Test( expected = UnsupportedOperationException.class )
+  public void readFrom_wrongJsonType() {
+    JsonObject.readFrom( "\"This is not a JSON object\"" );
+  }
+
   @Test
   public void isEmpty_trueAfterCreation() {
     assertTrue( object.isEmpty() );

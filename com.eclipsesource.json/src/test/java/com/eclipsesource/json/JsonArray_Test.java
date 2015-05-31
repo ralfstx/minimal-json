@@ -108,6 +108,16 @@ public class JsonArray_Test {
     assertEquals( new JsonArray().add( "a" ).add( 23 ), JsonArray.readFrom( "[ \"a\", 23 ]" ) );
   }
 
+  @Test( expected = ParseException.class )
+  public void readFrom_illegalJson() {
+    JsonArray.readFrom( "This is not JSON" );
+  }
+
+  @Test( expected = UnsupportedOperationException.class )
+  public void readFrom_wrongJsonType() {
+    JsonArray.readFrom( "\"This is not a JSON object\"" );
+  }
+
   @Test
   public void isEmpty_isTrueAfterCreation() {
     assertTrue( array.isEmpty() );
