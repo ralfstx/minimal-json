@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,38 +49,38 @@ public class BufferedReaderBenchmark extends SimpleBenchmark {
 
   @Override
   protected void setUp() throws Exception {
-    runner = JsonRunnerFactory.findByName( parser );
+    runner = JsonRunnerFactory.findByName(parser);
   }
 
-  public void timeReader( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
-      InputStream inputStream = getResourceAsStream( "input/" + input + ".json" );
-      Reader reader = new InputStreamReader( inputStream );
-      Object model = runner.readFromReader( reader );
+  public void timeReader(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
+      InputStream inputStream = getResourceAsStream("input/" + input + ".json");
+      Reader reader = new InputStreamReader(inputStream);
+      Object model = runner.readFromReader(reader);
       reader.close();
-      if( model == null ) {
+      if (model == null) {
         throw new NullPointerException();
       }
     }
   }
 
-  public void timeBufferedReader( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
-      InputStream inputStream = getResourceAsStream( "input/" + input + ".json" );
-      Reader reader = new BufferedReader( new InputStreamReader( inputStream ) );
-      Object model = runner.readFromReader( reader );
+  public void timeBufferedReader(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
+      InputStream inputStream = getResourceAsStream("input/" + input + ".json");
+      Reader reader = new BufferedReader(new InputStreamReader(inputStream));
+      Object model = runner.readFromReader(reader);
       reader.close();
-      if( model == null ) {
+      if (model == null) {
         throw new NullPointerException();
       }
     }
   }
 
-  public static void main( String[] args ) throws IOException {
-    CaliperRunner runner = new CaliperRunner( BufferedReaderBenchmark.class );
-    runner.addParameterDefault( "parser", "null", "gson", "jackson", "minimal-json" );
-    runner.addParameterDefault( "input", "rap", "caliper", "long-string", "numbers-array" );
-    runner.exec( args );
+  public static void main(String[] args) throws IOException {
+    CaliperRunner runner = new CaliperRunner(BufferedReaderBenchmark.class);
+    runner.addParameterDefault("parser", "null", "gson", "jackson", "minimal-json");
+    runner.addParameterDefault("input", "rap", "caliper", "long-string", "numbers-array");
+    runner.exec(args);
   }
 
 }

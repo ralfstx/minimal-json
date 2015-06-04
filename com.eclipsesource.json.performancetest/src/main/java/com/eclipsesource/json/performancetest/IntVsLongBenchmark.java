@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,25 +30,25 @@ import com.google.caliper.SimpleBenchmark;
 
 public class IntVsLongBenchmark extends SimpleBenchmark {
 
-  public void timeValueOfInt( int reps ) {
-    for( int i = 0; i < reps; i++ ) {
-      checkValue( JsonValue.valueOf( 23 ) );
+  public void timeValueOfInt(int reps) {
+    for (int i = 0; i < reps; i++) {
+      checkValue(JsonValue.valueOf(23));
     }
   }
 
-  public void timeValueOfLong( int reps ) {
-    for( int i = 0; i < reps; i++ ) {
-      checkValue( JsonValue.valueOf( 23l ) );
+  public void timeValueOfLong(int reps) {
+    for (int i = 0; i < reps; i++) {
+      checkValue(JsonValue.valueOf(23l));
     }
   }
 
   // prevent compiler from inlining
-  private void checkValue( JsonValue value ) {
+  private static void checkValue(JsonValue value) {
     assert value != null;
   }
 
-  public static void main( String[] args ) throws IOException {
-    new CaliperRunner( IntVsLongBenchmark.class ).exec( args );
+  public static void main(String[] args) throws IOException {
+    new CaliperRunner(IntVsLongBenchmark.class).exec(args);
   }
 
 }

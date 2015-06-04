@@ -35,136 +35,136 @@ public class JsonLiteral_Test {
 
   @Test
   public void isNull() {
-    assertTrue( NULL.isNull() );
+    assertTrue(NULL.isNull());
 
-    assertFalse( TRUE.isNull() );
-    assertFalse( FALSE.isNull() );
+    assertFalse(TRUE.isNull());
+    assertFalse(FALSE.isNull());
   }
 
   @Test
   public void isTrue() {
-    assertTrue( TRUE.isTrue() );
+    assertTrue(TRUE.isTrue());
 
-    assertFalse( NULL.isTrue() );
-    assertFalse( FALSE.isTrue() );
+    assertFalse(NULL.isTrue());
+    assertFalse(FALSE.isTrue());
   }
 
   @Test
   public void isFalse() {
-    assertTrue( FALSE.isFalse() );
+    assertTrue(FALSE.isFalse());
 
-    assertFalse( NULL.isFalse() );
-    assertFalse( TRUE.isFalse() );
+    assertFalse(NULL.isFalse());
+    assertFalse(TRUE.isFalse());
   }
 
   @Test
   public void isBoolean() {
-    assertTrue( TRUE.isBoolean() );
-    assertTrue( FALSE.isBoolean() );
+    assertTrue(TRUE.isBoolean());
+    assertTrue(FALSE.isBoolean());
 
-    assertFalse( NULL.isBoolean() );
+    assertFalse(NULL.isBoolean());
   }
 
   @Test
   public void NULL_write() throws IOException {
-    JsonWriter writer = mock( JsonWriter.class );
+    JsonWriter writer = mock(JsonWriter.class);
 
-    NULL.write( writer );
+    NULL.write(writer);
 
-    verify( writer ).writeLiteral( "null" );
-    verifyNoMoreInteractions( writer );
+    verify(writer).writeLiteral("null");
+    verifyNoMoreInteractions(writer);
   }
 
   @Test
   public void TRUE_write() throws IOException {
-    JsonWriter writer = mock( JsonWriter.class );
+    JsonWriter writer = mock(JsonWriter.class);
 
-    TRUE.write( writer );
+    TRUE.write(writer);
 
-    verify( writer ).writeLiteral( "true" );
-    verifyNoMoreInteractions( writer );
+    verify(writer).writeLiteral("true");
+    verifyNoMoreInteractions(writer);
   }
 
   @Test
   public void FALSE_write() throws IOException {
-    JsonWriter writer = mock( JsonWriter.class );
+    JsonWriter writer = mock(JsonWriter.class);
 
-    FALSE.write( writer );
+    FALSE.write(writer);
 
-    verify( writer ).writeLiteral( "false" );
-    verifyNoMoreInteractions( writer );
+    verify(writer).writeLiteral("false");
+    verifyNoMoreInteractions(writer);
   }
 
   @Test
   public void NULL_toString() {
-    assertEquals( "null", NULL.toString() );
+    assertEquals("null", NULL.toString());
   }
 
   @Test
   public void TRUE_toString() {
-    assertEquals( "true", TRUE.toString() );
+    assertEquals("true", TRUE.toString());
   }
 
   @Test
   public void FALSE_toString() {
-    assertEquals( "false", FALSE.toString() );
+    assertEquals("false", FALSE.toString());
   }
 
   @Test
   public void NULL_equals() {
-    assertTrue( NULL.equals( NULL ) );
+    assertTrue(NULL.equals(NULL));
 
-    assertFalse( NULL.equals( null ) );
-    assertFalse( NULL.equals( TRUE ) );
-    assertFalse( NULL.equals( FALSE ) );
+    assertFalse(NULL.equals(null));
+    assertFalse(NULL.equals(TRUE));
+    assertFalse(NULL.equals(FALSE));
   }
 
   @Test
   public void TRUE_equals() {
-    assertTrue( TRUE.equals( TRUE ) );
+    assertTrue(TRUE.equals(TRUE));
 
-    assertFalse( TRUE.equals( null ) );
-    assertFalse( TRUE.equals( FALSE ) );
-    assertFalse( TRUE.equals( Boolean.TRUE ) );
+    assertFalse(TRUE.equals(null));
+    assertFalse(TRUE.equals(FALSE));
+    assertFalse(TRUE.equals(Boolean.TRUE));
   }
 
   @Test
   public void FALSE_equals() {
-    assertTrue( FALSE.equals( FALSE ) );
+    assertTrue(FALSE.equals(FALSE));
 
-    assertFalse( FALSE.equals( null ) );
-    assertFalse( FALSE.equals( TRUE ) );
-    assertFalse( FALSE.equals( Boolean.FALSE ) );
+    assertFalse(FALSE.equals(null));
+    assertFalse(FALSE.equals(TRUE));
+    assertFalse(FALSE.equals(Boolean.FALSE));
   }
 
   @Test
   public void NULL_isSerializable() throws Exception {
-    assertEquals( NULL, serializeAndDeserialize( NULL ) );
-    assertTrue( serializeAndDeserialize( NULL ).isNull() );
+    assertEquals(NULL, serializeAndDeserialize(NULL));
+    assertTrue(serializeAndDeserialize(NULL).isNull());
   }
 
   @Test
   public void TRUE_isSerializable() throws Exception {
-    assertEquals( TRUE, serializeAndDeserialize( TRUE ) );
-    assertTrue( serializeAndDeserialize( TRUE ).isBoolean() );
-    assertTrue( serializeAndDeserialize( TRUE ).isTrue() );
+    assertEquals(TRUE, serializeAndDeserialize(TRUE));
+    assertTrue(serializeAndDeserialize(TRUE).isBoolean());
+    assertTrue(serializeAndDeserialize(TRUE).isTrue());
   }
 
   @Test
   public void FALSE_isSerializable() throws Exception {
-    assertEquals( FALSE, serializeAndDeserialize( FALSE ) );
-    assertTrue( serializeAndDeserialize( FALSE ).isBoolean() );
-    assertTrue( serializeAndDeserialize( FALSE ).isFalse() );
+    assertEquals(FALSE, serializeAndDeserialize(FALSE));
+    assertTrue(serializeAndDeserialize(FALSE).isBoolean());
+    assertTrue(serializeAndDeserialize(FALSE).isFalse());
   }
 
   @Test
   public void sameAfterDeserialization() throws Exception {
-    JsonArray array = new JsonArray().add( NULL ).add( NULL );
+    JsonArray array = new JsonArray().add(NULL).add(NULL);
 
-    JsonArray deserialized = serializeAndDeserialize( array );
+    JsonArray deserialized = serializeAndDeserialize(array);
 
-    assertNotSame( NULL, deserialized.get( 0 ) );
-    assertSame( deserialized.get( 0 ), deserialized.get( 1 ) );
+    assertNotSame(NULL, deserialized.get(0));
+    assertSame(deserialized.get(0), deserialized.get(1));
   }
 
 }

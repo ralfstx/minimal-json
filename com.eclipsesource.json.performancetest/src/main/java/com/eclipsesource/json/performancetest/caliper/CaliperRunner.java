@@ -48,8 +48,7 @@ import com.google.caliper.UserException.DisplayUsageException;
 
 /**
  * Runs a caliper test for the given benchmark and saves the results to a file using a generic JSON
- * format. Requires caliper v0.5.
- * @see CaliperResultsPreprocessor
+ * format. Requires caliper v0.5 (see CaliperResultsPreprocessor).
  */
 public class CaliperRunner {
 
@@ -57,138 +56,138 @@ public class CaliperRunner {
   private final Map<String, String[]> parameterDefaults = new LinkedHashMap<>();
   private final File resultsFile;
 
-  public CaliperRunner( Class<? extends Benchmark> benchmark ) {
+  public CaliperRunner(Class<? extends Benchmark> benchmark) {
     this.benchmark = benchmark;
     this.resultsFile = getResultsFile();
   }
 
-  public void addParameterDefault( String name, String... values ) {
-    Object displaced = parameterDefaults.put( name, values );
-    if( displaced != null) {
+  public void addParameterDefault(String name, String... values) {
+    Object displaced = parameterDefaults.put(name, values);
+    if (displaced != null) {
       throw new IllegalArgumentException("Duplicate parameter default for \"" + name + "\"");
     }
   }
 
-  public void exec( String[] args ) throws IOException {
-    int exitCode = safeRun( args );
-    if( exitCode == 0 && resultsFile != null ) {
+  public void exec(String[] args) throws IOException {
+    int exitCode = safeRun(args);
+    if (exitCode == 0 && resultsFile != null) {
       createJsonFile();
-      copyHtmlResources( resultsFile.getParentFile() );
+      copyHtmlResources(resultsFile.getParentFile());
     }
-    System.exit( exitCode ); // cleanup non-daemon threads from user code, see caliper.Runner
+    System.exit(exitCode); // cleanup non-daemon threads from user code, see caliper.Runner
   }
 
   private File getResultsFile() {
-    File file = new File( "results/" + getName() + ".json" );
+    File file = new File("results/" + getName() + ".json");
     int i = 0;
-    while( file.exists() ) {
-      file = new File( "results/" + getName() + "-" + ++i + ".json" );
+    while (file.exists()) {
+      file = new File("results/" + getName() + "-" + ++i + ".json");
     }
     return file;
   }
 
   private String getName() {
     String name = benchmark.getSimpleName();
-    if( name == null ) {
+    if (name == null) {
       name = "Unknown";
     }
     return name;
   }
 
   private void createJsonFile() throws IOException {
-    JsonObject caliperJson = JsonObject.readFrom( readFromFile( resultsFile ) );
-    String resultsJson = new CaliperResultsPreprocessor( caliperJson ).getResults().toString();
-    writeToFile( resultsJson, resultsFile );
+    JsonObject caliperJson = JsonObject.readFrom(readFromFile(resultsFile));
+    String resultsJson = new CaliperResultsPreprocessor(caliperJson).getResults().toString();
+    writeToFile(resultsJson, resultsFile);
   }
 
-  String[] adjustArgs( String[] args ) {
+  String[] adjustArgs(String[] args) {
     List<String> adjustedArgs = new ArrayList<>();
-    adjustedArgs.add( benchmark.getName() );
-    adjustedArgs.addAll( Arrays.asList( args ) );
-    Arguments parsed = Arguments.parse( adjustedArgs.toArray( new String[0] ) );
+    adjustedArgs.add(benchmark.getName());
+    adjustedArgs.addAll(Arrays.asList(args));
+    Arguments parsed = Arguments.parse(adjustedArgs.toArray(new String[0]));
     // If a param wasn't specified in 'args', use the default value
-    for( Map.Entry<String, String[]> paramDefault : parameterDefaults.entrySet() ) {
-      if ( !parsed.getUserParameters().containsKey( paramDefault.getKey() ) ) {
-        adjustedArgs.add( "-D" + paramDefault.getKey() + "=" + join( paramDefault.getValue(), "," ) );
+    for (Map.Entry<String, String[]> paramDefault : parameterDefaults.entrySet()) {
+      if (!parsed.getUserParameters().containsKey(paramDefault.getKey())) {
+        adjustedArgs.add("-D" + paramDefault.getKey() + "=" + join(paramDefault.getValue(), ","));
       }
     }
-    if( resultsFile != null ) {
-      if( parsed.getSaveResultsFile() != null ) {
-        throw new UserException.DuplicateParameterException( "--saveResults is already used internally" );
+    if (resultsFile != null) {
+      if (parsed.getSaveResultsFile() != null) {
+        throw new UserException.DuplicateParameterException("--saveResults is already used internally");
       }
-      adjustedArgs.add( "--saveResults" );
-      adjustedArgs.add( resultsFile.getAbsolutePath() );
+      adjustedArgs.add("--saveResults");
+      adjustedArgs.add(resultsFile.getAbsolutePath());
     }
-    return adjustedArgs.toArray( new String[0] );
+    return adjustedArgs.toArray(new String[0]);
   }
 
-  private static void copyHtmlResources( File parent ) throws IOException {
-    copyResource( "Benchmarks.html", parent );
-    copyResource( "benchmarks.js", parent );
-    copyResource( "benchmarks.css", parent );
-    copyResource( "parser.css", parent );
+  private static void copyHtmlResources(File parent) throws IOException {
+    copyResource("Benchmarks.html", parent);
+    copyResource("benchmarks.js", parent);
+    copyResource("benchmarks.css", parent);
+    copyResource("parser.css", parent);
   }
 
-  private static void copyResource( String name, File parent ) throws IOException {
-    File file = new File( parent, name );
-    if( !file.exists() ) {
-      writeToFile( readResource( "charts/" + name ), file );
+  private static void copyResource(String name, File parent) throws IOException {
+    File file = new File(parent, name);
+    if (!file.exists()) {
+      writeToFile(readResource("charts/" + name), file);
     }
   }
 
-  private int safeRun( String[] args ) {
+  private int safeRun(String[] args) {
     // see caliper.Runner.main( String[] )
     try {
-      new Runner().run( adjustArgs( args ) );
+      new Runner().run(adjustArgs(args));
       return 0;
-    } catch( DisplayUsageException e ) {
+    } catch (DisplayUsageException e) {
       e.display();
       return 0;
-    } catch( UserException e ) {
+    } catch (UserException e) {
       e.display();
       return 1;
     }
   }
 
-  private static void writeToFile( String string, File file ) throws IOException {
-    OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( file ) );
+  private static void writeToFile(String string, File file) throws IOException {
+    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file));
     try {
-      writer.write( string );
+      writer.write(string);
     } finally {
       writer.close();
     }
   }
 
-  private static String readFromFile( File file ) throws IOException {
-    FileInputStream inputStream = new FileInputStream( file );
+  private static String readFromFile(File file) throws IOException {
+    FileInputStream inputStream = new FileInputStream(file);
     try {
-      return readContent( inputStream, "UTF-8" );
+      return readContent(inputStream, "UTF-8");
     } finally {
       inputStream.close();
     }
   }
 
-  private static String readContent( InputStream inputStream, String charset )
+  private static String readContent(InputStream inputStream, String charset)
       throws UnsupportedEncodingException, IOException
   {
-    BufferedReader reader = new BufferedReader( new InputStreamReader( inputStream, charset ) );
+    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, charset));
     StringBuilder builder = new StringBuilder();
     String line = reader.readLine();
-    while( line != null ) {
-      builder.append( line );
-      builder.append( '\n' );
+    while (line != null) {
+      builder.append(line);
+      builder.append('\n');
       line = reader.readLine();
     }
     return builder.toString();
   }
 
-  private static String join( String[] parts, String glue ) {
+  private static String join(String[] parts, String glue) {
     StringBuilder buffer = new StringBuilder();
-    for( int i = 0; i < parts.length; i++ ) {
-      if( i > 0 ) {
-        buffer.append( glue );
+    for (int i = 0; i < parts.length; i++) {
+      if (i > 0) {
+        buffer.append(glue);
       }
-      buffer.append( parts[i] );
+      buffer.append(parts[i]);
     }
     return buffer.toString();
   }

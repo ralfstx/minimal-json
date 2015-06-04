@@ -24,14 +24,14 @@ package com.eclipsesource.json;
 import java.io.IOException;
 
 
-@SuppressWarnings( "serial" ) // use default serial UID
+@SuppressWarnings("serial") // use default serial UID
 class JsonNumber extends JsonValue {
 
   private final String string;
 
-  JsonNumber( String string ) {
-    if( string == null ) {
-      throw new NullPointerException( "string is null" );
+  JsonNumber(String string) {
+    if (string == null) {
+      throw new NullPointerException("string is null");
     }
     this.string = string;
   }
@@ -42,8 +42,8 @@ class JsonNumber extends JsonValue {
   }
 
   @Override
-  void write( JsonWriter writer ) throws IOException {
-    writer.writeNumber( string );
+  void write(JsonWriter writer) throws IOException {
+    writer.writeNumber(string);
   }
 
   @Override
@@ -53,22 +53,22 @@ class JsonNumber extends JsonValue {
 
   @Override
   public int asInt() {
-    return Integer.parseInt( string, 10 );
+    return Integer.parseInt(string, 10);
   }
 
   @Override
   public long asLong() {
-    return Long.parseLong( string, 10 );
+    return Long.parseLong(string, 10);
   }
 
   @Override
   public float asFloat() {
-    return Float.parseFloat( string );
+    return Float.parseFloat(string);
   }
 
   @Override
   public double asDouble() {
-    return Double.parseDouble( string );
+    return Double.parseDouble(string);
   }
 
   @Override
@@ -77,18 +77,18 @@ class JsonNumber extends JsonValue {
   }
 
   @Override
-  public boolean equals( Object object ) {
-    if( this == object ) {
+  public boolean equals(Object object) {
+    if (this == object) {
       return true;
     }
-    if( object == null ) {
+    if (object == null) {
       return false;
     }
-    if( getClass() != object.getClass() ) {
+    if (getClass() != object.getClass()) {
       return false;
     }
     JsonNumber other = (JsonNumber)object;
-    return string.equals( other.string );
+    return string.equals(other.string);
   }
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -127,65 +127,62 @@ class CaliperResultsPreprocessor {
 
   private final JsonObject results;
 
-  CaliperResultsPreprocessor( JsonObject results ) {
-    this.results = transformResults( results );
+  CaliperResultsPreprocessor(JsonObject results) {
+    this.results = transformResults(results);
   }
 
   JsonObject getResults() {
-    return new JsonObject( results );
+    return new JsonObject(results);
   }
 
-  private static JsonObject transformResults( JsonObject caliperResults ) {
-    return new JsonObject()
-      .add( "name", extractSimpleName( caliperResults ) )
-      .add( "details", extractEnvironment( caliperResults ) )
-      .add( "measurements", extractMeasurements( caliperResults ) );
+  private static JsonObject transformResults(JsonObject caliperResults) {
+    return new JsonObject().add("name", extractSimpleName(caliperResults))
+                           .add("details", extractEnvironment(caliperResults))
+                           .add("measurements", extractMeasurements(caliperResults));
   }
 
-  private static JsonValue extractBenchmarkName( JsonObject caliperResults ) {
-    return caliperResults.get( "run" ).asObject().get( "benchmarkName" );
+  private static JsonValue extractBenchmarkName(JsonObject caliperResults) {
+    return caliperResults.get("run").asObject().get("benchmarkName");
   }
 
-  private static JsonValue extractSimpleName( JsonObject caliperResults ) {
-    String name = caliperResults.get( "run" ).asObject().get( "benchmarkName" ).asString();
-    return JsonValue.valueOf( name.replaceFirst( ".*\\.", "" ) );
+  private static JsonValue extractSimpleName(JsonObject caliperResults) {
+    String name = caliperResults.get("run").asObject().get("benchmarkName").asString();
+    return JsonValue.valueOf(name.replaceFirst(".*\\.", ""));
   }
 
-  private static JsonValue extractTimestamp( JsonObject caliperResults ) {
-    return caliperResults.get( "run" ).asObject().get( "executedTimestamp" );
+  private static JsonValue extractTimestamp(JsonObject caliperResults) {
+    return caliperResults.get("run").asObject().get("executedTimestamp");
   }
 
-  private static JsonValue extractEnvironment( JsonObject caliperResults ) {
-    JsonObject details = caliperResults.get( "environment" ).asObject()
-      .get( "propertyMap" ).asObject();
-    details.add( "benchmark.classname", extractBenchmarkName( caliperResults ) );
-    details.add( "benchmark.executionTime", extractTimestamp( caliperResults ) );
+  private static JsonValue extractEnvironment(JsonObject caliperResults) {
+    JsonObject details = caliperResults.get("environment").asObject().get("propertyMap").asObject();
+    details.add("benchmark.classname", extractBenchmarkName(caliperResults));
+    details.add("benchmark.executionTime", extractTimestamp(caliperResults));
     return details;
   }
 
-  private static JsonArray extractMeasurements( JsonObject caliperResults ) {
+  private static JsonArray extractMeasurements(JsonObject caliperResults) {
     JsonArray result = new JsonArray();
-    JsonArray measurements = caliperResults.get( "run" ).asObject().get( "measurements" ).asArray();
-    for( JsonValue measurement : measurements ) {
-      result.add( extractMeasurement( measurement.asObject() ) );
+    JsonArray measurements = caliperResults.get("run").asObject().get("measurements").asArray();
+    for (JsonValue measurement : measurements) {
+      result.add(extractMeasurement(measurement.asObject()));
     }
     return result;
   }
 
-  private static JsonObject extractMeasurement( JsonObject measurement ) {
-    JsonObject times = measurement.get( "v" ).asObject()
-      .get( "measurementSetMap" ).asObject()
-      .get( "TIME" ).asObject();
-    return new JsonObject()
-      .add( "variables", measurement.get( "k" ).asObject().get( "variables" ) )
-      .add( "units", times.get( "unitNames" ) )
-      .add( "values", extractTimes( times.get( "measurements" ).asArray() ) );
+  private static JsonObject extractMeasurement(JsonObject measurement) {
+    JsonObject times = measurement.get("v").asObject()
+                                  .get("measurementSetMap").asObject()
+                                  .get("TIME").asObject();
+    return new JsonObject().add("variables", measurement.get("k").asObject().get("variables"))
+                           .add("units", times.get("unitNames"))
+                           .add("values", extractTimes(times.get("measurements").asArray()));
   }
 
-  private static JsonValue extractTimes( JsonArray measurements ) {
+  private static JsonValue extractTimes(JsonArray measurements) {
     JsonArray result = new JsonArray();
-    for( JsonValue measurement : measurements ) {
-      result.add( measurement.asObject().get( "processed" ) );
+    for (JsonValue measurement : measurements) {
+      result.add(measurement.asObject().get("processed"));
     }
     return result;
   }

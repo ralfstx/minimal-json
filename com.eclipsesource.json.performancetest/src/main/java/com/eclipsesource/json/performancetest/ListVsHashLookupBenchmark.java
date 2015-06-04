@@ -41,121 +41,121 @@ public class ListVsHashLookupBenchmark extends SimpleBenchmark {
   private List<String> hashedList32;
   private ExampleArrayListWithHash hashedList64;
   private ExampleArrayListWithHash hashedList128;
-  private Map<String,Integer> hashMap;
+  private Map<String, Integer> hashMap;
 
   @Override
   protected void setUp() throws IOException {
-    names = new String[ size ];
+    names = new String[size];
     arrayList = new ArrayList<>();
-    hashedList32 = new ExampleArrayListWithHash( 32 );
-    hashedList64 = new ExampleArrayListWithHash( 64 );
-    hashedList128 = new ExampleArrayListWithHash( 128 );
+    hashedList32 = new ExampleArrayListWithHash(32);
+    hashedList64 = new ExampleArrayListWithHash(64);
+    hashedList128 = new ExampleArrayListWithHash(128);
     hashMap = new HashMap<>();
-    for( int index = 0; index < size; index++ ) {
-      names[index] = Integer.toHexString( index );
-      arrayList.add( names[index] );
-      hashedList32.add( names[index] );
-      hashedList64.add( names[index] );
-      hashedList128.add( names[index] );
-      hashMap.put( names[index], Integer.valueOf( index ) );
+    for (int index = 0; index < size; index++) {
+      names[index] = Integer.toHexString(index);
+      arrayList.add(names[index]);
+      hashedList32.add(names[index]);
+      hashedList64.add(names[index]);
+      hashedList128.add(names[index]);
+      hashMap.put(names[index], Integer.valueOf(index));
     }
   }
 
-  public void timeFillArrayList( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
+  public void timeFillArrayList(int reps) {
+    for (int r = 0; r < reps; r++) {
       arrayList = new ArrayList<>();
-      for( int index = 0; index < size; index++ ) {
-        arrayList.add( names[index] );
+      for (int index = 0; index < size; index++) {
+        arrayList.add(names[index]);
       }
     }
   }
 
-  public void timeFillArrayListWithHash32( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      hashedList32 = new ExampleArrayListWithHash( 32 );
-      for( int index = 0; index < size; index++ ) {
-        hashedList32.add( names[index] );
+  public void timeFillArrayListWithHash32(int reps) {
+    for (int r = 0; r < reps; r++) {
+      hashedList32 = new ExampleArrayListWithHash(32);
+      for (int index = 0; index < size; index++) {
+        hashedList32.add(names[index]);
       }
     }
   }
 
-  public void timeFillArrayListWithHash64( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      hashedList64 = new ExampleArrayListWithHash( 32 );
-      for( int index = 0; index < size; index++ ) {
-        hashedList64.add( names[index] );
+  public void timeFillArrayListWithHash64(int reps) {
+    for (int r = 0; r < reps; r++) {
+      hashedList64 = new ExampleArrayListWithHash(32);
+      for (int index = 0; index < size; index++) {
+        hashedList64.add(names[index]);
       }
     }
   }
 
-  public void timeFillArrayListWithHash128( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      hashedList128 = new ExampleArrayListWithHash( 32 );
-      for( int index = 0; index < size; index++ ) {
-        hashedList128.add( names[index] );
+  public void timeFillArrayListWithHash128(int reps) {
+    for (int r = 0; r < reps; r++) {
+      hashedList128 = new ExampleArrayListWithHash(32);
+      for (int index = 0; index < size; index++) {
+        hashedList128.add(names[index]);
       }
     }
   }
 
-  public void timeFillHashMap( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
+  public void timeFillHashMap(int reps) {
+    for (int r = 0; r < reps; r++) {
       hashMap = new HashMap<>();
-      for( int index = 0; index < size; index++ ) {
-        hashMap.put( names[index], Integer.valueOf( index ) );
+      for (int index = 0; index < size; index++) {
+        hashMap.put(names[index], Integer.valueOf(index));
       }
     }
   }
 
-  public void timeLookupArrayList( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      for( int index = 0; index < size; index++ ) {
-        checkIndex( index, arrayList.indexOf( names[index] ) );
+  public void timeLookupArrayList(int reps) {
+    for (int r = 0; r < reps; r++) {
+      for (int index = 0; index < size; index++) {
+        checkIndex(index, arrayList.indexOf(names[index]));
       }
     }
   }
 
-  public void timeLookupArrayListWithHash32( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      for( int index = 0; index < size; index++ ) {
-        checkIndex( index, hashedList32.indexOf( names[index] ) );
+  public void timeLookupArrayListWithHash32(int reps) {
+    for (int r = 0; r < reps; r++) {
+      for (int index = 0; index < size; index++) {
+        checkIndex(index, hashedList32.indexOf(names[index]));
       }
     }
   }
 
-  public void timeLookupArrayListWithHash64( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      for( int index = 0; index < size; index++ ) {
-        checkIndex( index, hashedList64.indexOf( names[index] ) );
+  public void timeLookupArrayListWithHash64(int reps) {
+    for (int r = 0; r < reps; r++) {
+      for (int index = 0; index < size; index++) {
+        checkIndex(index, hashedList64.indexOf(names[index]));
       }
     }
   }
 
-  public void timeLookupArrayListWithHash128( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      for( int index = 0; index < size; index++ ) {
-        checkIndex( index, hashedList128.indexOf( names[index] ) );
+  public void timeLookupArrayListWithHash128(int reps) {
+    for (int r = 0; r < reps; r++) {
+      for (int index = 0; index < size; index++) {
+        checkIndex(index, hashedList128.indexOf(names[index]));
       }
     }
   }
 
-  public void timeLookupHashMap( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      for( int index = 0; index < size; index++ ) {
-        checkIndex( index, hashMap.get( names[index] ).intValue() );
+  public void timeLookupHashMap(int reps) {
+    for (int r = 0; r < reps; r++) {
+      for (int index = 0; index < size; index++) {
+        checkIndex(index, hashMap.get(names[index]).intValue());
       }
     }
   }
 
-  void checkIndex( int expected, int actual ) {
-    if( expected != actual ) {
+  void checkIndex(int expected, int actual) {
+    if (expected != actual) {
       throw new RuntimeException();
     }
   }
 
-  public static void main( String[] args ) throws IOException {
-    CaliperRunner runner = new CaliperRunner( ListVsHashLookupBenchmark.class );
-    runner.addParameterDefault( "size", "4", "16", "64", "256" );
-    runner.exec( args );
+  public static void main(String[] args) throws IOException {
+    CaliperRunner runner = new CaliperRunner(ListVsHashLookupBenchmark.class);
+    runner.addParameterDefault("size", "4", "16", "64", "256");
+    runner.exec(args);
   }
 
 }

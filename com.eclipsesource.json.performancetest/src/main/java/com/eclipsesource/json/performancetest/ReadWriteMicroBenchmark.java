@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,53 +49,58 @@ public class ReadWriteMicroBenchmark extends SimpleBenchmark {
 
   @Override
   protected void setUp() throws Exception {
-    json = readResource( "input/" + input + ".json" );
-    jsonBytes = json.getBytes( JsonRunner.UTF8 );
-    runner = JsonRunnerFactory.findByName( parser );
-    model = runner.readFromString( json );
+    json = readResource("input/" + input + ".json");
+    jsonBytes = json.getBytes(JsonRunner.UTF8);
+    runner = JsonRunnerFactory.findByName(parser);
+    model = runner.readFromString(json);
   }
 
-  public void timeReadFromString( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
-      Object model = runner.readFromString( json );
-      if( model == null ) {
+  public void timeReadFromString(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
+      Object model = runner.readFromString(json);
+      if (model == null) {
         throw new NullPointerException();
       }
     }
   }
 
-  public void timeReadFromByteArray( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
-      Object model = runner.readFromByteArray( jsonBytes );
-      if( model == null ) {
+  public void timeReadFromByteArray(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
+      Object model = runner.readFromByteArray(jsonBytes);
+      if (model == null) {
         throw new NullPointerException();
       }
     }
   }
 
-  public void timeWriteToString( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
-      String string = runner.writeToString( model );
-      if( string == null ) {
+  public void timeWriteToString(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
+      String string = runner.writeToString(model);
+      if (string == null) {
         throw new NullPointerException();
       }
     }
   }
 
-  public void timeWriteToByteArray( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
-      byte[] byteArray = runner.writeToByteArray( model );
-      if( byteArray == null ) {
+  public void timeWriteToByteArray(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
+      byte[] byteArray = runner.writeToByteArray(model);
+      if (byteArray == null) {
         throw new NullPointerException();
       }
     }
   }
 
-  public static void main( String[] args ) throws IOException {
-    CaliperRunner runner = new CaliperRunner( ReadWriteMicroBenchmark.class );
-    runner.addParameterDefault( "parser", "org-json", "gson", "jackson", "json-simple", "minimal-json" );
-    runner.addParameterDefault( "input", "long-string", "numbers-array" );
-    runner.exec( args );
+  public static void main(String[] args) throws IOException {
+    CaliperRunner runner = new CaliperRunner(ReadWriteMicroBenchmark.class);
+    runner.addParameterDefault("parser",
+                               "org-json",
+                               "gson",
+                               "jackson",
+                               "json-simple",
+                               "minimal-json");
+    runner.addParameterDefault("input", "long-string", "numbers-array");
+    runner.exec(args);
   }
 
 }

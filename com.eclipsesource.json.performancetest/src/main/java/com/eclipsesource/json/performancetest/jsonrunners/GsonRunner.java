@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,23 +37,23 @@ public class GsonRunner extends JsonRunner {
   }
 
   @Override
-  public Object readFromString( String string ) throws Exception {
-    return gson.fromJson( string, Map.class );
+  public Object readFromString(String string) throws Exception {
+    return gson.fromJson(string, Map.class);
   }
 
   @Override
-  public Object readFromReader( Reader reader ) throws Exception {
-    return gson.fromJson( reader, Map.class );
+  public Object readFromReader(Reader reader) throws Exception {
+    return gson.fromJson(reader, Map.class);
   }
 
   @Override
-  public String writeToString( Object model ) throws Exception {
-    return gson.toJson( model );
+  public String writeToString(Object model) throws Exception {
+    return gson.toJson(model);
   }
 
   @Override
-  public void writeToWriter( Object model, Writer writer ) throws Exception {
-    gson.toJson( model, writer );
+  public void writeToWriter(Object model, Writer writer) throws Exception {
+    gson.toJson(model, writer);
   }
 
 }

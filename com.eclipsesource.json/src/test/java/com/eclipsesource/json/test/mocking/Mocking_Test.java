@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,28 +39,28 @@ public class Mocking_Test {
 
   @Test
   public void mockValue() {
-    JsonValue jsonValue = Mockito.mock( JsonValue.class );
+    JsonValue jsonValue = Mockito.mock(JsonValue.class);
 
-    assertNotNull( jsonValue );
+    assertNotNull(jsonValue);
   }
 
   @Test
   public void mockObject() {
-    JsonObject jsonObject = Mockito.mock( JsonObject.class );
+    JsonObject jsonObject = Mockito.mock(JsonObject.class);
 
-    assertNotNull( jsonObject );
+    assertNotNull(jsonObject);
   }
 
   @Test
   public void mockArray() {
-    JsonArray jsonArray = Mockito.mock( JsonArray.class );
+    JsonArray jsonArray = Mockito.mock(JsonArray.class);
 
-    assertNotNull( jsonArray );
+    assertNotNull(jsonArray);
   }
 
   @Test
   public void mockParseException() {
-    Mockito.mock( ParseException.class );
+    Mockito.mock(ParseException.class);
   }
 
 }

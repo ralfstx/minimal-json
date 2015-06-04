@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,48 +36,49 @@ public class CaliperRunner_Test {
 
   @Test
   public void caliperArguments() {
-    CaliperRunner runner = new CaliperRunner( TestBenchmark.class );
+    CaliperRunner runner = new CaliperRunner(TestBenchmark.class);
 
-    String[] options = runner.adjustArgs( new String[0] );
+    String[] options = runner.adjustArgs(new String[0]);
 
-    List<String> expected = asList( TestBenchmark.class.getName(),
-                                    "--saveResults",
-                                    new File( "results/TestBenchmark.json" ).getAbsolutePath() );
-    assertEquals( expected, asList( options ) );
+    List<String> expected = asList(TestBenchmark.class.getName(),
+                                   "--saveResults",
+                                   new File("results/TestBenchmark.json").getAbsolutePath());
+    assertEquals(expected, asList(options));
   }
 
   @Test
   public void caliperArguments_withParameters() {
-    CaliperRunner runner = new CaliperRunner( TestBenchmark.class );
-    runner.addParameterDefault( "foo", "foo1", "foo2" );
-    runner.addParameterDefault( "bar", "bar1", "bar2" );
+    CaliperRunner runner = new CaliperRunner(TestBenchmark.class);
+    runner.addParameterDefault("foo", "foo1", "foo2");
+    runner.addParameterDefault("bar", "bar1", "bar2");
 
-    String[] options = runner.adjustArgs( new String[0] );
+    String[] options = runner.adjustArgs(new String[0]);
 
-    List<String> expected = asList( TestBenchmark.class.getName(),
-                                    "-Dfoo=foo1,foo2",
-                                    "-Dbar=bar1,bar2",
-                                    "--saveResults",
-                                    new File( "results/TestBenchmark.json" ).getAbsolutePath() );
-    assertEquals( expected, asList( options ) );
+    List<String> expected = asList(TestBenchmark.class.getName(),
+                                   "-Dfoo=foo1,foo2",
+                                   "-Dbar=bar1,bar2",
+                                   "--saveResults",
+                                   new File("results/TestBenchmark.json").getAbsolutePath());
+    assertEquals(expected, asList(options));
   }
 
   @Test
   public void caliperArguments_withOverriddenParameter() {
-    CaliperRunner runner = new CaliperRunner( TestBenchmark.class );
-    runner.addParameterDefault( "foo", "foo1", "foo2" );
-    runner.addParameterDefault( "bar", "bar1", "bar2" );
+    CaliperRunner runner = new CaliperRunner(TestBenchmark.class);
+    runner.addParameterDefault("foo", "foo1", "foo2");
+    runner.addParameterDefault("bar", "bar1", "bar2");
 
-    String[] options = runner.adjustArgs( new String[] {"-Dbar=bar2"} );
+    String[] options = runner.adjustArgs(new String[] {"-Dbar=bar2"});
 
-    List<String> expected = asList( TestBenchmark.class.getName(),
-                                    "-Dbar=bar2",
-                                    "-Dfoo=foo1,foo2",
-                                    "--saveResults",
-                                    new File( "results/TestBenchmark.json" ).getAbsolutePath() );
-    assertEquals( expected, asList( options ) );
+    List<String> expected = asList(TestBenchmark.class.getName(),
+                                   "-Dbar=bar2",
+                                   "-Dfoo=foo1,foo2",
+                                   "--saveResults",
+                                   new File("results/TestBenchmark.json").getAbsolutePath());
+    assertEquals(expected, asList(options));
   }
 
-  private static class TestBenchmark extends SimpleBenchmark {}
+  private static class TestBenchmark extends SimpleBenchmark {
+  }
 
 }

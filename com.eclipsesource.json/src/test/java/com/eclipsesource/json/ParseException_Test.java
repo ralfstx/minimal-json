@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,18 +30,18 @@ public class ParseException_Test {
 
   @Test
   public void position() {
-    ParseException exception = new ParseException( "Foo", 17, 23, 42 );
+    ParseException exception = new ParseException("Foo", 17, 23, 42);
 
-    assertEquals( 17, exception.getOffset() );
-    assertEquals( 23, exception.getLine() );
-    assertEquals( 42, exception.getColumn() );
+    assertEquals(17, exception.getOffset());
+    assertEquals(23, exception.getLine());
+    assertEquals(42, exception.getColumn());
   }
 
   @Test
   public void message() {
-    ParseException exception = new ParseException( "Foo", 17, 23, 42 );
+    ParseException exception = new ParseException("Foo", 17, 23, 42);
 
-    assertEquals( "Foo at 23:42", exception.getMessage() );
+    assertEquals("Foo at 23:42", exception.getMessage());
   }
 
 }

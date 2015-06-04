@@ -45,128 +45,128 @@ public class PrettyPrint_Test {
 
   @Test
   public void testIndentWithSpaces_emptyArray() throws IOException {
-    new JsonArray().writeTo( output, indentWithSpaces( 2 ) );
+    new JsonArray().writeTo(output, indentWithSpaces(2));
 
-    assertEquals( "[\n  \n]", output.toString() );
+    assertEquals("[\n  \n]", output.toString());
   }
 
   @Test
   public void testIndentWithSpaces_emptyObject() throws IOException {
-    new JsonObject().writeTo( output, indentWithSpaces( 2 ) );
+    new JsonObject().writeTo(output, indentWithSpaces(2));
 
-    assertEquals( "{\n  \n}", output.toString() );
+    assertEquals("{\n  \n}", output.toString());
   }
 
   @Test
   public void testIndentWithSpaces_array() throws IOException {
-    new JsonArray().add( 23 ).add( 42 ).writeTo( output, indentWithSpaces( 2 ) );
+    new JsonArray().add(23).add(42).writeTo(output, indentWithSpaces(2));
 
-    assertEquals( "[\n  23,\n  42\n]", output.toString() );
+    assertEquals("[\n  23,\n  42\n]", output.toString());
   }
 
   @Test
   public void testIndentWithSpaces_nestedArray() throws IOException {
-    new JsonArray().add( 23 )
-                   .add( new JsonArray().add( 42 ) )
-                   .writeTo( output, indentWithSpaces( 2 ) );
+    new JsonArray().add(23)
+                   .add(new JsonArray().add(42))
+                   .writeTo(output, indentWithSpaces(2));
 
-    assertEquals( "[\n  23,\n  [\n    42\n  ]\n]", output.toString() );
+    assertEquals("[\n  23,\n  [\n    42\n  ]\n]", output.toString());
   }
 
   @Test
   public void testIndentWithSpaces_object() throws IOException {
-    new JsonObject().add( "a", 23 ).add( "b", 42 ).writeTo( output, indentWithSpaces( 2 ) );
+    new JsonObject().add("a", 23).add("b", 42).writeTo(output, indentWithSpaces(2));
 
-    assertEquals( "{\n  \"a\": 23,\n  \"b\": 42\n}", output.toString() );
+    assertEquals("{\n  \"a\": 23,\n  \"b\": 42\n}", output.toString());
   }
 
   @Test
   public void testIndentWithSpaces_nestedObject() throws IOException {
-    new JsonObject().add( "a", 23 )
-                    .add( "b", new JsonObject().add( "c", 42 ) )
-                    .writeTo( output, indentWithSpaces( 2 ) );
+    new JsonObject().add("a", 23)
+                    .add("b", new JsonObject().add("c", 42))
+                    .writeTo(output, indentWithSpaces(2));
 
-    assertEquals( "{\n  \"a\": 23,\n  \"b\": {\n    \"c\": 42\n  }\n}", output.toString() );
+    assertEquals("{\n  \"a\": 23,\n  \"b\": {\n    \"c\": 42\n  }\n}", output.toString());
   }
 
   @Test
   public void testIndentWithSpaces_zero() throws IOException {
-    new JsonArray().add( 23 ).add( 42 ).writeTo( output, indentWithSpaces( 0 ) );
+    new JsonArray().add(23).add(42).writeTo(output, indentWithSpaces(0));
 
-    assertEquals( "[\n23,\n42\n]", output.toString() );
+    assertEquals("[\n23,\n42\n]", output.toString());
   }
 
   @Test
   public void testIndentWithSpaces_one() throws IOException {
-    new JsonArray().add( 23 ).add( 42 ).writeTo( output, indentWithSpaces( 1 ) );
+    new JsonArray().add(23).add(42).writeTo(output, indentWithSpaces(1));
 
-    assertEquals( "[\n 23,\n 42\n]", output.toString() );
+    assertEquals("[\n 23,\n 42\n]", output.toString());
   }
 
   @Test
   public void testIndentWithSpaces_failsWithNegativeValues() {
     try {
-      indentWithSpaces( -1 );
+      indentWithSpaces(-1);
       fail();
-    } catch( IllegalArgumentException ex ) {
-      assertTrue( ex.getMessage().toLowerCase( US ).contains( "negative" ) );
+    } catch (IllegalArgumentException ex) {
+      assertTrue(ex.getMessage().toLowerCase(US).contains("negative"));
     }
   }
 
   @Test
   public void testIndentWithSpaces_createsIndependentInstances() {
-    Writer writer = mock( Writer.class );
+    Writer writer = mock(Writer.class);
 
-    WriterConfig config = indentWithSpaces( 1 );
-    Object instance1 = config.createWriter( writer );
-    Object instance2 = config.createWriter( writer );
+    WriterConfig config = indentWithSpaces(1);
+    Object instance1 = config.createWriter(writer);
+    Object instance2 = config.createWriter(writer);
 
-    assertNotSame( instance1, instance2 );
+    assertNotSame(instance1, instance2);
   }
 
   @Test
   public void testIndentWithTabs() throws IOException {
-    new JsonArray().add( 23 ).add( 42 ).writeTo( output, indentWithTabs() );
+    new JsonArray().add(23).add(42).writeTo(output, indentWithTabs());
 
-    assertEquals( "[\n\t23,\n\t42\n]", output.toString() );
+    assertEquals("[\n\t23,\n\t42\n]", output.toString());
   }
 
   @Test
   public void testIndentWithTabs_createsIndependentInstances() {
-    Writer writer = mock( Writer.class );
+    Writer writer = mock(Writer.class);
 
     WriterConfig config = indentWithTabs();
-    Object instance1 = config.createWriter( writer );
-    Object instance2 = config.createWriter( writer );
+    Object instance1 = config.createWriter(writer);
+    Object instance2 = config.createWriter(writer);
 
-    assertNotSame( instance1, instance2 );
+    assertNotSame(instance1, instance2);
   }
 
   @Test
   public void testSingleLine_nestedArray() throws IOException {
-    new JsonArray().add( 23 ).add( new JsonArray().add( 42 ) ).writeTo( output, singleLine() );
+    new JsonArray().add(23).add(new JsonArray().add(42)).writeTo(output, singleLine());
 
-    assertEquals( "[23, [42]]", output.toString() );
+    assertEquals("[23, [42]]", output.toString());
   }
 
   @Test
   public void testSingleLine_nestedObject() throws IOException {
-    new JsonObject().add( "a", 23 )
-                    .add( "b", new JsonObject().add( "c", 42 ) )
-                    .writeTo( output, singleLine() );
+    new JsonObject().add("a", 23)
+                    .add("b", new JsonObject().add("c", 42))
+                    .writeTo(output, singleLine());
 
-    assertEquals( "{\"a\": 23, \"b\": {\"c\": 42}}", output.toString() );
+    assertEquals("{\"a\": 23, \"b\": {\"c\": 42}}", output.toString());
   }
 
   @Test
   public void testSingleLine_createsIndependentInstances() {
-    Writer writer = mock( Writer.class );
+    Writer writer = mock(Writer.class);
 
     WriterConfig config = singleLine();
-    Object instance1 = config.createWriter( writer );
-    Object instance2 = config.createWriter( writer );
+    Object instance1 = config.createWriter(writer);
+    Object instance2 = config.createWriter(writer);
 
-    assertNotSame( instance1, instance2 );
+    assertNotSame(instance1, instance2);
   }
 
 }

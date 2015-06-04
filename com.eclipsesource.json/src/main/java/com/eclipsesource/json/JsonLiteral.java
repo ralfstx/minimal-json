@@ -24,28 +24,28 @@ package com.eclipsesource.json;
 import java.io.IOException;
 
 
-@SuppressWarnings( "serial" ) // use default serial UID
+@SuppressWarnings("serial") // use default serial UID
 class JsonLiteral extends JsonValue {
 
-  static final JsonValue NULL = new JsonLiteral( "null" );
-  static final JsonValue TRUE = new JsonLiteral( "true" );
-  static final JsonValue FALSE = new JsonLiteral( "false" );
+  static final JsonValue NULL = new JsonLiteral("null");
+  static final JsonValue TRUE = new JsonLiteral("true");
+  static final JsonValue FALSE = new JsonLiteral("false");
 
   private final String value;
   private final boolean isNull;
   private final boolean isTrue;
   private final boolean isFalse;
 
-  private JsonLiteral( String value  ) {
+  private JsonLiteral(String value) {
     this.value = value;
-    isNull = "null".equals( value );
-    isTrue = "true".equals( value );
-    isFalse = "false".equals( value );
+    isNull = "null".equals(value);
+    isTrue = "true".equals(value);
+    isFalse = "false".equals(value);
   }
 
   @Override
-  void write( JsonWriter writer ) throws IOException {
-    writer.writeLiteral( value );
+  void write(JsonWriter writer) throws IOException {
+    writer.writeLiteral(value);
   }
 
   @Override
@@ -84,18 +84,18 @@ class JsonLiteral extends JsonValue {
   }
 
   @Override
-  public boolean equals( Object object ) {
-    if( this == object ) {
+  public boolean equals(Object object) {
+    if (this == object) {
       return true;
     }
-    if( object == null ) {
+    if (object == null) {
       return false;
     }
-    if( getClass() != object.getClass() ) {
+    if (getClass() != object.getClass()) {
       return false;
     }
     JsonLiteral other = (JsonLiteral)object;
-    return value.equals( other.value );
+    return value.equals(other.value);
   }
 
 }

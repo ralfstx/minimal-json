@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,35 +41,35 @@ public class BufferedStringWriterBenchmark extends SimpleBenchmark {
     buffer = "lorem ipsum dolor sit amet".toCharArray();
   }
 
-  public void timeStringWriter( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
+  public void timeStringWriter(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
       StringWriter writer = new StringWriter();
-      for( int j = 0; j < 1000; j++ ) {
-        writer.write( buffer, 0, buffer.length );
+      for (int j = 0; j < 1000; j++) {
+        writer.write(buffer, 0, buffer.length);
       }
-      if( writer.getBuffer().length() == 0 ) {
+      if (writer.getBuffer().length() == 0) {
         throw new RuntimeException();
       }
     }
   }
 
-  public void timeBufferedStringWriter( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
+  public void timeBufferedStringWriter(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
       StringWriter writer = new StringWriter();
-      BufferedWriter bufferedWriter = new BufferedWriter( writer );
-      for( int j = 0; j < 1000; j++ ) {
-        writer.write( buffer, 0, buffer.length );
+      BufferedWriter bufferedWriter = new BufferedWriter(writer);
+      for (int j = 0; j < 1000; j++) {
+        writer.write(buffer, 0, buffer.length);
       }
       bufferedWriter.close();
-      if( writer.getBuffer().length() == 0 ) {
+      if (writer.getBuffer().length() == 0) {
         throw new RuntimeException();
       }
     }
   }
 
-  public static void main( String[] args ) throws IOException {
-    CaliperRunner runner = new CaliperRunner( BufferedStringWriterBenchmark.class );
-    runner.exec( args );
+  public static void main(String[] args) throws IOException {
+    CaliperRunner runner = new CaliperRunner(BufferedStringWriterBenchmark.class);
+    runner.exec(args);
   }
 
 }
