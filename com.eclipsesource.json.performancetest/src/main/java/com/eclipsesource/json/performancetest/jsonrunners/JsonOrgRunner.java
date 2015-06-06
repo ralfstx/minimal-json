@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,23 +32,23 @@ import org.json.JSONTokener;
 public class JsonOrgRunner extends JsonRunner {
 
   @Override
-  public Object readFromString( String string ) throws JSONException {
-    return new JSONObject( string );
+  public Object readFromString(String string) throws JSONException {
+    return new JSONObject(string);
   }
 
   @Override
-  public Object readFromReader( Reader reader ) throws JSONException {
-    return new JSONObject( new JSONTokener( reader ) );
+  public Object readFromReader(Reader reader) throws JSONException {
+    return new JSONObject(new JSONTokener(reader));
   }
 
   @Override
-  public String writeToString( Object model ) {
+  public String writeToString(Object model) {
     return model.toString();
   }
 
   @Override
-  public void writeToWriter( Object model, Writer writer ) throws Exception {
-    ((JSONObject)model).write( writer );
+  public void writeToWriter(Object model, Writer writer) throws Exception {
+    ((JSONObject)model).write(writer);
   }
 
 }

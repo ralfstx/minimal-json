@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,49 +39,49 @@ public class JacksonRunner extends JsonRunner {
     // Reuse object mapper to improve performance
     // See http://wiki.fasterxml.com/JacksonBestPracticesPerformance
     mapper = new ObjectMapper();
-    mapper.configure( JsonParser.Feature.AUTO_CLOSE_SOURCE, false );
-    mapper.configure( JsonGenerator.Feature.AUTO_CLOSE_TARGET, false );
-    mapper.configure( JsonGenerator.Feature.FLUSH_PASSED_TO_STREAM, false );
+    mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+    mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    mapper.configure(JsonGenerator.Feature.FLUSH_PASSED_TO_STREAM, false);
   }
 
   @Override
-  public Object readFromString( String string ) throws Exception {
-    return mapper.readTree( string );
+  public Object readFromString(String string) throws Exception {
+    return mapper.readTree(string);
   }
 
   @Override
-  public Object readFromByteArray( byte[] bytes ) throws Exception {
-    return mapper.readTree( bytes );
+  public Object readFromByteArray(byte[] bytes) throws Exception {
+    return mapper.readTree(bytes);
   }
 
   @Override
-  public Object readFromReader( Reader reader ) throws Exception {
-    return mapper.readTree( reader );
+  public Object readFromReader(Reader reader) throws Exception {
+    return mapper.readTree(reader);
   }
 
   @Override
-  public Object readFromInputStream( InputStream in ) throws Exception {
-    return mapper.readTree( in );
+  public Object readFromInputStream(InputStream in) throws Exception {
+    return mapper.readTree(in);
   }
 
   @Override
-  public String writeToString( Object model ) throws Exception {
-    return mapper.writeValueAsString( model );
+  public String writeToString(Object model) throws Exception {
+    return mapper.writeValueAsString(model);
   }
 
   @Override
-  public byte[] writeToByteArray( Object model ) throws Exception {
-    return mapper.writeValueAsBytes( model );
+  public byte[] writeToByteArray(Object model) throws Exception {
+    return mapper.writeValueAsBytes(model);
   }
 
   @Override
-  public void writeToWriter( Object model, Writer writer ) throws Exception {
-    mapper.writeValue( writer, model );
+  public void writeToWriter(Object model, Writer writer) throws Exception {
+    mapper.writeValue(writer, model);
   }
 
   @Override
-  public void writeToOutputStream( Object model, OutputStream out ) throws Exception {
-    mapper.writeValue( out, model );
+  public void writeToOutputStream(Object model, OutputStream out) throws Exception {
+    mapper.writeValue(out, model);
   }
 
 }

@@ -41,53 +41,53 @@ public class DoubleBufferingBenchmark extends SimpleBenchmark {
 
   @Param int n;
 
-  public void timePlainWriter( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
+  public void timePlainWriter(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      Writer writer = new OutputStreamWriter( output );
-      writeToWriter( writer );
+      Writer writer = new OutputStreamWriter(output);
+      writeToWriter(writer);
       writer.close();
-      if( output.size() == 0 ) {
+      if (output.size() == 0) {
         throw new RuntimeException();
       }
     }
   }
 
-  public void timeBufferedWriter( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
+  public void timeBufferedWriter(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      Writer writer = new BufferedWriter( new OutputStreamWriter( output ) );
-      writeToWriter( writer );
+      Writer writer = new BufferedWriter(new OutputStreamWriter(output));
+      writeToWriter(writer);
       writer.close();
-      if( output.size() == 0 ) {
+      if (output.size() == 0) {
         throw new RuntimeException();
       }
     }
   }
 
-  public void timeDoubleBufferedWriter( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
+  public void timeDoubleBufferedWriter(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      Writer writer = new BufferedWriter( new BufferedWriter( new OutputStreamWriter( output ) ) );
-      writeToWriter( writer );
+      Writer writer = new BufferedWriter(new BufferedWriter(new OutputStreamWriter(output)));
+      writeToWriter(writer);
       writer.close();
-      if( output.size() == 0 ) {
+      if (output.size() == 0) {
         throw new RuntimeException();
       }
     }
   }
 
-  private void writeToWriter( Writer writer ) throws IOException {
-    for( int i = 0; i < n; i++ ) {
-      writer.write( "foo" );
-      writer.write( 'x' );
+  private void writeToWriter(Writer writer) throws IOException {
+    for (int i = 0; i < n; i++) {
+      writer.write("foo");
+      writer.write('x');
     }
   }
 
-  public static void main( String[]rgs ) throws IOException {
-    CaliperRunner runner = new CaliperRunner( DoubleBufferingBenchmark.class );
-    runner.addParameterDefault( "n", "100", "1000", "10000" );
-    runner.exec(rgs );
+  public static void main(String[] rgs) throws IOException {
+    CaliperRunner runner = new CaliperRunner(DoubleBufferingBenchmark.class);
+    runner.addParameterDefault("n", "100", "1000", "10000");
+    runner.exec(rgs);
   }
 
 }

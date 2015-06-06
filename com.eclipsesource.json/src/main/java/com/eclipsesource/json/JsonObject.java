@@ -49,7 +49,7 @@ import com.eclipsesource.json.JsonObject.Member;
  * document order using an {@link #iterator()} or an enhanced for loop:
  * </p>
  * <pre>
- * for( Member member : jsonObject ) {
+ * for (Member member : jsonObject) {
  *   String name = member.getName();
  *   JsonValue value = member.getValue();
  *   ...
@@ -69,8 +69,7 @@ import com.eclipsesource.json.JsonObject.Member;
  * This class is <strong>not supposed to be extended</strong> by clients.
  * </p>
  */
-@SuppressWarnings( "serial" )
-// use default serial UID
+@SuppressWarnings("serial") // use default serial UID
 public class JsonObject extends JsonValue implements Iterable<Member> {
 
   private final List<String> names;
@@ -92,20 +91,20 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @param object
    *          the JSON object to get the initial contents from, must not be <code>null</code>
    */
-  public JsonObject( JsonObject object ) {
-    this( object, false );
+  public JsonObject(JsonObject object) {
+    this(object, false);
   }
 
-  private JsonObject( JsonObject object, boolean unmodifiable ) {
-    if( object == null ) {
-      throw new NullPointerException( "object is null" );
+  private JsonObject(JsonObject object, boolean unmodifiable) {
+    if (object == null) {
+      throw new NullPointerException("object is null");
     }
-    if( unmodifiable ) {
-      names = Collections.unmodifiableList( object.names );
-      values = Collections.unmodifiableList( object.values );
+    if (unmodifiable) {
+      names = Collections.unmodifiableList(object.names);
+      values = Collections.unmodifiableList(object.values);
     } else {
-      names = new ArrayList<String>( object.names );
-      values = new ArrayList<JsonValue>( object.values );
+      names = new ArrayList<String>(object.names);
+      values = new ArrayList<JsonValue>(object.values);
     }
     table = new HashIndexTable();
     updateHashIndex();
@@ -129,8 +128,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @throws UnsupportedOperationException
    *           if the input does not contain a JSON object
    */
-  public static JsonObject readFrom( Reader reader ) throws IOException {
-    return JsonValue.readFrom( reader ).asObject();
+  public static JsonObject readFrom(Reader reader) throws IOException {
+    return JsonValue.readFrom(reader).asObject();
   }
 
   /**
@@ -144,8 +143,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @throws UnsupportedOperationException
    *           if the input does not contain a JSON object
    */
-  public static JsonObject readFrom( String string ) {
-    return JsonValue.readFrom( string ).asObject();
+  public static JsonObject readFrom(String string) {
+    return JsonValue.readFrom(string).asObject();
   }
 
   /**
@@ -161,8 +160,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the JsonObject for which an unmodifiable JsonObject is to be returned
    * @return an unmodifiable view of the specified JsonObject
    */
-  public static JsonObject unmodifiableObject( JsonObject object ) {
-    return new JsonObject( object, true );
+  public static JsonObject unmodifiableObject(JsonObject object) {
+    return new JsonObject(object, true);
   }
 
   /**
@@ -183,8 +182,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject add( String name, int value ) {
-    add( name, valueOf( value ) );
+  public JsonObject add(String name, int value) {
+    add(name, valueOf(value));
     return this;
   }
 
@@ -206,8 +205,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject add( String name, long value ) {
-    add( name, valueOf( value ) );
+  public JsonObject add(String name, long value) {
+    add(name, valueOf(value));
     return this;
   }
 
@@ -229,8 +228,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject add( String name, float value ) {
-    add( name, valueOf( value ) );
+  public JsonObject add(String name, float value) {
+    add(name, valueOf(value));
     return this;
   }
 
@@ -252,8 +251,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject add( String name, double value ) {
-    add( name, valueOf( value ) );
+  public JsonObject add(String name, double value) {
+    add(name, valueOf(value));
     return this;
   }
 
@@ -275,8 +274,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject add( String name, boolean value ) {
-    add( name, valueOf( value ) );
+  public JsonObject add(String name, boolean value) {
+    add(name, valueOf(value));
     return this;
   }
 
@@ -298,8 +297,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject add( String name, String value ) {
-    add( name, valueOf( value ) );
+  public JsonObject add(String name, String value) {
+    add(name, valueOf(value));
     return this;
   }
 
@@ -321,16 +320,16 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add, must not be <code>null</code>
    * @return the object itself, to enable method chaining
    */
-  public JsonObject add( String name, JsonValue value ) {
-    if( name == null ) {
-      throw new NullPointerException( "name is null" );
+  public JsonObject add(String name, JsonValue value) {
+    if (name == null) {
+      throw new NullPointerException("name is null");
     }
-    if( value == null ) {
-      throw new NullPointerException( "value is null" );
+    if (value == null) {
+      throw new NullPointerException("value is null");
     }
-    table.add( name, names.size() );
-    names.add( name );
-    values.add( value );
+    table.add(name, names.size());
+    names.add(name);
+    values.add(value);
     return this;
   }
 
@@ -351,8 +350,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value to set to the member
    * @return the object itself, to enable method chaining
    */
-  public JsonObject set( String name, int value ) {
-    set( name, valueOf( value ) );
+  public JsonObject set(String name, int value) {
+    set(name, valueOf(value));
     return this;
   }
 
@@ -373,8 +372,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value to set to the member
    * @return the object itself, to enable method chaining
    */
-  public JsonObject set( String name, long value ) {
-    set( name, valueOf( value ) );
+  public JsonObject set(String name, long value) {
+    set(name, valueOf(value));
     return this;
   }
 
@@ -395,8 +394,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject set( String name, float value ) {
-    set( name, valueOf( value ) );
+  public JsonObject set(String name, float value) {
+    set(name, valueOf(value));
     return this;
   }
 
@@ -417,8 +416,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject set( String name, double value ) {
-    set( name, valueOf( value ) );
+  public JsonObject set(String name, double value) {
+    set(name, valueOf(value));
     return this;
   }
 
@@ -439,8 +438,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject set( String name, boolean value ) {
-    set( name, valueOf( value ) );
+  public JsonObject set(String name, boolean value) {
+    set(name, valueOf(value));
     return this;
   }
 
@@ -461,8 +460,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add
    * @return the object itself, to enable method chaining
    */
-  public JsonObject set( String name, String value ) {
-    set( name, valueOf( value ) );
+  public JsonObject set(String name, String value) {
+    set(name, valueOf(value));
     return this;
   }
 
@@ -482,20 +481,20 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add, must not be <code>null</code>
    * @return the object itself, to enable method chaining
    */
-  public JsonObject set( String name, JsonValue value ) {
-    if( name == null ) {
-      throw new NullPointerException( "name is null" );
+  public JsonObject set(String name, JsonValue value) {
+    if (name == null) {
+      throw new NullPointerException("name is null");
     }
-    if( value == null ) {
-      throw new NullPointerException( "value is null" );
+    if (value == null) {
+      throw new NullPointerException("value is null");
     }
-    int index = indexOf( name );
-    if( index != -1 ) {
-      values.set( index, value );
+    int index = indexOf(name);
+    if (index != -1) {
+      values.set(index, value);
     } else {
-      table.add( name, names.size() );
-      names.add( name );
-      values.add( value );
+      table.add(name, names.size());
+      names.add(name);
+      values.add(value);
     }
     return this;
   }
@@ -509,15 +508,15 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the name of the member to remove
    * @return the object itself, to enable method chaining
    */
-  public JsonObject remove( String name ) {
-    if( name == null ) {
-      throw new NullPointerException( "name is null" );
+  public JsonObject remove(String name) {
+    if (name == null) {
+      throw new NullPointerException("name is null");
     }
-    int index = indexOf( name );
-    if( index != -1 ) {
-      table.remove( index );
-      names.remove( index );
-      values.remove( index );
+    int index = indexOf(name);
+    if (index != -1) {
+      table.remove(index);
+      names.remove(index);
+      values.remove(index);
     }
     return this;
   }
@@ -531,12 +530,12 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the value of the last member with the specified name, or <code>null</code> if this
    *         object does not contain a member with that name
    */
-  public JsonValue get( String name ) {
-    if( name == null ) {
-      throw new NullPointerException( "name is null" );
+  public JsonValue get(String name) {
+    if (name == null) {
+      throw new NullPointerException("name is null");
     }
-    int index = indexOf( name );
-    return index != -1 ? values.get( index ) : null;
+    int index = indexOf(name);
+    return index != -1 ? values.get(index) : null;
   }
 
   /**
@@ -553,8 +552,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
    */
-  public int getInt( String name, int defaultValue ) {
-    JsonValue value = get( name );
+  public int getInt(String name, int defaultValue) {
+    JsonValue value = get(name);
     return value != null ? value.asInt() : defaultValue;
   }
 
@@ -572,8 +571,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
    */
-  public long getLong( String name, long defaultValue ) {
-    JsonValue value = get( name );
+  public long getLong(String name, long defaultValue) {
+    JsonValue value = get(name);
     return value != null ? value.asLong() : defaultValue;
   }
 
@@ -591,8 +590,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
    */
-  public float getFloat( String name, float defaultValue ) {
-    JsonValue value = get( name );
+  public float getFloat(String name, float defaultValue) {
+    JsonValue value = get(name);
     return value != null ? value.asFloat() : defaultValue;
   }
 
@@ -610,8 +609,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
    */
-  public double getDouble( String name, double defaultValue ) {
-    JsonValue value = get( name );
+  public double getDouble(String name, double defaultValue) {
+    JsonValue value = get(name);
     return value != null ? value.asDouble() : defaultValue;
   }
 
@@ -629,8 +628,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
    */
-  public boolean getBoolean( String name, boolean defaultValue ) {
-    JsonValue value = get( name );
+  public boolean getBoolean(String name, boolean defaultValue) {
+    JsonValue value = get(name);
     return value != null ? value.asBoolean() : defaultValue;
   }
 
@@ -647,8 +646,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
    */
-  public String getString( String name, String defaultValue ) {
-    JsonValue value = get( name );
+  public String getString(String name, String defaultValue) {
+    JsonValue value = get(name);
     return value != null ? value.asString() : defaultValue;
   }
 
@@ -678,7 +677,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return a list of the names in this object
    */
   public List<String> names() {
-    return Collections.unmodifiableList( names );
+    return Collections.unmodifiableList(names);
   }
 
   /**
@@ -699,7 +698,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
       public Member next() {
         String name = namesIterator.next();
         JsonValue value = valuesIterator.next();
-        return new Member( name, value );
+        return new Member(name, value);
       }
 
       public void remove() {
@@ -710,18 +709,18 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   @Override
-  void write( JsonWriter writer ) throws IOException {
+  void write(JsonWriter writer) throws IOException {
     writer.writeObjectOpen();
     Iterator<String> namesIterator = names.iterator();
     Iterator<JsonValue> valuesIterator = values.iterator();
     boolean first = true;
-    while( namesIterator.hasNext() ) {
-      if( !first ) {
+    while (namesIterator.hasNext()) {
+      if (!first) {
         writer.writeObjectSeparator();
       }
-      writer.writeMemberName( namesIterator.next() );
+      writer.writeMemberName(namesIterator.next());
       writer.writeMemberSeparator();
-      valuesIterator.next().write( writer );
+      valuesIterator.next().write(writer);
       first = false;
     }
     writer.writeObjectClose();
@@ -746,30 +745,30 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   @Override
-  public boolean equals( Object obj ) {
-    if( this == obj ) {
+  public boolean equals(Object obj) {
+    if (this == obj) {
       return true;
     }
-    if( obj == null ) {
+    if (obj == null) {
       return false;
     }
-    if( getClass() != obj.getClass() ) {
+    if (getClass() != obj.getClass()) {
       return false;
     }
     JsonObject other = (JsonObject)obj;
-    return names.equals( other.names ) && values.equals( other.values );
+    return names.equals(other.names) && values.equals(other.values);
   }
 
-  int indexOf( String name ) {
-    int index = table.get( name );
-    if( index != -1 && name.equals( names.get( index ) ) ) {
+  int indexOf(String name) {
+    int index = table.get(name);
+    if (index != -1 && name.equals(names.get(index))) {
       return index;
     }
-    return names.lastIndexOf( name );
+    return names.lastIndexOf(name);
   }
 
-  private synchronized void readObject( ObjectInputStream inputStream ) throws IOException,
-      ClassNotFoundException
+  private synchronized void readObject(ObjectInputStream inputStream)
+      throws IOException, ClassNotFoundException
   {
     inputStream.defaultReadObject();
     table = new HashIndexTable();
@@ -778,8 +777,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
 
   private void updateHashIndex() {
     int size = names.size();
-    for( int i = 0; i < size; i++ ) {
-      table.add( names.get( i ), i );
+    for (int i = 0; i < size; i++) {
+      table.add(names.get(i), i);
     }
   }
 
@@ -791,7 +790,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     private final String name;
     private final JsonValue value;
 
-    Member( String name, JsonValue value ) {
+    Member(String name, JsonValue value) {
       this.name = name;
       this.value = value;
     }
@@ -823,18 +822,18 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     }
 
     @Override
-    public boolean equals( Object obj ) {
-      if( this == obj ) {
+    public boolean equals(Object obj) {
+      if (this == obj) {
         return true;
       }
-      if( obj == null ) {
+      if (obj == null) {
         return false;
       }
-      if( getClass() != obj.getClass() ) {
+      if (getClass() != obj.getClass()) {
         return false;
       }
       Member other = (Member)obj;
-      return name.equals( other.name ) && value.equals( other.value );
+      return name.equals(other.name) && value.equals(other.value);
     }
 
   }
@@ -846,37 +845,37 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     public HashIndexTable() {
     }
 
-    public HashIndexTable( HashIndexTable original ) {
-      System.arraycopy( original.hashTable, 0, hashTable, 0, hashTable.length );
+    public HashIndexTable(HashIndexTable original) {
+      System.arraycopy(original.hashTable, 0, hashTable, 0, hashTable.length);
     }
 
-    void add( String name, int index ) {
-      int slot = hashSlotFor( name );
-      if( index < 0xff ) {
+    void add(String name, int index) {
+      int slot = hashSlotFor(name);
+      if (index < 0xff) {
         // increment by 1, 0 stands for empty
-        hashTable[slot] = (byte)( index + 1 );
+        hashTable[slot] = (byte)(index + 1);
       } else {
         hashTable[slot] = 0;
       }
     }
 
-    void remove( int index ) {
-      for( int i = 0; i < hashTable.length; i++ ) {
-        if( hashTable[i] == index + 1 ) {
+    void remove(int index) {
+      for (int i = 0; i < hashTable.length; i++) {
+        if (hashTable[i] == index + 1) {
           hashTable[i] = 0;
-        } else if( hashTable[i] > index + 1 ) {
+        } else if (hashTable[i] > index + 1) {
           hashTable[i]--;
         }
       }
     }
 
-    int get( Object name ) {
-      int slot = hashSlotFor( name );
+    int get(Object name) {
+      int slot = hashSlotFor(name);
       // subtract 1, 0 stands for empty
-      return ( hashTable[slot] & 0xff ) - 1;
+      return (hashTable[slot] & 0xff) - 1;
     }
 
-    private int hashSlotFor( Object element ) {
+    private int hashSlotFor(Object element) {
       return element.hashCode() & hashTable.length - 1;
     }
 

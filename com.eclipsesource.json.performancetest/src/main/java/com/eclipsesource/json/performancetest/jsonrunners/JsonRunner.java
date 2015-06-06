@@ -34,31 +34,31 @@ import java.nio.charset.Charset;
 
 public abstract class JsonRunner {
 
-  public static final Charset UTF8 = Charset.forName( "UTF-8" );
+  public static final Charset UTF8 = Charset.forName("UTF-8");
 
-  public abstract Object readFromString( String string ) throws Exception;
+  public abstract Object readFromString(String string) throws Exception;
 
-  public Object readFromByteArray( byte[] bytes ) throws Exception {
-    return readFromString( new String( bytes, UTF8 ) );
+  public Object readFromByteArray(byte[] bytes) throws Exception {
+    return readFromString(new String(bytes, UTF8));
   }
 
-  public abstract Object readFromReader( Reader reader ) throws Exception;
+  public abstract Object readFromReader(Reader reader) throws Exception;
 
-  public Object readFromInputStream( InputStream in ) throws Exception {
-    return readFromReader( new InputStreamReader( in, UTF8 ) );
+  public Object readFromInputStream(InputStream in) throws Exception {
+    return readFromReader(new InputStreamReader(in, UTF8));
   }
 
-  public abstract String writeToString( Object model ) throws Exception;
+  public abstract String writeToString(Object model) throws Exception;
 
-  public byte[] writeToByteArray( Object model ) throws Exception {
-    return writeToString( model ).getBytes( UTF8 );
+  public byte[] writeToByteArray(Object model) throws Exception {
+    return writeToString(model).getBytes(UTF8);
   }
 
-  public abstract void writeToWriter( Object model, Writer writer ) throws Exception;
+  public abstract void writeToWriter(Object model, Writer writer) throws Exception;
 
-  public void writeToOutputStream( Object model, OutputStream out ) throws Exception {
-    Writer writer = new BufferedWriter( new OutputStreamWriter( new OutputStreamWrapper( out ), UTF8 ) );
-    writeToWriter( model, writer );
+  public void writeToOutputStream(Object model, OutputStream out) throws Exception {
+    Writer writer = new BufferedWriter(new OutputStreamWriter(new OutputStreamWrapper(out), UTF8));
+    writeToWriter(model, writer);
     writer.flush();
   }
 
@@ -69,23 +69,23 @@ public abstract class JsonRunner {
 
     private final OutputStream out;
 
-    public OutputStreamWrapper( OutputStream out ) {
+    public OutputStreamWrapper(OutputStream out) {
       this.out = out;
     }
 
     @Override
-    public void write( int b ) throws IOException {
-      out.write( b );
+    public void write(int b) throws IOException {
+      out.write(b);
     }
 
     @Override
-    public void write( byte[] b ) throws IOException {
-      out.write( b );
+    public void write(byte[] b) throws IOException {
+      out.write(b);
     }
 
     @Override
-    public void write( byte[] b, int off, int len ) throws IOException {
-      out.write( b, off, len );
+    public void write(byte[] b, int off, int len) throws IOException {
+      out.write(b, off, len);
     }
 
   }

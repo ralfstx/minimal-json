@@ -21,26 +21,25 @@
  ******************************************************************************/
 package com.eclipsesource.json.performancetest.jsonrunners;
 
-
 public class JsonRunnerFactory {
 
-  public static JsonRunner findByName( String name ) {
-    if( "null".equals( name ) ) {
+  public static JsonRunner findByName(String name) {
+    if ("null".equals(name)) {
       return new NullRunner();
-    } else if( "org-json".equals( name ) ) {
+    } else if ("org-json".equals(name)) {
       return new JsonOrgRunner();
-    } else if( "gson".equals( name ) ) {
+    } else if ("gson".equals(name)) {
       return new GsonRunner();
-    } else if( "jackson".equals( name ) ) {
+    } else if ("jackson".equals(name)) {
       return new JacksonRunner();
-    } else if( "json-simple".equals( name ) ) {
+    } else if ("json-simple".equals(name)) {
       return new SimpleRunner();
-    } else if( "json-smart".equals( name ) ) {
+    } else if ("json-smart".equals(name)) {
       return new JsonSmartRunner();
-    } else if( "minimal-json".equals( name ) ) {
+    } else if ("minimal-json".equals(name)) {
       return new MinimalJsonRunner();
     } else {
-      throw new IllegalArgumentException( "Unknown parser: " + name );
+      throw new IllegalArgumentException("Unknown parser: " + name);
     }
   }
 

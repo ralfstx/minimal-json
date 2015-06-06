@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,50 +36,50 @@ public class ExampleArrayListWithHash extends ArrayList<String> {
 
   private final HashIndexTable hashTable;
 
-  public ExampleArrayListWithHash( int hashSize ) {
-    hashTable = new HashIndexTable( hashSize );
+  public ExampleArrayListWithHash(int hashSize) {
+    hashTable = new HashIndexTable(hashSize);
   }
 
   @Override
-  public boolean add( String element ) {
-    hashTable.add( element, size() );
-    return super.add( element );
+  public boolean add(String element) {
+    hashTable.add(element, size());
+    return super.add(element);
   }
 
   @Override
-  public int indexOf( Object element ) {
-    int index = hashTable.get( element );
-    if( index != -1 && element.equals( get( index ) ) ) {
+  public int indexOf(Object element) {
+    int index = hashTable.get(element);
+    if (index != -1 && element.equals(get(index))) {
       return index;
     }
-    return super.indexOf( element );
+    return super.indexOf(element);
   }
 
   static class HashIndexTable {
 
     private final byte[] hashTable;
 
-    HashIndexTable( int size ) {
-      hashTable = new byte[ size ]; // must be a power of two
+    HashIndexTable(int size) {
+      hashTable = new byte[size]; // must be a power of two
     }
 
-    void add( String name, int index ) {
-      if( index < 0xff ) {
-        int slot = hashSlotFor( name );
-        if( hashTable[slot] == 0 ) {
+    void add(String name, int index) {
+      if (index < 0xff) {
+        int slot = hashSlotFor(name);
+        if (hashTable[slot] == 0) {
           // increment by 1, 0 stands for empty
-          hashTable[slot] = (byte)( index + 1 );
+          hashTable[slot] = (byte)(index + 1);
         }
       }
     }
 
-    int get( Object name ) {
-      int slot = hashSlotFor( name );
+    int get(Object name) {
+      int slot = hashSlotFor(name);
       // subtract 1, 0 stands for empty
-      return ( hashTable[slot] & 0xff ) - 1;
+      return (hashTable[slot] & 0xff) - 1;
     }
 
-    private int hashSlotFor( Object element ) {
+    private int hashSlotFor(Object element) {
       return element.hashCode() & hashTable.length - 1;
     }
 

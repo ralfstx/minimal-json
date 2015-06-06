@@ -33,33 +33,33 @@ import net.minidev.json.JSONValue;
 public class JsonSmartRunner extends JsonRunner {
 
   @Override
-  public Object readFromString( String string ) throws Exception {
-    return JSONValue.parse( string );
+  public Object readFromString(String string) throws Exception {
+    return JSONValue.parse(string);
   }
 
   @Override
-  public Object readFromByteArray( byte[] bytes ) throws Exception {
-    return JSONValue.parse( bytes );
+  public Object readFromByteArray(byte[] bytes) throws Exception {
+    return JSONValue.parse(bytes);
   }
 
   @Override
-  public Object readFromReader( Reader reader ) throws Exception {
-    return JSONValue.parse( reader );
+  public Object readFromReader(Reader reader) throws Exception {
+    return JSONValue.parse(reader);
   }
 
   @Override
-  public Object readFromInputStream( InputStream in ) throws Exception {
-    return JSONValue.parse( in );
+  public Object readFromInputStream(InputStream in) throws Exception {
+    return JSONValue.parse(in);
   }
 
   @Override
-  public String writeToString( Object model ) throws Exception {
+  public String writeToString(Object model) throws Exception {
     return ((JSONAware)model).toJSONString();
   }
 
   @Override
-  public void writeToWriter( Object model, Writer writer ) throws Exception {
-    ((JSONStreamAware)model).writeJSONString( writer );
+  public void writeToWriter(Object model, Writer writer) throws Exception {
+    ((JSONStreamAware)model).writeJSONString(writer);
   }
 
 }

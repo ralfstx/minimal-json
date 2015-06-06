@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,65 +39,65 @@ public class CaliperResultsPreprocessor_Test {
 
   @BeforeClass
   public static void loadCaliperJson() throws IOException {
-    caliperJson = JsonObject.readFrom( Resources.readResource( "input/caliper.json" ) );
+    caliperJson = JsonObject.readFrom(Resources.readResource("input/caliper.json"));
   }
 
   @Test
   public void results_structure() {
-    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor( caliperJson );
+    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor(caliperJson);
 
     JsonObject results = preprocessor.getResults();
 
-    assertEquals( asList( "name", "details", "measurements" ), results.names() );
-    assertTrue( results.get( "name" ).isString() );
-    assertTrue( results.get( "details" ).isObject() );
-    assertTrue( results.get( "measurements" ).isArray() );
+    assertEquals(asList("name", "details", "measurements"), results.names());
+    assertTrue(results.get("name").isString());
+    assertTrue(results.get("details").isObject());
+    assertTrue(results.get("measurements").isArray());
   }
 
   @Test
   public void name_isSimpleName() {
-    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor( caliperJson );
+    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor(caliperJson);
 
     JsonObject results = preprocessor.getResults();
 
-    String name = results.get( "name" ).asString();
-    assertTrue( name.contains( "Benchmark" ) );
-    assertFalse( name.contains( "." ) );
+    String name = results.get("name").asString();
+    assertTrue(name.contains("Benchmark"));
+    assertFalse(name.contains("."));
   }
 
   @Test
   public void details_containsEnvironmentVariables() {
-    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor( caliperJson );
+    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor(caliperJson);
 
     JsonObject results = preprocessor.getResults();
 
-    assertTrue( results.get( "details" ).asObject().names().contains( "os.version" ) );
+    assertTrue(results.get("details").asObject().names().contains("os.version"));
   }
 
   @Test
   public void details_containsBenchmarkNameAndTime() {
-    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor( caliperJson );
+    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor(caliperJson);
 
     JsonObject results = preprocessor.getResults();
 
-    String name = results.get( "details" ).asObject().get( "benchmark.classname" ).asString();
-    assertTrue( name.contains( "." ) );
-    String time = results.get( "details" ).asObject().get( "benchmark.executionTime" ).asString();
-    assertTrue( time.matches( "[\\d-]+T[\\d:]+UTC" ) );
+    String name = results.get("details").asObject().get("benchmark.classname").asString();
+    assertTrue(name.contains("."));
+    String time = results.get("details").asObject().get("benchmark.executionTime").asString();
+    assertTrue(time.matches("[\\d-]+T[\\d:]+UTC"));
   }
 
   @Test
   public void measurements_structure() {
-    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor( caliperJson );
+    CaliperResultsPreprocessor preprocessor = new CaliperResultsPreprocessor(caliperJson);
 
     JsonObject results = preprocessor.getResults();
 
-    assertFalse( results.get( "measurements" ).asArray().isEmpty() );
-    JsonObject measurement = results.get( "measurements" ).asArray().get( 0 ).asObject();
-    assertEquals( asList( "variables", "units", "values" ), measurement.names() );
-    assertTrue( measurement.get( "variables" ).asObject().names().contains( "vm" ) );
-    assertTrue( measurement.get( "units" ).asObject().names().contains( "ns" ) );
-    assertTrue( measurement.get( "values" ).asArray().get( 0 ).isNumber() );
+    assertFalse(results.get("measurements").asArray().isEmpty());
+    JsonObject measurement = results.get("measurements").asArray().get(0).asObject();
+    assertEquals(asList("variables", "units", "values"), measurement.names());
+    assertTrue(measurement.get("variables").asObject().names().contains("vm"));
+    assertTrue(measurement.get("units").asObject().names().contains("ns"));
+    assertTrue(measurement.get("values").asArray().get(0).isNumber());
   }
 
 }

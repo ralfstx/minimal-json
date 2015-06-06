@@ -51,40 +51,40 @@ public class BufferedWriterBenchmark extends SimpleBenchmark {
 
   @Override
   protected void setUp() throws Exception {
-    json = readResource( "input/" + input + ".json" );
-    runner = JsonRunnerFactory.findByName( parser );
-    model = runner.readFromString( json );
+    json = readResource("input/" + input + ".json");
+    runner = JsonRunnerFactory.findByName(parser);
+    model = runner.readFromString(json);
   }
 
-  public void timeWriter( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
+  public void timeWriter(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      Writer writer = new OutputStreamWriter( output );
-      runner.writeToWriter( model, writer );
+      Writer writer = new OutputStreamWriter(output);
+      runner.writeToWriter(model, writer);
       writer.close();
-      if( output.size() == 0 ) {
+      if (output.size() == 0) {
         throw new RuntimeException();
       }
     }
   }
 
-  public void timeBufferedWriter( int reps ) throws Exception {
-    for( int i = 0; i < reps; i++ ) {
+  public void timeBufferedWriter(int reps) throws Exception {
+    for (int i = 0; i < reps; i++) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      Writer writer = new BufferedWriter( new OutputStreamWriter( output ) );
-      runner.writeToWriter( model, writer );
+      Writer writer = new BufferedWriter(new OutputStreamWriter(output));
+      runner.writeToWriter(model, writer);
       writer.close();
-      if( output.size() == 0 ) {
+      if (output.size() == 0) {
         throw new RuntimeException();
       }
     }
   }
 
-  public static void main( String[] args ) throws IOException {
-    CaliperRunner runner = new CaliperRunner( BufferedWriterBenchmark.class );
-    runner.addParameterDefault( "parser", "null", "gson", "jackson", "minimal-json" );
-    runner.addParameterDefault( "input", "rap", "caliper", "long-string", "numbers-array" );
-    runner.exec( args );
+  public static void main(String[] args) throws IOException {
+    CaliperRunner runner = new CaliperRunner(BufferedWriterBenchmark.class);
+    runner.addParameterDefault("parser", "null", "gson", "jackson", "minimal-json");
+    runner.addParameterDefault("input", "rap", "caliper", "long-string", "numbers-array");
+    runner.exec(args);
   }
 
 }

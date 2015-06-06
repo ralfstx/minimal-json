@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@ package com.eclipsesource.json.performancetest.jsonrunners;
 
 import static com.eclipsesource.json.performancetest.resources.Resources.readResource;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayInputStream;
@@ -47,7 +46,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 
-@RunWith( value = Parameterized.class )
+@RunWith(value = Parameterized.class)
 public class JsonRunner_Test {
 
   private String json;
@@ -55,186 +54,187 @@ public class JsonRunner_Test {
   private JsonValue minimalJsonModel;
   private JsonRunner runner;
 
-  @Parameter( 0 ) public String name;
+  @Parameter(0)
+  public String name;
 
-  @Parameters( name = "{0}" )
+  @Parameters(name = "{0}")
   public static Iterable<Object[]> data() {
-    return Arrays.asList( new Object[][] {
-        { "org-json" },
-        { "gson" },
-        { "jackson" },
-        { "json-simple" },
-        { "json-smart" },
-        { "minimal-json" } } );
+    return Arrays.asList(new Object[][] {
+      {"org-json"},
+      {"gson"},
+      {"jackson"},
+      {"json-simple"},
+      {"json-smart"},
+      {"minimal-json"}});
   }
 
   @Before
   public void setUp() throws Exception {
-    runner = JsonRunnerFactory.findByName( name );
+    runner = JsonRunnerFactory.findByName(name);
     json = readResource("input/test.json");
-    jsonBytes = json.getBytes( JsonRunner.UTF8 );
-    minimalJsonModel = JsonValue.readFrom( json );
+    jsonBytes = json.getBytes(JsonRunner.UTF8);
+    minimalJsonModel = JsonValue.readFrom(json);
   }
 
-  private void assertJsonCorrect( String s ) {
-    assertTrue( equalsIgnoreOrder( minimalJsonModel, JsonValue.readFrom( s ) ) );
+  private void assertJsonCorrect(String s) {
+    assertTrue(equalsIgnoreOrder(minimalJsonModel, JsonValue.readFrom(s)));
   }
 
-  private void assertJsonCorrect( byte[] ba ) {
-    assertJsonCorrect( new String( ba, JsonRunner.UTF8 ) );
+  private void assertJsonCorrect(byte[] ba) {
+    assertJsonCorrect(new String(ba, JsonRunner.UTF8));
   }
 
   @Test
   public void testReadWriteString() throws Exception {
-    String result = runner.writeToString( runner.readFromString( json ) );
+    String result = runner.writeToString(runner.readFromString(json));
 
-    assertJsonCorrect( result );
+    assertJsonCorrect(result);
   }
 
   @Test
   public void testReadWriteByteArray() throws Exception {
-    byte[] result = runner.writeToByteArray( runner.readFromByteArray( jsonBytes ) );
+    byte[] result = runner.writeToByteArray(runner.readFromByteArray(jsonBytes));
 
-    assertJsonCorrect( result );
+    assertJsonCorrect(result);
   }
 
   @Test
   public void testReadFromReader() throws Exception {
-    StringReader reader = new StringReader( json );
+    StringReader reader = new StringReader(json);
 
-    Object readFromReader = runner.readFromReader( reader );
+    Object readFromReader = runner.readFromReader(reader);
 
-    String result = runner.writeToString( readFromReader );
-    assertJsonCorrect( result );
+    String result = runner.writeToString(readFromReader);
+    assertJsonCorrect(result);
   }
 
   @Test
   public void testReadFromReader_doesNotCloseReader() throws Exception {
-    Reader reader = spy( new StringReader( json ) );
+    Reader reader = spy(new StringReader(json));
 
-    runner.readFromReader( reader );
+    runner.readFromReader(reader);
 
-    verify( reader, never() ).close();
+    verify(reader, never()).close();
   }
 
   @Test
   public void testReadFromInputStream() throws Exception {
-    ByteArrayInputStream inputStream = new ByteArrayInputStream( jsonBytes );
+    ByteArrayInputStream inputStream = new ByteArrayInputStream(jsonBytes);
 
-    Object readFromInputStream = runner.readFromInputStream( inputStream );
+    Object readFromInputStream = runner.readFromInputStream(inputStream);
 
-    String result = runner.writeToString( readFromInputStream );
-    assertJsonCorrect( result );
+    String result = runner.writeToString(readFromInputStream);
+    assertJsonCorrect(result);
   }
 
   @Test
   public void testReadFromInputStream_doesNotCloseInputStream() throws Exception {
-    InputStream inputStream = spy( new ByteArrayInputStream( jsonBytes ) );
+    InputStream inputStream = spy(new ByteArrayInputStream(jsonBytes));
 
-    runner.readFromInputStream( inputStream );
+    runner.readFromInputStream(inputStream);
 
-    verify( inputStream, never() ).close();
+    verify(inputStream, never()).close();
   }
 
   @Test
   public void testWriteToWriter() throws Exception {
-    Object model = runner.readFromString( json );
+    Object model = runner.readFromString(json);
     StringWriter writer = new StringWriter();
 
-    runner.writeToWriter( model, writer );
+    runner.writeToWriter(model, writer);
 
     String result = writer.toString();
-    assertJsonCorrect( result );
+    assertJsonCorrect(result);
   }
 
   @Test
   public void testWriteToWriter_doesNotCloseWriter() throws Exception {
-    StringWriter writer = spy( new StringWriter() );
-    Object model = runner.readFromString( json );
+    StringWriter writer = spy(new StringWriter());
+    Object model = runner.readFromString(json);
 
-    runner.writeToWriter( model, writer );
+    runner.writeToWriter(model, writer);
 
-    verify( writer, never() ).close();
+    verify(writer, never()).close();
   }
 
   @Test
   public void testWriteToWriter_doesNotFlushWriter() throws Exception {
-    StringWriter writer = spy( new StringWriter() );
-    Object model = runner.readFromString( json );
+    StringWriter writer = spy(new StringWriter());
+    Object model = runner.readFromString(json);
 
-    runner.writeToWriter( model, writer );
+    runner.writeToWriter(model, writer);
 
-    verify( writer, never() ).flush();
+    verify(writer, never()).flush();
   }
 
   @Test
   public void testWriteToOutputStream() throws Exception {
-    Object model = runner.readFromString( json );
+    Object model = runner.readFromString(json);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-    runner.writeToOutputStream( model, outputStream );
+    runner.writeToOutputStream(model, outputStream);
 
     byte[] result = outputStream.toByteArray();
-    assertJsonCorrect( result );
+    assertJsonCorrect(result);
   }
 
   @Test
   public void testWriteToOutputStream_doesNotCloseOutputStream() throws Exception {
-    ByteArrayOutputStream outputStream = spy( new ByteArrayOutputStream() );
-    Object model = runner.readFromString( json );
+    ByteArrayOutputStream outputStream = spy(new ByteArrayOutputStream());
+    Object model = runner.readFromString(json);
 
-    runner.writeToOutputStream( model, outputStream );
+    runner.writeToOutputStream(model, outputStream);
 
-    verify( outputStream, never() ).close();
+    verify(outputStream, never()).close();
   }
 
   @Test
   public void testWriteToOutputStream_doesNotFlushOutputStream() throws Exception {
-    ByteArrayOutputStream outputStream = spy( new ByteArrayOutputStream() );
-    Object model = runner.readFromString( json );
+    ByteArrayOutputStream outputStream = spy(new ByteArrayOutputStream());
+    Object model = runner.readFromString(json);
 
-    runner.writeToOutputStream( model, outputStream );
+    runner.writeToOutputStream(model, outputStream);
 
-    verify( outputStream, never() ).flush();
+    verify(outputStream, never()).flush();
   }
 
-  private boolean equalsIgnoreOrder( JsonValue value1, JsonValue value2 ) {
-    if( value1.isObject() ) {
-      return equalsIgnoreOrder( value1.asObject(), value2 );
-    } else if( value1.isArray() ) {
-      return equalsIgnoreOrder( value1.asArray(), value2 );
+  private boolean equalsIgnoreOrder(JsonValue value1, JsonValue value2) {
+    if (value1.isObject()) {
+      return equalsIgnoreOrder(value1.asObject(), value2);
+    } else if (value1.isArray()) {
+      return equalsIgnoreOrder(value1.asArray(), value2);
     }
-    return value1.equals( value2 );
+    return value1.equals(value2);
   }
 
-  private boolean equalsIgnoreOrder( JsonArray array1, JsonValue value2 ) {
-    if( !value2.isArray() ) {
+  private boolean equalsIgnoreOrder(JsonArray array1, JsonValue value2) {
+    if (!value2.isArray()) {
       return false;
     }
     JsonArray array2 = value2.asArray();
-    if( array1.size() != array2.size() ) {
+    if (array1.size() != array2.size()) {
       return false;
     }
-    for( int i = 0; i < array1.size(); i++ ) {
-      if( !equalsIgnoreOrder( array2.get( i ), array2.get( i ) ) ) {
+    for (int i = 0; i < array1.size(); i++) {
+      if (!equalsIgnoreOrder(array2.get(i), array2.get(i))) {
         return false;
       }
     }
     return true;
   }
 
-  private boolean equalsIgnoreOrder( JsonObject object1, JsonValue value2 ) {
-    if( !value2.isObject() ) {
+  private boolean equalsIgnoreOrder(JsonObject object1, JsonValue value2) {
+    if (!value2.isObject()) {
       return false;
     }
     JsonObject object2 = value2.asObject();
     List<String> names1 = object1.names();
     List<String> names2 = object2.names();
-    if( !names1.containsAll( names2 ) || !names2.containsAll( names1 ) ) {
+    if (!names1.containsAll(names2) || !names2.containsAll(names1)) {
       return false;
     }
-    for( String name : names1 ) {
-      if( !equalsIgnoreOrder( object1.get( name ), object2.get( name ) ) ) {
+    for (String name : names1) {
+      if (!equalsIgnoreOrder(object1.get(name), object2.get(name))) {
         return false;
       }
     }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +21,26 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
-
 /**
  * An unchecked exception to indicate that an input does not qualify as valid JSON.
  */
-@SuppressWarnings( "serial" ) // use default serial UID
+@SuppressWarnings("serial") // use default serial UID
 public class ParseException extends RuntimeException {
 
   private final int offset;
   private final int line;
   private final int column;
 
-  ParseException( String message, int offset, int line, int column ) {
-    super( message + " at " + line + ":" + column );
+  ParseException(String message, int offset, int line, int column) {
+    super(message + " at " + line + ":" + column);
     this.offset = offset;
     this.line = line;
     this.column = column;
   }
 
   /**
-   * Returns the absolute index of the character at which the error occurred. The
-   * index of the first character of a document is 0.
+   * Returns the absolute index of the character at which the error occurred. The index of the first
+   * character of a document is 0.
    *
    * @return the character offset at which the error occurred, will be &gt;= 0
    */
@@ -59,8 +58,8 @@ public class ParseException extends RuntimeException {
   }
 
   /**
-   * Returns the index of the character at which the error occurred, relative to the line. The
-   * index of the first character of a line is 0.
+   * Returns the index of the character at which the error occurred, relative to the line. The index
+   * of the first character of a line is 0.
    *
    * @return the column in which the error occurred, will be &gt;= 0
    */

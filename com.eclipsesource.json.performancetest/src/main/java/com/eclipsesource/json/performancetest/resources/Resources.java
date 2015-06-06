@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,18 +29,18 @@ import java.io.InputStreamReader;
 
 public class Resources {
 
-  public static String readResource( String name ) throws IOException {
-    InputStream inputStream = getResourceAsStream( name );
-    if( inputStream == null ) {
+  public static String readResource(String name) throws IOException {
+    InputStream inputStream = getResourceAsStream(name);
+    if (inputStream == null) {
       return null;
     }
     StringBuilder stringBuilder = new StringBuilder();
-    char[] buffer = new char[ 1024 ];
+    char[] buffer = new char[1024];
     try {
-      BufferedReader reader = new BufferedReader( new InputStreamReader( inputStream, "UTF-8" ) );
+      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
       int read;
-      while( ( read = reader.read( buffer ) ) != -1 ) {
-        stringBuilder.append( buffer, 0, read );
+      while ((read = reader.read(buffer)) != -1) {
+        stringBuilder.append(buffer, 0, read);
       }
     } finally {
       inputStream.close();
@@ -48,8 +48,8 @@ public class Resources {
     return stringBuilder.toString();
   }
 
-  public static InputStream getResourceAsStream( String name ) {
-    return Resources.class.getClassLoader().getResourceAsStream( name );
+  public static InputStream getResourceAsStream(String name) {
+    return Resources.class.getClassLoader().getResourceAsStream(name);
   }
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 EclipseSource and others.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,41 +40,41 @@ public class JsonObjectIterationBenchmark extends SimpleBenchmark {
   @Override
   protected void setUp() throws IOException {
     jsonObject = new JsonObject();
-    for( int index = 0; index < size; index++ ) {
-      String name = Integer.toHexString( index );
-      jsonObject.add( name, index );
+    for (int index = 0; index < size; index++) {
+      String name = Integer.toHexString(index);
+      jsonObject.add(name, index);
     }
   }
 
-  public void timeIterateMembers( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      for( Member member : jsonObject ) {
+  public void timeIterateMembers(int reps) {
+    for (int r = 0; r < reps; r++) {
+      for (Member member : jsonObject) {
         String name = member.getName();
         JsonValue value = member.getValue();
-        checkResult( name, value );
+        checkResult(name, value);
       }
     }
   }
 
-  public void timeIterateNames( int reps ) {
-    for( int r = 0; r < reps; r++ ) {
-      for( String name : jsonObject.names() ) {
-        JsonValue value = jsonObject.get( name );
-        checkResult( name, value );
+  public void timeIterateNames(int reps) {
+    for (int r = 0; r < reps; r++) {
+      for (String name : jsonObject.names()) {
+        JsonValue value = jsonObject.get(name);
+        checkResult(name, value);
       }
     }
   }
 
-  void checkResult( String name, JsonValue value ) {
-    if( name == null || value == null ) {
+  void checkResult(String name, JsonValue value) {
+    if (name == null || value == null) {
       throw new NullPointerException();
     }
   }
 
-  public static void main( String[] args ) throws IOException {
-    CaliperRunner runner = new CaliperRunner( JsonObjectIterationBenchmark.class );
-    runner.addParameterDefault( "size", "4", "16", "64" );
-    runner.exec( args );
+  public static void main(String[] args) throws IOException {
+    CaliperRunner runner = new CaliperRunner(JsonObjectIterationBenchmark.class);
+    runner.addParameterDefault("size", "4", "16", "64");
+    runner.exec(args);
   }
 
 }

@@ -60,7 +60,7 @@ import java.io.Writer;
  * This class is <strong>not supposed to be extended</strong> by clients.
  * </p>
  */
-@SuppressWarnings( "serial" ) // use default serial UID
+@SuppressWarnings("serial") // use default serial UID
 public abstract class JsonValue implements Serializable {
 
   /**
@@ -98,8 +98,8 @@ public abstract class JsonValue implements Serializable {
    * @throws ParseException
    *           if the input is not valid JSON
    */
-  public static JsonValue readFrom( Reader reader ) throws IOException {
-    return new JsonParser( reader ).parse();
+  public static JsonValue readFrom(Reader reader) throws IOException {
+    return new JsonParser(reader).parse();
   }
 
   /**
@@ -111,12 +111,12 @@ public abstract class JsonValue implements Serializable {
    * @throws ParseException
    *           if the input is not valid JSON
    */
-  public static JsonValue readFrom( String text ) {
+  public static JsonValue readFrom(String text) {
     try {
-      return new JsonParser( text ).parse();
-    } catch( IOException exception ) {
+      return new JsonParser(text).parse();
+    } catch (IOException exception) {
       // JsonParser does not throw IOException for String
-      throw new RuntimeException( exception );
+      throw new RuntimeException(exception);
     }
   }
 
@@ -127,8 +127,8 @@ public abstract class JsonValue implements Serializable {
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
    */
-  public static JsonValue valueOf( int value ) {
-    return new JsonNumber( Integer.toString( value, 10 ) );
+  public static JsonValue valueOf(int value) {
+    return new JsonNumber(Integer.toString(value, 10));
   }
 
   /**
@@ -138,8 +138,8 @@ public abstract class JsonValue implements Serializable {
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
    */
-  public static JsonValue valueOf( long value ) {
-    return new JsonNumber( Long.toString( value, 10 ) );
+  public static JsonValue valueOf(long value) {
+    return new JsonNumber(Long.toString(value, 10));
   }
 
   /**
@@ -149,11 +149,11 @@ public abstract class JsonValue implements Serializable {
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
    */
-  public static JsonValue valueOf( float value ) {
-    if( Float.isInfinite( value ) || Float.isNaN( value ) ) {
-      throw new IllegalArgumentException( "Infinite and NaN values not permitted in JSON" );
+  public static JsonValue valueOf(float value) {
+    if (Float.isInfinite(value) || Float.isNaN(value)) {
+      throw new IllegalArgumentException("Infinite and NaN values not permitted in JSON");
     }
-    return new JsonNumber( cutOffPointZero( Float.toString( value ) ) );
+    return new JsonNumber(cutOffPointZero(Float.toString(value)));
   }
 
   /**
@@ -163,11 +163,11 @@ public abstract class JsonValue implements Serializable {
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
    */
-  public static JsonValue valueOf( double value ) {
-    if( Double.isInfinite( value ) || Double.isNaN( value ) ) {
-      throw new IllegalArgumentException( "Infinite and NaN values not permitted in JSON" );
+  public static JsonValue valueOf(double value) {
+    if (Double.isInfinite(value) || Double.isNaN(value)) {
+      throw new IllegalArgumentException("Infinite and NaN values not permitted in JSON");
     }
-    return new JsonNumber( cutOffPointZero( Double.toString( value ) ) );
+    return new JsonNumber(cutOffPointZero(Double.toString(value)));
   }
 
   /**
@@ -177,8 +177,8 @@ public abstract class JsonValue implements Serializable {
    *          the string to get a JSON representation for
    * @return a JSON value that represents the given string
    */
-  public static JsonValue valueOf( String string ) {
-    return string == null ? NULL : new JsonString( string );
+  public static JsonValue valueOf(String string) {
+    return string == null ? NULL : new JsonString(string);
   }
 
   /**
@@ -188,7 +188,7 @@ public abstract class JsonValue implements Serializable {
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
    */
-  public static JsonValue valueOf( boolean value ) {
+  public static JsonValue valueOf(boolean value) {
     return value ? TRUE : FALSE;
   }
 
@@ -276,7 +276,7 @@ public abstract class JsonValue implements Serializable {
    *           if this value is not a JSON object
    */
   public JsonObject asObject() {
-    throw new UnsupportedOperationException( "Not an object: " + toString() );
+    throw new UnsupportedOperationException("Not an object: " + toString());
   }
 
   /**
@@ -288,7 +288,7 @@ public abstract class JsonValue implements Serializable {
    *           if this value is not a JSON array
    */
   public JsonArray asArray() {
-    throw new UnsupportedOperationException( "Not an array: " + toString() );
+    throw new UnsupportedOperationException("Not an array: " + toString());
   }
 
   /**
@@ -307,7 +307,7 @@ public abstract class JsonValue implements Serializable {
    *           if this JSON number can not be interpreted as <code>int</code> value
    */
   public int asInt() {
-    throw new UnsupportedOperationException( "Not a number: " + toString() );
+    throw new UnsupportedOperationException("Not a number: " + toString());
   }
 
   /**
@@ -326,7 +326,7 @@ public abstract class JsonValue implements Serializable {
    *           if this JSON number can not be interpreted as <code>long</code> value
    */
   public long asLong() {
-    throw new UnsupportedOperationException( "Not a number: " + toString() );
+    throw new UnsupportedOperationException("Not a number: " + toString());
   }
 
   /**
@@ -342,7 +342,7 @@ public abstract class JsonValue implements Serializable {
    *           if this value is not a JSON number
    */
   public float asFloat() {
-    throw new UnsupportedOperationException( "Not a number: " + toString() );
+    throw new UnsupportedOperationException("Not a number: " + toString());
   }
 
   /**
@@ -358,7 +358,7 @@ public abstract class JsonValue implements Serializable {
    *           if this value is not a JSON number
    */
   public double asDouble() {
-    throw new UnsupportedOperationException( "Not a number: " + toString() );
+    throw new UnsupportedOperationException("Not a number: " + toString());
   }
 
   /**
@@ -370,7 +370,7 @@ public abstract class JsonValue implements Serializable {
    *           if this value is not a JSON string
    */
   public String asString() {
-    throw new UnsupportedOperationException( "Not a string: " + toString() );
+    throw new UnsupportedOperationException("Not a string: " + toString());
   }
 
   /**
@@ -382,7 +382,7 @@ public abstract class JsonValue implements Serializable {
    *           if this value is neither <code>true</code> or <code>false</code>
    */
   public boolean asBoolean() {
-    throw new UnsupportedOperationException( "Not a boolean: " + toString() );
+    throw new UnsupportedOperationException("Not a boolean: " + toString());
   }
 
   /**
@@ -397,8 +397,8 @@ public abstract class JsonValue implements Serializable {
    * @throws IOException
    *           if an I/O error occurs in the writer
    */
-  public void writeTo( Writer writer ) throws IOException {
-    writeTo( writer, WriterConfig.MINIMAL );
+  public void writeTo(Writer writer) throws IOException {
+    writeTo(writer, WriterConfig.MINIMAL);
   }
 
   /**
@@ -414,15 +414,15 @@ public abstract class JsonValue implements Serializable {
    * @throws IOException
    *           if an I/O error occurs in the writer
    */
-  public void writeTo( Writer writer, WriterConfig config ) throws IOException {
-    if( writer == null ) {
-      throw new NullPointerException( "writer is null" );
+  public void writeTo(Writer writer, WriterConfig config) throws IOException {
+    if (writer == null) {
+      throw new NullPointerException("writer is null");
     }
-    if( config == null ) {
-      throw new NullPointerException( "config is null" );
+    if (config == null) {
+      throw new NullPointerException("config is null");
     }
-    WritingBuffer buffer = new WritingBuffer( writer, 128 );
-    write( config.createWriter( buffer ) );
+    WritingBuffer buffer = new WritingBuffer(writer, 128);
+    write(config.createWriter(buffer));
     buffer.flush();
   }
 
@@ -435,7 +435,7 @@ public abstract class JsonValue implements Serializable {
    */
   @Override
   public String toString() {
-    return toString( WriterConfig.MINIMAL );
+    return toString(WriterConfig.MINIMAL);
   }
 
   /**
@@ -445,13 +445,13 @@ public abstract class JsonValue implements Serializable {
    *          a configuration that controls the formatting or <code>null</code> for the minimal form
    * @return a JSON string that represents this value
    */
-  public String toString( WriterConfig config ) {
+  public String toString(WriterConfig config) {
     StringWriter writer = new StringWriter();
     try {
-      writeTo( writer, config );
-    } catch( IOException exception ) {
+      writeTo(writer, config);
+    } catch (IOException exception) {
       // StringWriter does not throw IOExceptions
-      throw new RuntimeException( exception );
+      throw new RuntimeException(exception);
     }
     return writer.toString();
   }
@@ -470,8 +470,8 @@ public abstract class JsonValue implements Serializable {
    * @return true if this object is the same as the object argument; false otherwise
    */
   @Override
-  public boolean equals( Object object ) {
-    return super.equals( object );
+  public boolean equals(Object object) {
+    return super.equals(object);
   }
 
   @Override
@@ -479,11 +479,11 @@ public abstract class JsonValue implements Serializable {
     return super.hashCode();
   }
 
-  abstract void write( JsonWriter writer ) throws IOException;
+  abstract void write(JsonWriter writer) throws IOException;
 
-  private static String cutOffPointZero( String string ) {
-    if( string.endsWith( ".0" ) ) {
-      return string.substring( 0, string.length() - 2 );
+  private static String cutOffPointZero(String string) {
+    if (string.endsWith(".0")) {
+      return string.substring(0, string.length() - 2);
     }
     return string;
   }

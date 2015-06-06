@@ -40,117 +40,117 @@ public class WritingBuffer_Test {
   @Before
   public void setUp() {
     wrapped = new StringWriter();
-    writer = new WritingBuffer( wrapped, BUFFER_SIZE );
+    writer = new WritingBuffer(wrapped, BUFFER_SIZE);
   }
 
   @Test
   public void testFlushEmpty() throws IOException {
     writer.flush();
 
-    assertEquals( "", wrapped.toString() );
+    assertEquals("", wrapped.toString());
   }
 
   @Test
   public void testWriteChar() throws IOException {
-    writer.write( 'c' );
+    writer.write('c');
     writer.flush();
 
-    assertEquals( "c", wrapped.toString() );
+    assertEquals("c", wrapped.toString());
   }
 
   @Test
   public void testWriteChar_fit() throws IOException {
-    writer.write( createString( BUFFER_SIZE - 1 ) );
-    writer.write( 'c' );
+    writer.write(createString(BUFFER_SIZE - 1));
+    writer.write('c');
     writer.flush();
 
-    assertEquals( createString( BUFFER_SIZE - 1 ) + "c", wrapped.toString() );
+    assertEquals(createString(BUFFER_SIZE - 1) + "c", wrapped.toString());
   }
 
   @Test
   public void testWriteChar_exceeding() throws IOException {
-    writer.write( createString( BUFFER_SIZE ) );
-    writer.write( 'c' );
+    writer.write(createString(BUFFER_SIZE));
+    writer.write('c');
     writer.flush();
 
-    assertEquals( createString( BUFFER_SIZE ) + "c", wrapped.toString() );
+    assertEquals(createString(BUFFER_SIZE) + "c", wrapped.toString());
   }
 
   @Test
   public void testWriteCharArray() throws IOException {
-    writer.write( "foobar".toCharArray(), 1, 3 );
+    writer.write("foobar".toCharArray(), 1, 3);
     writer.flush();
 
-    assertEquals( "oob", wrapped.toString() );
+    assertEquals("oob", wrapped.toString());
   }
 
   @Test
   public void testWriteCharArray_fit() throws IOException {
-    writer.write( createString( BUFFER_SIZE - 3 ) );
-    writer.write( "foobar".toCharArray(), 1, 3 );
+    writer.write(createString(BUFFER_SIZE - 3));
+    writer.write("foobar".toCharArray(), 1, 3);
     writer.flush();
 
-    assertEquals( createString( BUFFER_SIZE - 3 ) + "oob", wrapped.toString() );
+    assertEquals(createString(BUFFER_SIZE - 3) + "oob", wrapped.toString());
   }
 
   @Test
   public void testWriteCharArray_exceeding() throws IOException {
-    writer.write( createString( BUFFER_SIZE - 2 ) );
-    writer.write( "foobar".toCharArray(), 1, 3 );
+    writer.write(createString(BUFFER_SIZE - 2));
+    writer.write("foobar".toCharArray(), 1, 3);
     writer.flush();
 
-    assertEquals( createString( BUFFER_SIZE - 2 ) + "oob", wrapped.toString() );
+    assertEquals(createString(BUFFER_SIZE - 2) + "oob", wrapped.toString());
   }
 
   @Test
   public void testWriteCharArray_exceedingBuffer() throws IOException {
-    writer.write( createChars( BUFFER_SIZE + 1 ) );
+    writer.write(createChars(BUFFER_SIZE + 1));
     writer.flush();
 
-    assertEquals( createString( BUFFER_SIZE + 1 ), wrapped.toString() );
+    assertEquals(createString(BUFFER_SIZE + 1), wrapped.toString());
   }
 
   @Test
   public void testWriteString() throws IOException {
-    writer.write( "foobar", 1, 3 );
+    writer.write("foobar", 1, 3);
     writer.flush();
 
-    assertEquals( "oob", wrapped.toString() );
+    assertEquals("oob", wrapped.toString());
   }
 
   @Test
   public void testWriteString_fit() throws IOException {
-    writer.write( createString( BUFFER_SIZE - 3 ) );
-    writer.write( "foobar", 1, 3 );
+    writer.write(createString(BUFFER_SIZE - 3));
+    writer.write("foobar", 1, 3);
     writer.flush();
 
-    assertEquals( createString( BUFFER_SIZE - 3 ) + "oob", wrapped.toString() );
+    assertEquals(createString(BUFFER_SIZE - 3) + "oob", wrapped.toString());
   }
 
   @Test
   public void testWriteString_exceeding() throws IOException {
-    writer.write( createString( BUFFER_SIZE - 2 ) );
-    writer.write( "foobar", 1, 3 );
+    writer.write(createString(BUFFER_SIZE - 2));
+    writer.write("foobar", 1, 3);
     writer.flush();
 
-    assertEquals( createString( BUFFER_SIZE - 2 ) + "oob", wrapped.toString() );
+    assertEquals(createString(BUFFER_SIZE - 2) + "oob", wrapped.toString());
   }
 
   @Test
   public void testWriteString_exceedingBuffer() throws IOException {
-    writer.write( createString( BUFFER_SIZE + 1 ) );
+    writer.write(createString(BUFFER_SIZE + 1));
     writer.flush();
 
-    assertEquals( createString( BUFFER_SIZE + 1 ), wrapped.toString() );
+    assertEquals(createString(BUFFER_SIZE + 1), wrapped.toString());
   }
 
-  private static String createString( int length  ) {
-    return new String( createChars( length ) );
+  private static String createString(int length) {
+    return new String(createChars(length));
   }
 
-  private static char[] createChars( int length  ) {
+  private static char[] createChars(int length) {
     char[] array = new char[length];
-    Arrays.fill( array, 'x' );
+    Arrays.fill(array, 'x');
     return array;
   }
 
