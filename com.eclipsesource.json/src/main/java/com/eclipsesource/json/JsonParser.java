@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import com.eclipsesource.json.CollectionFactory.ElementList;
-import com.eclipsesource.json.CollectionFactory.MemberSet;
+import com.eclipsesource.json.JsonHandler.ElementList;
+import com.eclipsesource.json.JsonHandler.MemberSet;
 
 class JsonParser implements ParserContext {
 
@@ -35,7 +35,7 @@ class JsonParser implements ParserContext {
 
   private final Reader reader;
   private final char[] buffer;
-  private final CollectionFactory collectionFactory;
+  private JsonHandler handler;
   private int bufferOffset;
   private int index;
   private int fill;
@@ -56,41 +56,24 @@ class JsonParser implements ParserContext {
    *                       |  index           fill
    */
 
-  private final static CollectionFactory defaultFactory = new CollectionFactory() {
-    public ElementList handleArrayStart(ParserContext context) {
-      return new JsonArray();
-    }
-    public MemberSet handleObjectStart(ParserContext context) {
-      return new JsonObject();
-    }
-  };
-
   JsonParser(String string) {
-    this(new StringReader(string), defaultFactory,
+    this(new StringReader(string),
          Math.max(MIN_BUFFER_SIZE, Math.min(DEFAULT_BUFFER_SIZE, string.length())));
   }
 
   JsonParser(Reader reader) {
-    this(reader, defaultFactory, DEFAULT_BUFFER_SIZE);
-  }
-
-  JsonParser(Reader reader, CollectionFactory factory) {
-	this(reader, factory, DEFAULT_BUFFER_SIZE);
+    this(reader, DEFAULT_BUFFER_SIZE);
   }
 
   JsonParser(Reader reader, int buffersize) {
-    this(reader, defaultFactory, buffersize);
-  }
-
-  JsonParser(Reader reader, CollectionFactory factory, int buffersize) {
     this.reader = reader;
     buffer = new char[ buffersize ];
-    collectionFactory = factory;
     line = 1;
     captureStart = -1;
   }
 
-  JsonValue parse() throws IOException {
+  JsonValue parse(JsonHandler handler) throws IOException {
+    this.handler = handler;
     read();
     skipWhiteSpace();
     JsonValue result = readValue();
@@ -99,6 +82,10 @@ class JsonParser implements ParserContext {
       throw error("Unexpected character");
     }
     return result;
+  }
+
+  JsonValue parse() throws IOException {
+    return parse(JsonValue.defaultHandler);
   }
 
   private JsonValue readValue() throws IOException {
@@ -133,101 +120,103 @@ class JsonParser implements ParserContext {
   }
 
   private JsonValue readArray() throws IOException {
+    int begin = getOffset();
     read();
-    ElementList array;
-    array = collectionFactory.handleArrayStart(this);
+    ElementList array = handler.handleArrayStart(this);
     nesting ++;
     name = null;
-    if (array == null && nesting > 1) {
-      skipAll();
-    } else {
-      skipWhiteSpace();
-      if (readChar( ']')) {
-        nesting --;
-        return array;
-      }
-      do {
-        skipWhiteSpace();
-        JsonValue value = readValue();
-        name = null;
-        if (value != null && array != null) {
-          array.addElement(value, this);
-        }
-        skipWhiteSpace();
-      } while (readChar(','));
+    skipWhiteSpace();
+    if (readChar( ']')) {
+      array = handler.handleArrayEnd(begin, begin, array);
+      nesting --;
+      return array;
     }
+    do {
+      skipWhiteSpace();
+      JsonValue value = readValue();
+      name = null;
+      if (value != null && array != null) {
+        array.addElement(value, this);
+      }
+      skipWhiteSpace();
+    } while (readChar(','));
     if (!readChar( ']')) {
       throw expected("',' or ']'");
     }
     nesting --;
-    return array;
+    return handler.handleArrayEnd(begin, begin, array);
   }
 
   private JsonValue readObject() throws IOException {
+    int begin = getOffset();
     read();
-    MemberSet object = collectionFactory.handleObjectStart(this);
+    MemberSet object = handler.handleObjectStart(this);
     nesting ++;
-    if (object == null && nesting > 1) {
-      skipAll();
-    } else {
-      skipWhiteSpace();
-      if (readChar('}')) {
-        nesting --;
-        return object;
-      }
-      do {
-        skipWhiteSpace();
-        String name = this.name = readName();
-        skipWhiteSpace();
-        if (!readChar( ':')) {
-          throw expected("':'");
-        }
-        skipWhiteSpace();
-        JsonValue value = readValue();
-        this.name = name;
-        if (value != null && object != null) {
-          object.addMember(name, value, this);
-        }
-        skipWhiteSpace();
-      } while (readChar( ',' ));
+    skipWhiteSpace();
+    if (readChar('}')) {
+      object = handler.handleObjectEnd(begin, getOffset(), object);
+      nesting --;
+      return object;
     }
+    do {
+      skipWhiteSpace();
+      String name = this.name = readName();
+      handler.handleMemberName(begin, getOffset(), name);
+      skipWhiteSpace();
+      if (!readChar( ':')) {
+        throw expected("':'");
+      }
+      skipWhiteSpace();
+      JsonValue value = readValue();
+      this.name = name;
+      if (value != null && object != null) {
+        object.addMember(name, value, this);
+      }
+      skipWhiteSpace();
+    } while (readChar( ',' ));
     if (!readChar('}')) {
       throw expected("',' or '}'");
     }
     nesting --;
-    return object;
+    return handler.handleObjectEnd(begin, getOffset(), object);
   }
 
   private String readName() throws IOException {
     if (current != '"') {
       throw expected("name");
     }
-    return readStringInternal();
+    int begin = getOffset();
+    String name = readStringInternal();
+    handler.handleMemberName(begin, getOffset(), name);
+    return name;
   }
 
   private JsonValue readNull() throws IOException {
+    int begin = getOffset();
     read();
     readRequiredChar('u');
     readRequiredChar('l');
     readRequiredChar('l');
-    return JsonValue.NULL;
+    return handler.handleNull(begin);
   }
 
   private JsonValue readTrue() throws IOException {
+    int begin = getOffset();
     read();
     readRequiredChar('r');
     readRequiredChar('u');
     readRequiredChar('e');
-    return JsonValue.TRUE;
+    return handler.handleTrue(begin);
   }
 
   private JsonValue readFalse() throws IOException {
+    int begin = getOffset();
     read();
     readRequiredChar('a');
     readRequiredChar('l');
     readRequiredChar('s');
     readRequiredChar('e');
-    return JsonValue.FALSE;
+    return handler.handleFalse(begin);
   }
 
   private void readRequiredChar(char ch) throws IOException {
@@ -237,7 +226,9 @@ class JsonParser implements ParserContext {
   }
 
   private JsonValue readString() throws IOException {
-    return new JsonString(readStringInternal());
+    int begin = getOffset();
+    String string = readStringInternal();
+    return handler.handleString(begin, getOffset(), string);
   }
 
   private String readStringInternal() throws IOException {
@@ -300,6 +291,7 @@ class JsonParser implements ParserContext {
   }
 
   private JsonValue readNumber() throws IOException {
+    int begin = getOffset();
     startCapture();
     readChar('-');
     int firstDigit = current;
@@ -312,7 +304,8 @@ class JsonParser implements ParserContext {
     }
     readFraction();
     readExponent();
-    return new JsonNumber(endCapture());
+    String string = endCapture();
+    return handler.handleNumber(begin, getOffset(), string);
   }
 
   private boolean readFraction() throws IOException {

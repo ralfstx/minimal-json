@@ -31,8 +31,8 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.eclipsesource.json.CollectionFactory.ElementList;
-import com.eclipsesource.json.CollectionFactory.MemberSet;
+import com.eclipsesource.json.JsonHandler.ElementList;
+import com.eclipsesource.json.JsonHandler.MemberSet;
 
 public class JsonStreamingTest {
 
@@ -48,12 +48,14 @@ public class JsonStreamingTest {
   @Test
   public void withNestedElementDistiller() throws IOException {
 	final CollectionFactory factory = new CollectionFactory() {
+      @Override
       public ElementList handleArrayStart(ParserContext context) {
     	if (context.getNesting() == 1 && "routes".equals(context.getFieldName())) {
     	  return new RouteList();
     	}
 	    return new JsonArray();
       }
+      @Override
       public MemberSet handleObjectStart(ParserContext context) {
 	    return new JsonObject();
 	  }
@@ -71,6 +73,7 @@ public class JsonStreamingTest {
   public void withElementFilterByOverride() throws IOException {
 	StringReader reader = new StringReader("{\"all\":[1,2,3,4,5],\"odd\":[1,2,3,4,5]}");
 	final CollectionFactory factory = new CollectionFactory() {
+      @Override
       public ElementList handleArrayStart(ParserContext context) {
     	if ("odd".equals(context.getFieldName())) {
     	  return new JsonArray() {
@@ -84,7 +87,8 @@ public class JsonStreamingTest {
     	}
 	    return new JsonArray();
       }
-	  public MemberSet handleObjectStart(ParserContext context) {
+	  @Override
+    public MemberSet handleObjectStart(ParserContext context) {
 	    return new JsonObject();
 	  }
 	};
@@ -190,9 +194,11 @@ public class JsonStreamingTest {
 
   private static ComplexEditorContent annotateContent(String content) throws IOException {
     final CollectionFactory factory = new CollectionFactory() {
+      @Override
       public ElementList handleArrayStart(ParserContext context) {
         return new ArrayAnnotator(context.getLine(), context.getColumn());
   	  }
+      @Override
       public MemberSet handleObjectStart(ParserContext context) {
   	    return new ObjectAnnotator(context.getLine(), context.getColumn());
   	  }
@@ -235,7 +241,7 @@ public class JsonStreamingTest {
 	assertEquals(2, address.children.size());
   }
 
-  private static class SkippingReaderFactory implements CollectionFactory {
+  private static class SkippingReaderFactory extends CollectionFactory {
 	int n_skip, idx;
 	boolean is_object;
 	void skip ( ParserContext context ) {
@@ -248,7 +254,8 @@ public class JsonStreamingTest {
 	  } catch ( IOException e ) { }
 	  idx = 0;
 	}
-	public ElementList handleArrayStart( ParserContext context ) {
+	@Override
+  public ElementList handleArrayStart( ParserContext context ) {
 	  return new JsonArray() {
 		@Override
 		protected void addElement( JsonValue value, ParserContext context ) {
@@ -259,7 +266,8 @@ public class JsonStreamingTest {
 		}
 	  };
 	}
-	public MemberSet handleObjectStart( ParserContext context ) {
+	@Override
+  public MemberSet handleObjectStart( ParserContext context ) {
       return new JsonObject() {
         @Override
         protected void addMember( String name, JsonValue value, ParserContext context ) {
@@ -304,9 +312,11 @@ public class JsonStreamingTest {
   @Test
   public void skipAll_isIdempotent() throws IOException {
     final CollectionFactory factory = new CollectionFactory() {
+      @Override
       public ElementList handleArrayStart( ParserContext context ) {
         return new JsonArray();
       }
+      @Override
       public MemberSet handleObjectStart( ParserContext context ) {
     	return new JsonObject() {
 	      @Override
@@ -359,27 +369,5 @@ public class JsonStreamingTest {
 		} catch (IOException e) { }
 	  }
 	} );
-  }
-
-  @Test
-  public void skipByNullFromFactory() throws IOException {
-    CollectionFactory factory = new CollectionFactory() {
-      public ElementList handleArrayStart(ParserContext context) {
-        return "prev".equals(context.getFieldName()) ? null : new JsonArray();
-      }
-      public MemberSet handleObjectStart(ParserContext context) {
-        return new JsonObject();
-      }
-    };
-    StringReader json = new StringReader( "[{\"player\":\"Mario\",\"rank\":2,\"prev\":[1,5,4]}," +
-        "{\"player\":\"Lara\",\"rank\":1,\"prev\":[2,3,5],\"trophies\":[\"gold\",\"bronze\"]}]" );
-    JsonArray array = JsonValue.readFrom( json, factory ).asArray();
-    assertEquals(2, array.size());
-    JsonObject mario = array.get(0).asObject();
-    assertEquals("Mario", mario.get("player").asString());
-    assertEquals(null, mario.get("prev"));
-    JsonObject lara = array.get(1).asObject();
-    assertEquals(null, lara.get("prev"));
-    assertEquals(2, lara.get("trophies").asArray().size());
   }
 }

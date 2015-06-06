@@ -21,8 +21,6 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
-import java.io.IOException;
-
 /**
  * Provides implementations for JSON array and object representations.
  * <p>
@@ -33,70 +31,11 @@ import java.io.IOException;
  * as a hybrid streaming API.
  * </p>
  */
-public interface CollectionFactory {
-
-  /**
-   * The most abstract kind of JSON array.
-   * <p>
-   * Implementations other than {@link JsonArray} may extract content from or filter array
-   * elements as a means to reduce memory footprint and increased performance.
-   * </p>
-   */
-  public abstract class ElementList extends JsonValue {
-
-	/**
-	 * Called when an element of a JSON array has been parsed from the JSON stream.
-	 *
-	 * @param value
-	 *          a parsed element of the current JSON array
-	 * @throws IOException
-	 *          forwarded from failed skipping reads
-	 */
-	abstract protected void addElement( JsonValue value, ParserContext context ) throws IOException;
-
-	/**
-	 * Unless implemented, replaces the JSON array with a stripping note.
-	 */
-	@Override
-	void write(JsonWriter writer) throws IOException {
-	  writer.writeString("Compacted JSON array.");
-	}
-  }
-
-  /**
-   * The most abstract kind of JSON array.
-   * <p>
-   * Implementations other than {@link JsonArray} may extract content from or filter array
-   * elements as a means to reduce memory footprint and increased performance.
-   * </p>
-   */
-  public abstract class MemberSet extends JsonValue {
-
-	/**
-	 * Called when a member of a JSON object has been parsed from the JSON stream.
-	 *
-	 * @param name
-	 *          the field name of the object's member
-	 * @param value
-	 *          the JSON value of the object's member
-	 * @throws IOException
-	 *          forwarded from failed skipping reads
-	 */
-	abstract protected void addMember( String name, JsonValue value, ParserContext context )
-	    throws IOException;
-
-	/**
-	 * Unless implemented, replaces the JSON object with a stripping note.
-	 */
-	@Override
-	void write(JsonWriter writer) throws IOException {
-	  writer.writeString("Compacted JSON object.");
-	}
-  }
+public abstract class CollectionFactory extends JsonValue.DefaultJsonHandler {
 
   /**
    * Implementations must return a new {@code JSONArray} or a custom kind of {@code ElementList},
-   * or null for skipping the current array.
+   * or null for building a non-JSON data structure held by the caller.
    * <p>
    * A custom {@code ElementList} can be useful for filtering, extracting from, or annotating the
    * streamed JSON array. Filtering or extracting from the stream may offer performance benefits
@@ -105,21 +44,20 @@ public interface CollectionFactory {
    * position in the input, nesting level, and field name.
    * </p>
    * <p>
-   * Returning <em>null</em> on a particular context causes the parser to skip the entire object and
-   * to not insert the corresponding member or element into the enclosing object or array. If the
-   * skipped array is outermost, {@link JsonValue#readFrom(java.io.Reader, CollectionFactory)}
-   * returns <em>null</em>.
+   * Returning <em>null</em> is only allowed if <em>null</em> was also returned for the root
+   * collection.
    * </p>
    *
    * @param context
    *          logical and absolute parser state, for deciding what array representation to return
    * @return implementation of {@code ElementList} or null depending on nesting and/or field name
    */
-  public ElementList handleArrayStart(ParserContext context);
+  @Override
+  public abstract ElementList handleArrayStart(ParserContext context);
 
   /**
    * Implementations must return a new {@code JSONObject} or a custom kind of {@code MemberSet},
-   * or null for skipping the current object.
+   * or null for building a non-JSON data structure held by the caller.
    * <p>
    * Factory interface method like {@link #handleArrayStart} but for object representations.
    * </p>
@@ -128,6 +66,7 @@ public interface CollectionFactory {
    *          logical and absolute parser state, for deciding what object representation to return
    * @return implementation of {@code MemberSet} or null depending on nesting and/or field name
    */
-  public MemberSet handleObjectStart(ParserContext context);
+  @Override
+  public abstract MemberSet handleObjectStart(ParserContext context);
 
 }

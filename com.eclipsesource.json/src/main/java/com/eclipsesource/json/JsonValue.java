@@ -78,6 +78,50 @@ public abstract class JsonValue implements Serializable {
    */
   public static final JsonValue NULL = JsonLiteral.NULL;
 
+  static final JsonHandler defaultHandler = new DefaultJsonHandler();
+
+  static class DefaultJsonHandler implements JsonHandler {
+
+    public JsonValue handleNull(int begin) {
+      return JsonValue.NULL;
+    }
+
+    public JsonValue handleTrue(int begin) {
+      return JsonValue.TRUE;
+    }
+
+    public JsonValue handleFalse(int begin) {
+      return JsonValue.FALSE;
+    }
+
+    public JsonValue handleString(int begin, int end, String string) {
+      return new JsonString(string);
+    }
+
+    public JsonValue handleNumber(int begin, int end, String string) {
+      return new JsonNumber(string);
+    }
+
+    public ElementList handleArrayStart(ParserContext context) {
+      return new JsonArray();
+    }
+
+    public ElementList handleArrayEnd(int begin, int end, ElementList array) {
+      return array;
+    }
+
+    public MemberSet handleObjectStart(ParserContext context) {
+      return new JsonObject();
+    }
+
+    public void handleMemberName(int begin, int end, String name) {
+    }
+
+    public MemberSet handleObjectEnd(int begin, int end, MemberSet object) {
+      return object;
+    }
+  }
+
   JsonValue() {
     // prevent subclasses outside of this package
   }
@@ -99,7 +143,7 @@ public abstract class JsonValue implements Serializable {
    *           if the input is not valid JSON
    */
   public static JsonValue readFrom(Reader reader) throws IOException {
-    return new JsonParser(reader).parse();
+    return readFrom(reader, defaultHandler);
   }
 
   /**
@@ -115,16 +159,16 @@ public abstract class JsonValue implements Serializable {
    *
    * @param reader
    *          the reader to read the JSON value from
-   * @param factory
-   *          a {@code CollectionFactory} to provide implementations of JSON arrays and objects
+   * @param handler
+   *          a {@code JsonHandler} to provide implementations of JSON arrays and objects
    * @return the JSON value that has been read, or null
    * @throws IOException
    *           if an I/O error occurs in the reader
    * @throws ParseException
    *           if the input is not valid JSON
    */
-  public static JsonValue readFrom( Reader reader, CollectionFactory factory ) throws IOException {
-	return new JsonParser( reader, factory ).parse();
+  public static JsonValue readFrom(Reader reader, JsonHandler handler) throws IOException {
+    return new JsonParser(reader).parse(handler);
   }
 
   /**
@@ -138,7 +182,7 @@ public abstract class JsonValue implements Serializable {
    */
   public static JsonValue readFrom(String text) {
     try {
-      return new JsonParser(text).parse();
+      return new JsonParser(text).parse(defaultHandler);
     } catch (IOException exception) {
       // JsonParser does not throw IOException for String
       throw new RuntimeException(exception);
