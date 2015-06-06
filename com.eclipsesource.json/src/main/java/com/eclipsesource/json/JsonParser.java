@@ -139,7 +139,7 @@ class JsonParser {
      * @param name
      *          the name of this member
      */
-    void handleObjectName(int begin, int end, String name);
+    void handleMemberName(int begin, int end, String name);
 
     /**
      * Handle a member of a JSON object. This method is called after the value has been parsed. It
@@ -152,7 +152,7 @@ class JsonParser {
      * @param valueData
      *          the object returned by the handle method that processed the element value
      */
-    void handleObjectMember(Object objectData, String name, Object valueData);
+    void handleMemberValue(Object objectData, String name, Object valueData);
 
     /**
      * Handle the end of a JSON object.
@@ -273,7 +273,7 @@ class JsonParser {
       }
       skipWhiteSpace();
       Object value = readValue(handler);
-      handler.handleObjectMember(data, name, value);
+      handler.handleMemberValue(data, name, value);
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar('}')) {
@@ -288,7 +288,7 @@ class JsonParser {
     }
     int begin = getOffset();
     String name = readStringInternal();
-    handler.handleObjectName(begin, getOffset(), name);
+    handler.handleMemberName(begin, getOffset(), name);
     return name;
   }
 

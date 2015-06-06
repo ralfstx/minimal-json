@@ -80,9 +80,7 @@ public abstract class JsonValue implements Serializable {
    */
   public static final JsonValue NULL = JsonLiteral.NULL;
 
-  static final JsonHandler JSON_HANDLER = new JsonValueHandler();
-
-  static class JsonValueHandler implements JsonHandler {
+  static final JsonHandler defaultHandler = new JsonHandler() {
 
     public Object handleNull(int begin) {
       return JsonValue.NULL;
@@ -120,10 +118,10 @@ public abstract class JsonValue implements Serializable {
       return new JsonObject();
     }
 
-    public void handleObjectName(int begin, int end, String name) {
+    public void handleMemberName(int begin, int end, String name) {
     }
 
-    public void handleObjectMember(Object data, String name, Object value) {
+    public void handleMemberValue(Object data, String name, Object value) {
       ((JsonObject)data).add(name, (JsonValue)value);
     }
 
@@ -131,7 +129,7 @@ public abstract class JsonValue implements Serializable {
       return data;
     }
 
-  }
+  };
 
   JsonValue() {
     // prevent subclasses outside of this package
@@ -154,7 +152,7 @@ public abstract class JsonValue implements Serializable {
    *           if the input is not valid JSON
    */
   public static JsonValue readFrom(Reader reader) throws IOException {
-    return (JsonValue)new JsonParser(reader).parse(new JsonValueHandler());
+    return (JsonValue)new JsonParser(reader).parse(defaultHandler);
   }
 
   /**
@@ -168,7 +166,7 @@ public abstract class JsonValue implements Serializable {
    */
   public static JsonValue readFrom(String text) {
     try {
-      return (JsonValue)new JsonParser(text).parse(new JsonValueHandler());
+      return (JsonValue)new JsonParser(text).parse(defaultHandler);
     } catch (IOException exception) {
       // JsonParser does not throw IOException for String
       throw new RuntimeException(exception);
