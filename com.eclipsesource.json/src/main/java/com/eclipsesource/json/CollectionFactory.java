@@ -115,19 +115,19 @@ public interface CollectionFactory {
    *          logical and absolute parser state, for deciding what array representation to return
    * @return implementation of {@code ElementList} or null depending on nesting and/or field name
    */
-  public ElementList createElementList(ParserContext context);
+  public ElementList handleArrayStart(ParserContext context);
 
   /**
    * Implementations must return a new {@code JSONObject} or a custom kind of {@code MemberSet},
    * or null for skipping the current object.
    * <p>
-   * Factory interface method like {@link #createElementList} but for object representations.
+   * Factory interface method like {@link #handleArrayStart} but for object representations.
    * </p>
    *
    * @param context
    *          logical and absolute parser state, for deciding what object representation to return
    * @return implementation of {@code MemberSet} or null depending on nesting and/or field name
    */
-  public MemberSet createMemberSet(ParserContext context);
+  public MemberSet handleObjectStart(ParserContext context);
 
 }

@@ -42,7 +42,7 @@ class JsonParser implements ParserContext {
   private int line;
   private int lineOffset;
   private int current;
-  private int nesting = -1;
+  private int nesting;
   private String name;
   private StringBuilder captureBuffer;
   private int captureStart;
@@ -57,10 +57,10 @@ class JsonParser implements ParserContext {
    */
 
   private final static CollectionFactory defaultFactory = new CollectionFactory() {
-    public ElementList createElementList(ParserContext context) {
+    public ElementList handleArrayStart(ParserContext context) {
       return new JsonArray();
     }
-    public MemberSet createMemberSet(ParserContext context) {
+    public MemberSet handleObjectStart(ParserContext context) {
       return new JsonObject();
     }
   };
@@ -133,16 +133,16 @@ class JsonParser implements ParserContext {
   }
 
   private JsonValue readArray() throws IOException {
-	nesting ++;
     read();
     ElementList array;
-    array = collectionFactory.createElementList( this );
+    array = collectionFactory.handleArrayStart(this);
+    nesting ++;
     name = null;
-    if( array == null ) {
+    if (array == null && nesting > 1) {
       skipAll();
     } else {
       skipWhiteSpace();
-      if( readChar( ']' ) ) {
+      if (readChar( ']')) {
         nesting --;
         return array;
       }
@@ -150,28 +150,28 @@ class JsonParser implements ParserContext {
         skipWhiteSpace();
         JsonValue value = readValue();
         name = null;
-        if( value != null ) {
-          array.addElement( value, this );
+        if (value != null && array != null) {
+          array.addElement(value, this);
         }
         skipWhiteSpace();
-      } while( readChar( ',' ) );
+      } while (readChar(','));
     }
-    if( !readChar( ']' ) ) {
-      throw expected( "',' or ']'" );
+    if (!readChar( ']')) {
+      throw expected("',' or ']'");
     }
     nesting --;
     return array;
   }
 
   private JsonValue readObject() throws IOException {
-	nesting ++;
     read();
-    MemberSet object = collectionFactory.createMemberSet(this);
-    if( object == null ) {
+    MemberSet object = collectionFactory.handleObjectStart(this);
+    nesting ++;
+    if (object == null && nesting > 1) {
       skipAll();
     } else {
       skipWhiteSpace();
-      if( readChar( '}' ) ) {
+      if (readChar('}')) {
         nesting --;
         return object;
       }
@@ -179,20 +179,20 @@ class JsonParser implements ParserContext {
         skipWhiteSpace();
         String name = this.name = readName();
         skipWhiteSpace();
-        if( !readChar( ':' ) ) {
-          throw expected( "':'" );
+        if (!readChar( ':')) {
+          throw expected("':'");
         }
         skipWhiteSpace();
         JsonValue value = readValue();
         this.name = name;
-        if( value != null ) {
-          object.addMember( name, value, this );
+        if (value != null && object != null) {
+          object.addMember(name, value, this);
         }
         skipWhiteSpace();
-      } while( readChar( ',' ) );
+      } while (readChar( ',' ));
     }
-    if( !readChar( '}' ) ) {
-      throw expected( "',' or '}'" );
+    if (!readChar('}')) {
+      throw expected("',' or '}'");
     }
     nesting --;
     return object;
