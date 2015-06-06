@@ -28,8 +28,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.eclipsesource.json.CollectionFactory.ElementReader;
-
 
 /**
  * Represents a JSON array, an ordered collection of JSON values.
@@ -62,7 +60,7 @@ import com.eclipsesource.json.CollectionFactory.ElementReader;
  * </p>
  */
 @SuppressWarnings("serial") // use default serial UID
-public class JsonArray extends ElementReader implements Iterable<JsonValue> {
+public class JsonArray extends CollectionFactory.ElementList implements Iterable<JsonValue> {
 
   private final List<JsonValue> values;
 
@@ -240,8 +238,8 @@ public class JsonArray extends ElementReader implements Iterable<JsonValue> {
   }
 
   @Override
-  protected void addElement( JsonValue value, ParserContext context ) {
-	add( value );
+  protected void addElement(JsonValue value, ParserContext context) {
+	add(value);
   }
 
   /**

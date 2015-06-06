@@ -27,7 +27,7 @@ import java.io.IOException;
  * Provides implementations for JSON array and object representations.
  * <p>
  * Implementations of this interface my choose to return custom implementations of {@code
- * ElementReader} or {@code MemeberReader} as opposed to {@link JsonArray} and {@code JsonObject}
+ * ElementList} or {@code MemeberReader} as opposed to {@link JsonArray} and {@code JsonObject}
  * respectively, depending on nesting level and/or field name. Providing a custom {@code
  * CollectionFactory} to {@link JsonValue#readFrom} allows clients to effectively use minimal-json
  * as a hybrid streaming API.
@@ -42,7 +42,7 @@ public interface CollectionFactory {
    * elements as a means to reduce memory footprint and increased performance.
    * </p>
    */
-  public abstract class ElementReader extends JsonValue {
+  public abstract class ElementList extends JsonValue {
 
 	/**
 	 * Called when an element of a JSON array has been parsed from the JSON stream.
@@ -70,7 +70,7 @@ public interface CollectionFactory {
    * elements as a means to reduce memory footprint and increased performance.
    * </p>
    */
-  public abstract class MemberReader extends JsonValue {
+  public abstract class MemberSet extends JsonValue {
 
 	/**
 	 * Called when a member of a JSON object has been parsed from the JSON stream.
@@ -95,10 +95,10 @@ public interface CollectionFactory {
   }
 
   /**
-   * Implementations must return a new {@code JSONArray} or a custom kind of {@code ElementReader},
+   * Implementations must return a new {@code JSONArray} or a custom kind of {@code ElementList},
    * or null for skipping the current array.
    * <p>
-   * A custom {@code ElementReader} can be useful for filtering, extracting from, or annotating the
+   * A custom {@code ElementList} can be useful for filtering, extracting from, or annotating the
    * streamed JSON array. Filtering or extracting from the stream may offer performance benefits
    * because not all elements of the JSON array need to be retained in memory in the form of {@code
    * JSONValue} objects. {@code context} provides access to the current parser state, including
@@ -113,21 +113,21 @@ public interface CollectionFactory {
    *
    * @param context
    *          logical and absolute parser state, for deciding what array representation to return
-   * @return implementation of {@code ElementReader} or null depending on nesting and/or field name
+   * @return implementation of {@code ElementList} or null depending on nesting and/or field name
    */
-  public ElementReader createElementReader(ParserContext context);
+  public ElementList createElementList(ParserContext context);
 
   /**
-   * Implementations must return a new {@code JSONObject} or a custom kind of {@code MemberReader},
+   * Implementations must return a new {@code JSONObject} or a custom kind of {@code MemberSet},
    * or null for skipping the current object.
    * <p>
-   * Factory interface method like {@link #createElementReader} but for object representations.
+   * Factory interface method like {@link #createElementList} but for object representations.
    * </p>
    *
    * @param context
    *          logical and absolute parser state, for deciding what object representation to return
-   * @return implementation of {@code MemberReader} or null depending on nesting and/or field name
+   * @return implementation of {@code MemberSet} or null depending on nesting and/or field name
    */
-  public MemberReader createMemberReader(ParserContext context);
+  public MemberSet createMemberSet(ParserContext context);
 
 }

@@ -25,9 +25,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import com.eclipsesource.json.CollectionFactory.ElementReader;
-import com.eclipsesource.json.CollectionFactory.MemberReader;
-
+import com.eclipsesource.json.CollectionFactory.ElementList;
+import com.eclipsesource.json.CollectionFactory.MemberSet;
 
 class JsonParser implements ParserContext {
 
@@ -57,24 +56,33 @@ class JsonParser implements ParserContext {
    *                       |  index           fill
    */
 
-  JsonParser( String string ) {
-    this( new StringReader( string ), null,
-          Math.max( MIN_BUFFER_SIZE, Math.min( DEFAULT_BUFFER_SIZE, string.length() ) ) );
+  private final static CollectionFactory defaultFactory = new CollectionFactory() {
+    public ElementList createElementList(ParserContext context) {
+      return new JsonArray();
+    }
+    public MemberSet createMemberSet(ParserContext context) {
+      return new JsonObject();
+    }
+  };
+
+  JsonParser(String string) {
+    this(new StringReader(string), defaultFactory,
+         Math.max(MIN_BUFFER_SIZE, Math.min(DEFAULT_BUFFER_SIZE, string.length())));
   }
 
-  JsonParser( Reader reader ) {
-    this( reader, null, DEFAULT_BUFFER_SIZE );
+  JsonParser(Reader reader) {
+    this(reader, defaultFactory, DEFAULT_BUFFER_SIZE);
   }
 
-  JsonParser( Reader reader, CollectionFactory factory ) {
-	this( reader, factory, DEFAULT_BUFFER_SIZE );
+  JsonParser(Reader reader, CollectionFactory factory) {
+	this(reader, factory, DEFAULT_BUFFER_SIZE);
   }
 
-  JsonParser( Reader reader, int buffersize) {
-    this( reader, null, buffersize );
+  JsonParser(Reader reader, int buffersize) {
+    this(reader, defaultFactory, buffersize);
   }
 
-  JsonParser( Reader reader, CollectionFactory factory, int buffersize) {
+  JsonParser(Reader reader, CollectionFactory factory, int buffersize) {
     this.reader = reader;
     buffer = new char[ buffersize ];
     collectionFactory = factory;
@@ -124,16 +132,12 @@ class JsonParser implements ParserContext {
     }
   }
 
-  private ElementReader readArray() throws IOException {
+  private JsonValue readArray() throws IOException {
 	nesting ++;
     read();
-    ElementReader array;
-    if( collectionFactory == null ) {
-      array = new JsonArray();
-    } else {
-      array = collectionFactory.createElementReader( this );
-      name = null;
-    }
+    ElementList array;
+    array = collectionFactory.createElementList( this );
+    name = null;
     if( array == null ) {
       skipAll();
     } else {
@@ -159,15 +163,10 @@ class JsonParser implements ParserContext {
     return array;
   }
 
-  private MemberReader readObject() throws IOException {
+  private JsonValue readObject() throws IOException {
 	nesting ++;
     read();
-    MemberReader object;
-    if( collectionFactory == null ) {
-      object = new JsonObject();
-    } else {
-      object = collectionFactory.createMemberReader( this );
-    }
+    MemberSet object = collectionFactory.createMemberSet(this);
     if( object == null ) {
       skipAll();
     } else {

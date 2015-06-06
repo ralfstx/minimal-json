@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.eclipsesource.json.CollectionFactory.MemberReader;
 import com.eclipsesource.json.JsonObject.Member;
 
 /**
@@ -70,7 +69,7 @@ import com.eclipsesource.json.JsonObject.Member;
  * </p>
  */
 @SuppressWarnings( "serial" ) // use default serial UID
-public class JsonObject extends MemberReader implements Iterable<Member> {
+public class JsonObject extends CollectionFactory.MemberSet implements Iterable<Member> {
 
   private final List<String> names;
   private final List<JsonValue> values;

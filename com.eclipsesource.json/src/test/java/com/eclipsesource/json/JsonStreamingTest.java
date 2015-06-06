@@ -31,13 +31,13 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.eclipsesource.json.CollectionFactory.ElementReader;
-import com.eclipsesource.json.CollectionFactory.MemberReader;
+import com.eclipsesource.json.CollectionFactory.ElementList;
+import com.eclipsesource.json.CollectionFactory.MemberSet;
 
 public class JsonStreamingTest {
 
   @SuppressWarnings("boxing")
-  private static class RouteList extends ElementReader {
+  private static class RouteList extends ElementList {
 	@Override
 	protected void addElement(JsonValue value, ParserContext context) {
 	  bus_routes.add(value.asObject().get("id").asInt());
@@ -48,13 +48,13 @@ public class JsonStreamingTest {
   @Test
   public void withNestedElementDistiller() throws IOException {
 	final CollectionFactory factory = new CollectionFactory() {
-      public ElementReader createElementReader(ParserContext context) {
+      public ElementList createElementList(ParserContext context) {
     	if (context.getNesting() == 1 && "routes".equals(context.getFieldName())) {
     	  return new RouteList();
     	}
 	    return new JsonArray();
       }
-      public MemberReader createMemberReader(ParserContext context) {
+      public MemberSet createMemberSet(ParserContext context) {
 	    return new JsonObject();
 	  }
 	};
@@ -71,7 +71,7 @@ public class JsonStreamingTest {
   public void withElementFilterByOverride() throws IOException {
 	StringReader reader = new StringReader("{\"all\":[1,2,3,4,5],\"odd\":[1,2,3,4,5]}");
 	final CollectionFactory factory = new CollectionFactory() {
-      public ElementReader createElementReader(ParserContext context) {
+      public ElementList createElementList(ParserContext context) {
     	if ("odd".equals(context.getFieldName())) {
     	  return new JsonArray() {
     		@Override
@@ -84,7 +84,7 @@ public class JsonStreamingTest {
     	}
 	    return new JsonArray();
       }
-	  public MemberReader createMemberReader(ParserContext context) {
+	  public MemberSet createMemberSet(ParserContext context) {
 	    return new JsonObject();
 	  }
 	};
@@ -135,9 +135,9 @@ public class JsonStreamingTest {
 	}
 	void addChild(JsonValue value, ParserContext context) {
 	  EditorContent entity = null;
-      if (value instanceof ElementReader) {
+      if (value instanceof ElementList) {
         entity = ((ArrayAnnotator) value).array;
-      } else if (value instanceof MemberReader) {
+      } else if (value instanceof MemberSet) {
         entity = ((ObjectAnnotator) value).object;
       } else {
         entity = new EditorContent();
@@ -166,7 +166,7 @@ public class JsonStreamingTest {
 	}
   }
 
-  private static class ArrayAnnotator extends ElementReader {
+  private static class ArrayAnnotator extends ElementList {
     final ComplexEditorContent array;
     ArrayAnnotator(int line, int column) {
 	  array = new ComplexEditorContent(EditorContent.ARRAY, new EditorPosition(line, column));
@@ -177,7 +177,7 @@ public class JsonStreamingTest {
     }
   }
 
-  private static class ObjectAnnotator extends MemberReader {
+  private static class ObjectAnnotator extends MemberSet {
     final ComplexEditorContent object;
     ObjectAnnotator(int line, int column) {
 	  object = new ComplexEditorContent(EditorContent.OBJECT, new EditorPosition(line, column));
@@ -190,10 +190,10 @@ public class JsonStreamingTest {
 
   private static ComplexEditorContent annotateContent(String content) throws IOException {
     final CollectionFactory factory = new CollectionFactory() {
-      public ElementReader createElementReader(ParserContext context) {
+      public ElementList createElementList(ParserContext context) {
         return new ArrayAnnotator(context.getLine(), context.getColumn());
   	  }
-      public MemberReader createMemberReader(ParserContext context) {
+      public MemberSet createMemberSet(ParserContext context) {
   	    return new ObjectAnnotator(context.getLine(), context.getColumn());
   	  }
     };
@@ -248,7 +248,7 @@ public class JsonStreamingTest {
 	  } catch ( IOException e ) { }
 	  idx = 0;
 	}
-	public ElementReader createElementReader( ParserContext context ) {
+	public ElementList createElementList( ParserContext context ) {
 	  return new JsonArray() {
 		@Override
 		protected void addElement( JsonValue value, ParserContext context ) {
@@ -259,7 +259,7 @@ public class JsonStreamingTest {
 		}
 	  };
 	}
-	public MemberReader createMemberReader( ParserContext context ) {
+	public MemberSet createMemberSet( ParserContext context ) {
       return new JsonObject() {
         @Override
         protected void addMember( String name, JsonValue value, ParserContext context ) {
@@ -304,10 +304,10 @@ public class JsonStreamingTest {
   @Test
   public void skipAll_isIdempotent() throws IOException {
     final CollectionFactory factory = new CollectionFactory() {
-      public ElementReader createElementReader( ParserContext context ) {
+      public ElementList createElementList( ParserContext context ) {
         return new JsonArray();
       }
-      public MemberReader createMemberReader( ParserContext context ) {
+      public MemberSet createMemberSet( ParserContext context ) {
     	return new JsonObject() {
 	      @Override
 	      protected void addMember( String name, JsonValue value, ParserContext context ) {
@@ -364,10 +364,10 @@ public class JsonStreamingTest {
   @Test
   public void skipByNullFromFactory() throws IOException {
     CollectionFactory factory = new CollectionFactory() {
-      public ElementReader createElementReader(ParserContext context) {
+      public ElementList createElementList(ParserContext context) {
         return "prev".equals(context.getFieldName()) ? null : new JsonArray();
       }
-      public MemberReader createMemberReader(ParserContext context) {
+      public MemberSet createMemberSet(ParserContext context) {
         return new JsonObject();
       }
     };
