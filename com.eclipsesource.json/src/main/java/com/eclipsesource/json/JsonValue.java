@@ -27,6 +27,8 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import com.eclipsesource.json.JsonParser.JsonHandler;
+
 
 /**
  * Represents a JSON value. This can be a JSON <strong>object</strong>, an <strong> array</strong>,
@@ -78,6 +80,59 @@ public abstract class JsonValue implements Serializable {
    */
   public static final JsonValue NULL = JsonLiteral.NULL;
 
+  static final JsonHandler JSON_HANDLER = new JsonValueHandler();
+
+  static class JsonValueHandler implements JsonHandler {
+
+    public Object handleNull(int begin) {
+      return JsonValue.NULL;
+    }
+
+    public Object handleTrue(int begin) {
+      return JsonValue.TRUE;
+    }
+
+    public Object handleFalse(int begin) {
+      return JsonValue.FALSE;
+    }
+
+    public Object handleString(int begin, int end, String string) {
+      return new JsonString(string);
+    }
+
+    public Object handleNumber(int begin, int end, String string) {
+      return new JsonNumber(string);
+    }
+
+    public Object handleArrayStart(int begin) {
+      return new JsonArray();
+    }
+
+    public void handleArrayElement(Object data, Object value) {
+      ((JsonArray)data).add((JsonValue)value);
+    }
+
+    public Object handleArrayEnd(int begin, int end, Object data) {
+      return data;
+    }
+
+    public Object handleObjectStart(int begin) {
+      return new JsonObject();
+    }
+
+    public void handleObjectName(int begin, int end, String name) {
+    }
+
+    public void handleObjectMember(Object data, String name, Object value) {
+      ((JsonObject)data).add(name, (JsonValue)value);
+    }
+
+    public Object handleObjectEnd(int begin, int end, Object data) {
+      return data;
+    }
+
+  }
+
   JsonValue() {
     // prevent subclasses outside of this package
   }
@@ -99,7 +154,7 @@ public abstract class JsonValue implements Serializable {
    *           if the input is not valid JSON
    */
   public static JsonValue readFrom(Reader reader) throws IOException {
-    return new JsonParser(reader).parse();
+    return (JsonValue)new JsonParser(reader).parse(new JsonValueHandler());
   }
 
   /**
@@ -113,7 +168,7 @@ public abstract class JsonValue implements Serializable {
    */
   public static JsonValue readFrom(String text) {
     try {
-      return new JsonParser(text).parse();
+      return (JsonValue)new JsonParser(text).parse(new JsonValueHandler());
     } catch (IOException exception) {
       // JsonParser does not throw IOException for String
       throw new RuntimeException(exception);

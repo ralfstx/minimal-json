@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,133 @@ class JsonParser {
   private StringBuilder captureBuffer;
   private int captureStart;
 
+  /**
+   * <strong>Experimental:</strong>
+   * <p>
+   * Handles all parser events while parsing a JSON document. Methods can return arbitrary values to
+   * be used by the handler for tracking arrays and objects.
+   * </p>
+   */
+  static interface JsonHandler {
+
+    /**
+     * Handle a JSON <code>null</code> value.
+     * @param begin the character index of the start position
+     * @return An object to pass to the caller, or <code>null</code>
+     */
+    Object handleNull(int begin);
+
+    /**
+     * Handle a JSON <code>true</code> value.
+     * @param begin the character index of the start position
+     * @return An object to pass to the caller, or <code>null</code>
+     */
+    Object handleTrue(int begin);
+
+    /**
+     * Handle a JSON <code>false</code> value.
+     * @param begin the character index of the start position
+     * @return An object to pass to the caller, or <code>null</code>
+     */
+    Object handleFalse(int begin);
+
+    /**
+     * Handle a JSON string.
+     * @param begin the character index of the start position
+     * @param end the character index that follows the string
+     * @param string the string that has been read
+     * @return An object to pass to the caller, or <code>null</code>
+     */
+    Object handleString(int begin, int end, String string);
+
+    /**
+     * Handle a JSON number.
+     * @param begin the character index of the start position
+     * @param end the character index that follows the number
+     * @param string the string that represents a JSON number
+     * @return An object to pass to the caller, or <code>null</code>
+     */
+    Object handleNumber(int begin, int end, String string);
+
+    /**
+     * Handle the start of an JSON array. This method can return an object for tracking this array.
+     * This object will be passed to the next call to handleArrayElement or handleArrayEnd.
+     * @param begin
+     *          the character index of the array's opening bracket
+     * @return An object to be passed to the next handleArrayElement or handleArrayEnd call
+     */
+    Object handleArrayStart(int begin);
+
+    /**
+     * Handle an element of a JSON array. This method is called after the value has been parsed. It
+     * can be used to add the parsed value to the tracking object.
+     *
+     * @param arrayData
+     *          the object returned by the previous handleArrayStart method
+     * @param valueData
+     *          the object returned by the handle method that processed the element value
+     */
+    void handleArrayElement(Object arrayData, Object valueData);
+
+    /**
+     * Handle the end of a JSON array.
+     * @param begin the character index of opening bracket
+     * @param end the character index that follows the closing bracket
+     * @param arrayData
+     *          the object returned by the previous handleArrayStart method
+     * @return An object to pass to the caller, or <code>null</code>
+     */
+    Object handleArrayEnd(int begin, int end, Object arrayData);
+
+    /**
+     * Handle the start of an JSON object. This method can return an object used to track this
+     * object. This object will be passed to the next call to handleObjectMember or handleObjectEnd.
+     *
+     * @param begin
+     *          the character index of the array's opening bracket
+     * @return An object to be passed to the next handleObjectMember or handleObjectEnd call
+     */
+    Object handleObjectStart(int begin);
+
+    /**
+     * Handle the name of a new member of a JSON object. This method is called after the name has
+     * been parsed.
+     *
+     * @param begin the first character index of the member name
+     * @param end the character index that follows the member name
+     * @param name
+     *          the name of this member
+     */
+    void handleObjectName(int begin, int end, String name);
+
+    /**
+     * Handle a member of a JSON object. This method is called after the value has been parsed. It
+     * can be used to add the parsed value to the tracking object.
+     *
+     * @param objectData
+     *          the object returned by the previous handleObjectStart or handleObjectElement method
+     * @param name
+     *          the member name
+     * @param valueData
+     *          the object returned by the handle method that processed the element value
+     */
+    void handleObjectMember(Object objectData, String name, Object valueData);
+
+    /**
+     * Handle the end of a JSON object.
+     *
+     * @param begin
+     *          the character index of opening brace
+     * @param end
+     *          the character index that follows the closing brace
+     * @param objectData
+     *          the object returned by the previous handleObjectStart or handlerObjectMember method
+     * @return An object to pass to the caller, or <code>null</code>
+     */
+    Object handleObjectEnd(int begin, int end, Object objectData);
+
+  }
+
   /*
    * |                      bufferOffset
    *                        v
@@ -67,10 +194,10 @@ class JsonParser {
     captureStart = -1;
   }
 
-  JsonValue parse() throws IOException {
+  Object parse(JsonHandler handler) throws IOException {
     read();
     skipWhiteSpace();
-    JsonValue result = readValue();
+    Object result = readValue(handler);
     skipWhiteSpace();
     if (!isEndOfText()) {
       throw error("Unexpected character");
@@ -78,20 +205,20 @@ class JsonParser {
     return result;
   }
 
-  private JsonValue readValue() throws IOException {
+  private Object readValue(JsonHandler handler) throws IOException {
     switch (current) {
       case 'n':
-        return readNull();
+        return readNull(handler);
       case 't':
-        return readTrue();
+        return readTrue(handler);
       case 'f':
-        return readFalse();
+        return readFalse(handler);
       case '"':
-        return readString();
+        return readString(handler);
       case '[':
-        return readArray();
+        return readArray(handler);
       case '{':
-        return readObject();
+        return readObject(handler);
       case '-':
       case '0':
       case '1':
@@ -103,84 +230,94 @@ class JsonParser {
       case '7':
       case '8':
       case '9':
-        return readNumber();
+        return readNumber(handler);
       default:
         throw expected("value");
     }
   }
 
-  private JsonArray readArray() throws IOException {
+  private Object readArray(JsonHandler handler) throws IOException {
+    int begin = getOffset();
     read();
-    JsonArray array = new JsonArray();
+    Object data = handler.handleArrayStart(begin);
     skipWhiteSpace();
     if (readChar(']')) {
-      return array;
+      return handler.handleArrayEnd(begin, begin, data);
     }
     do {
       skipWhiteSpace();
-      array.add(readValue());
+      Object value = readValue(handler);
+      handler.handleArrayElement(data, value);
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar(']')) {
       throw expected("',' or ']'");
     }
-    return array;
+    return handler.handleArrayEnd(begin, getOffset(), data);
   }
 
-  private JsonObject readObject() throws IOException {
+  private Object readObject(JsonHandler handler) throws IOException {
+    int begin = getOffset();
     read();
-    JsonObject object = new JsonObject();
+    Object data = handler.handleObjectStart(begin);
     skipWhiteSpace();
     if (readChar('}')) {
-      return object;
+      return handler.handleObjectEnd(begin, getOffset(), data);
     }
     do {
       skipWhiteSpace();
-      String name = readName();
+      String name = readName(handler);
       skipWhiteSpace();
       if (!readChar(':')) {
         throw expected("':'");
       }
       skipWhiteSpace();
-      object.add(name, readValue());
+      Object value = readValue(handler);
+      handler.handleObjectMember(data, name, value);
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar('}')) {
       throw expected("',' or '}'");
     }
-    return object;
+    return handler.handleObjectEnd(begin, getOffset(), data);
   }
 
-  private String readName() throws IOException {
+  private String readName(JsonHandler handler) throws IOException {
     if (current != '"') {
       throw expected("name");
     }
-    return readStringInternal();
+    int begin = getOffset();
+    String name = readStringInternal();
+    handler.handleObjectName(begin, getOffset(), name);
+    return name;
   }
 
-  private JsonValue readNull() throws IOException {
+  private Object readNull(JsonHandler handler) throws IOException {
+    int begin = getOffset();
     read();
     readRequiredChar('u');
     readRequiredChar('l');
     readRequiredChar('l');
-    return JsonValue.NULL;
+    return handler.handleNull(begin);
   }
 
-  private JsonValue readTrue() throws IOException {
+  private Object readTrue(JsonHandler handler) throws IOException {
+    int begin = getOffset();
     read();
     readRequiredChar('r');
     readRequiredChar('u');
     readRequiredChar('e');
-    return JsonValue.TRUE;
+    return handler.handleTrue(begin);
   }
 
-  private JsonValue readFalse() throws IOException {
+  private Object readFalse(JsonHandler handler) throws IOException {
+    int begin = getOffset();
     read();
     readRequiredChar('a');
     readRequiredChar('l');
     readRequiredChar('s');
     readRequiredChar('e');
-    return JsonValue.FALSE;
+    return handler.handleFalse(begin);
   }
 
   private void readRequiredChar(char ch) throws IOException {
@@ -189,8 +326,10 @@ class JsonParser {
     }
   }
 
-  private JsonValue readString() throws IOException {
-    return new JsonString(readStringInternal());
+  private Object readString(JsonHandler handler) throws IOException {
+    int begin = getOffset();
+    String string = readStringInternal();
+    return handler.handleString(begin, getOffset(), string);
   }
 
   private String readStringInternal() throws IOException {
@@ -252,7 +391,8 @@ class JsonParser {
     read();
   }
 
-  private JsonValue readNumber() throws IOException {
+  private Object readNumber(JsonHandler handler) throws IOException {
+    int begin = getOffset();
     startCapture();
     readChar('-');
     int firstDigit = current;
@@ -265,7 +405,8 @@ class JsonParser {
     }
     readFraction();
     readExponent();
-    return new JsonNumber(endCapture());
+    String string = endCapture();
+    return handler.handleNumber(begin, getOffset(), string);
   }
 
   private boolean readFraction() throws IOException {
@@ -395,6 +536,11 @@ class JsonParser {
 
   private boolean isEndOfText() {
     return current == -1;
+  }
+
+  private int getOffset() {
+    int absIndex = bufferOffset + index;
+    return isEndOfText() ? absIndex : absIndex - 1;
   }
 
 }

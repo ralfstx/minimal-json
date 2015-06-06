@@ -21,6 +21,7 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import static com.eclipsesource.json.JsonValue.JSON_HANDLER;
 import static com.eclipsesource.json.TestUtil.assertException;
 import static org.junit.Assert.*;
 
@@ -43,7 +44,7 @@ public class JsonParser_Test {
     ParseException exception = assertException(ParseException.class, new Runnable() {
       public void run() {
         try {
-          new JsonParser(new StringReader("")).parse();
+          new JsonParser(new StringReader("")).parse(JSON_HANDLER);
         } catch (IOException exception) {
           throw new RuntimeException(exception);
         }
@@ -102,7 +103,7 @@ public class JsonParser_Test {
   public void parse_handlesInputsThatExceedBufferSize() throws IOException {
     String input = "[ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47 ]";
 
-    JsonValue value = new JsonParser(new StringReader(input), 3).parse();
+    JsonValue value = (JsonValue)new JsonParser(new StringReader(input), 3).parse(JSON_HANDLER);
 
     assertEquals("[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47]", value.toString());
   }
@@ -111,7 +112,7 @@ public class JsonParser_Test {
   public void parse_handlesStringsThatExceedBufferSize() throws IOException {
     String input = "[ \"lorem ipsum dolor sit amet\" ]";
 
-    JsonValue value = new JsonParser(new StringReader(input), 3).parse();
+    JsonValue value = (JsonValue)new JsonParser(new StringReader(input), 3).parse(JSON_HANDLER);
 
     assertEquals("[\"lorem ipsum dolor sit amet\"]", value.toString());
   }
@@ -120,7 +121,7 @@ public class JsonParser_Test {
   public void parse_handlesNumbersThatExceedBufferSize() throws IOException {
     String input = "[ 3.141592653589 ]";
 
-    JsonValue value = new JsonParser(new StringReader(input), 3).parse();
+    JsonValue value = (JsonValue)new JsonParser(new StringReader(input), 3).parse(JSON_HANDLER);
 
     assertEquals("[3.141592653589]", value.toString());
   }
@@ -132,7 +133,7 @@ public class JsonParser_Test {
     ParseException exception = assertException(ParseException.class, new Runnable() {
       public void run() {
         try {
-          new JsonParser(new StringReader(input), 3).parse();
+          new JsonParser(new StringReader(input), 3).parse(JSON_HANDLER);
         } catch (IOException e) {
         }
       }
@@ -474,7 +475,7 @@ public class JsonParser_Test {
 
   private static JsonValue parse(String json) {
     try {
-      return new JsonParser(json).parse();
+      return (JsonValue)new JsonParser(json).parse(JSON_HANDLER);
     } catch (IOException exception) {
       throw new RuntimeException(exception);
     }
