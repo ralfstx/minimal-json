@@ -120,14 +120,13 @@ class JsonParser implements ParserContext {
   }
 
   private JsonValue readArray() throws IOException {
-    int begin = getOffset();
     read();
     ElementList array = handler.handleArrayStart(this);
     nesting ++;
     name = null;
     skipWhiteSpace();
     if (readChar( ']')) {
-      array = handler.handleArrayEnd(begin, begin, array);
+      array = handler.handleArrayEnd(array, this);
       nesting --;
       return array;
     }
@@ -144,26 +143,24 @@ class JsonParser implements ParserContext {
       throw expected("',' or ']'");
     }
     nesting --;
-    return handler.handleArrayEnd(begin, begin, array);
+    return handler.handleArrayEnd(array, this);
   }
 
   private JsonValue readObject() throws IOException {
-    int begin = getOffset();
     read();
     MemberSet object = handler.handleObjectStart(this);
     nesting ++;
     skipWhiteSpace();
     if (readChar('}')) {
-      object = handler.handleObjectEnd(begin, getOffset(), object);
+      object = handler.handleObjectEnd(object, this);
       nesting --;
       return object;
     }
     do {
       skipWhiteSpace();
-      String name = this.name = readName();
-      handler.handleMemberName(begin, getOffset(), name);
+      String name = readName();
       skipWhiteSpace();
-      if (!readChar( ':')) {
+      if (!readChar(':')) {
         throw expected("':'");
       }
       skipWhiteSpace();
@@ -173,12 +170,12 @@ class JsonParser implements ParserContext {
         object.addMember(name, value, this);
       }
       skipWhiteSpace();
-    } while (readChar( ',' ));
+    } while (readChar(','));
     if (!readChar('}')) {
       throw expected("',' or '}'");
     }
     nesting --;
-    return handler.handleObjectEnd(begin, getOffset(), object);
+    return handler.handleObjectEnd(object, this);
   }
 
   private String readName() throws IOException {
@@ -186,37 +183,34 @@ class JsonParser implements ParserContext {
       throw expected("name");
     }
     int begin = getOffset();
-    String name = readStringInternal();
-    handler.handleMemberName(begin, getOffset(), name);
+    name = readStringInternal();
+    handler.handleMemberName(name, begin, this);
     return name;
   }
 
   private JsonValue readNull() throws IOException {
-    int begin = getOffset();
     read();
     readRequiredChar('u');
     readRequiredChar('l');
     readRequiredChar('l');
-    return handler.handleNull(begin);
+    return handler.handleNull(this);
   }
 
   private JsonValue readTrue() throws IOException {
-    int begin = getOffset();
     read();
     readRequiredChar('r');
     readRequiredChar('u');
     readRequiredChar('e');
-    return handler.handleTrue(begin);
+    return handler.handleTrue(this);
   }
 
   private JsonValue readFalse() throws IOException {
-    int begin = getOffset();
     read();
     readRequiredChar('a');
     readRequiredChar('l');
     readRequiredChar('s');
     readRequiredChar('e');
-    return handler.handleFalse(begin);
+    return handler.handleFalse(this);
   }
 
   private void readRequiredChar(char ch) throws IOException {
@@ -228,7 +222,7 @@ class JsonParser implements ParserContext {
   private JsonValue readString() throws IOException {
     int begin = getOffset();
     String string = readStringInternal();
-    return handler.handleString(begin, getOffset(), string);
+    return handler.handleString(string, begin, this);
   }
 
   private String readStringInternal() throws IOException {
@@ -305,7 +299,7 @@ class JsonParser implements ParserContext {
     readFraction();
     readExponent();
     String string = endCapture();
-    return handler.handleNumber(begin, getOffset(), string);
+    return handler.handleNumber(string, begin, this);
   }
 
   private boolean readFraction() throws IOException {
@@ -413,43 +407,38 @@ class JsonParser implements ParserContext {
   }
 
   private void skipInner() throws IOException {
-    boolean is_literal = false;
-	int n_obj = 0, n_arr = 0;
+    boolean is_quoted = false;
+	int n_level = 0;
 	do {
 	  read();
-	  switch ( current ) {
+	  switch (current) {
 	  case '{':
-	    n_obj ++;
-	    break;
-	  case '[':
-	    n_arr ++;
+      case '[':
+	    n_level ++;
 	    break;
 	  case '}':
-	    -- n_obj;
-		break;
       case ']':
-		-- n_arr;
+	    n_level --;
 		break;
       case '"':
-	    is_literal = !is_literal;
+	    is_quoted = !is_quoted;
 	    break;
 	  case '\\':
 	    read();
 	    break;
 	  default:
 	  }
-	} while( is_literal || n_obj > 0 || n_arr > 0 ||
-        current != ',' && current != ']' && current != '}' );
+	} while (is_quoted || n_level > 0 || current != ',' && current != ']' && current != '}');
   }
 
-  private int skip( int n_skip ) throws IOException {
+  private int skip(int n_skip) throws IOException {
 	int n_skipped = 0;
     skipWhiteSpace();
-    if( current != ',' && current != ']' && current != '}' ) {
+    if (current != ',' && current != ']' && current != '}') {
       skipInner();
       n_skipped = 1;
     }
-    while( current == ',' && n_skipped++ != n_skip ) {
+    while (current == ',' && n_skipped++ != n_skip) {
       skipWhiteSpace();
       skipInner();
     }
@@ -457,21 +446,21 @@ class JsonParser implements ParserContext {
   }
 
   public int skipAll() throws IOException {
-    return skip( -1 );
+    return skip(-1);
   }
 
-  public int skipNext( int n ) throws IOException {
-	if( name != null ) {
-	  throw new IllegalStateException( "Attempted to skip element inside object" );
+  public int skipNext(int n) throws IOException {
+	if (name != null) {
+	  throw new IllegalStateException("Attempted to skip element inside object");
 	}
-	if ( n < 1 ) {
-      throw new IllegalArgumentException( "Number of elements to skip must be greater than zero " );
+	if (n < 1) {
+      throw new IllegalArgumentException("Number of elements to skip must be greater than zero");
 	}
-	return skip( n );
+	return skip(n);
   }
 
   public boolean skipNext() throws IOException {
-	return skipNext( 1 ) == 1;
+	return skipNext(1) == 1;
   }
 
   public int getNesting() {
@@ -492,11 +481,11 @@ class JsonParser implements ParserContext {
   }
 
   public int getColumn() {
-	return bufferOffset + index - lineOffset - 1;
+    return bufferOffset + index - lineOffset - 1;
   }
 
-  private ParseException error( String message ) {
-    return new ParseException( message, getOffset(), line, getColumn() );
+  private ParseException error(String message) {
+    return new ParseException(message, getOffset(), line, getColumn());
   }
 
   private boolean isWhiteSpace() {

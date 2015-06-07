@@ -93,45 +93,49 @@ interface JsonHandler {
 
   /**
    * Handle a JSON <code>null</code> value.
+   * @param context
    * @param begin the character index of the start position
    * @return An object to pass to the caller, or <code>null</code>
    */
-  JsonValue handleNull(int begin);
+  JsonValue handleNull(ParserContext context);
 
   /**
    * Handle a JSON <code>true</code> value.
+   * @param context
    * @param begin the character index of the start position
    * @return An object to pass to the caller, or <code>null</code>
    */
-  JsonValue handleTrue(int begin);
+  JsonValue handleTrue(ParserContext context);
 
   /**
    * Handle a JSON <code>false</code> value.
+   * @param context
    * @param begin the character index of the start position
    * @return An object to pass to the caller, or <code>null</code>
    */
-  JsonValue handleFalse(int begin);
+  JsonValue handleFalse(ParserContext context);
 
   /**
    * Handle a JSON string.
    * @param begin the character index of the start position
    * @param end the character index that follows the string
    * @param string the string that has been read
+   * @param context
    * @return An object to pass to the caller, or <code>null</code>
    */
-  JsonValue handleString(int begin, int end, String string);
+  JsonValue handleString(String string, int begin, ParserContext context);
 
   /**
    * Handle a JSON number.
+   * @param number the string that represents a JSON number
    * @param begin the character index of the start position
-   * @param end the character index that follows the number
-   * @param string the string that represents a JSON number
+   * @param context
    * @return An object to pass to the caller, or <code>null</code>
    */
-  JsonValue handleNumber(int begin, int end, String string);
+  JsonValue handleNumber(String number, int begin, ParserContext context);
 
   /**
-   * Handle the start of an JSON array. This method can return an object for tracking this array.
+   * Handle the start of a JSON array. This method can return an object for tracking this array.
    * This object will be passed to the next call to handleArrayElement or handleArrayEnd.
    * @param context
    *          the character index of the array's opening bracket
@@ -145,12 +149,13 @@ interface JsonHandler {
    * @param end the character index that follows the closing bracket
    * @param array
    *          the object returned by the previous handleArrayStart method
+   * @param context
    * @return An object to pass to the caller, or <code>null</code>
    */
-  JsonHandler.ElementList handleArrayEnd(int begin, int end, JsonHandler.ElementList array);
+  JsonHandler.ElementList handleArrayEnd(JsonHandler.ElementList array, ParserContext context);
 
   /**
-   * Handle the start of an JSON object. This method can return an object used to track this
+   * Handle the start of a JSON object. This method can return an object used to track this
    * object. This object will be passed to the next call to handleObjectMember or handleObjectEnd.
    *
    * @param context
@@ -163,12 +168,12 @@ interface JsonHandler {
    * Handle the name of a new member of a JSON object. This method is called after the name has
    * been parsed.
    *
-   * @param begin the first character index of the member name
-   * @param end the character index that follows the member name
    * @param name
    *          the name of this member
+   * @param begin the first character index of the member name
+   * @param context
    */
-  void handleMemberName(int begin, int end, String name);
+  void handleMemberName(String name, int begin, ParserContext context);
 
   /**
    * Handle the end of a JSON object.
@@ -177,10 +182,11 @@ interface JsonHandler {
    *          the character index of opening brace
    * @param end
    *          the character index that follows the closing brace
-   * @param objectData
+   * @param object
    *          the object returned by the previous handleObjectStart or handlerObjectMember method
+   * @param context
    * @return An object to pass to the caller, or <code>null</code>
    */
-  JsonHandler.MemberSet handleObjectEnd(int begin, int end, JsonHandler.MemberSet objectData);
+  JsonHandler.MemberSet handleObjectEnd(JsonHandler.MemberSet object, ParserContext context);
 
 }

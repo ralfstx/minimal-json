@@ -39,61 +39,60 @@ public class ParserHandlerExample {
   @SuppressWarnings("boxing")
   static class LoggingParserHandler implements JsonHandler {
 
-    public JsonValue handleNull(int begin) {
-      log(begin, "null");
+    Stack<Integer> start = new Stack<Integer>();
+
+    public JsonValue handleNull(ParserContext context) {
+      log(context.getOffset() - 4, "null");
       return null;
     }
 
-    public JsonValue handleTrue(int begin) {
-      log(begin, "true");
+    public JsonValue handleTrue(ParserContext context) {
+      log(context.getOffset() - 4, "true");
       return null;
     }
 
-    public JsonValue handleFalse(int begin) {
-      log(begin, "false");
+    public JsonValue handleFalse(ParserContext context) {
+      log(context.getOffset() - 4, "false");
       return null;
     }
 
-    public JsonValue handleString(int begin, int end, String string) {
-      log(begin, "string", end, string);
+    public JsonValue handleString(String string, int begin, ParserContext context) {
+      log(begin, "string", context.getOffset(), string);
       return null;
     }
 
-    public JsonValue handleNumber(int begin, int end, String string) {
-      log(begin, "number", end, string);
+    public JsonValue handleNumber(String number, int begin, ParserContext context) {
+      log(begin, "number", context.getOffset(), number);
       return null;
     }
 
     public ElementList handleArrayStart(ParserContext context) {
-      log(context.getOffset(), "array start");
+      int begin = context.getOffset();
+      start.push(begin);
+      log(begin, "array start");
       return null;
     }
 
-    public ElementList handleArrayEnd(int begin, int end, ElementList data) {
-      log(begin, end, "array end");
+    public ElementList handleArrayEnd(ElementList array, ParserContext context) {
+      log(start.pop(), context.getOffset(), "array end");
       return null;
-    }
-
-    public void handleArrayElement(ElementList array, JsonValue value, ParserContext context) {
     }
 
     public MemberSet handleObjectStart(ParserContext context) {
-      log(context.getOffset(), "object start");
+      int begin = context.getOffset();
+      start.push(begin);
+      log(begin, "object start");
       return null;
     }
 
-    public void handleMemberName(int begin, int end, String name) {
-      log(begin, "object name", name, end);
+    public void handleMemberName(String name, int begin, ParserContext context) {
+      log(begin, "object name", name, context.getOffset());
     }
 
-    public void handleMemberValue(MemberSet object, String name, JsonValue value, ParserContext context) {
-    }
-
-    public MemberSet handleObjectEnd(int begin, int end, MemberSet object) {
-      log(begin, end, "object end");
+    public MemberSet handleObjectEnd(MemberSet object, ParserContext context) {
+      log(start.pop(), context.getOffset(), "object end");
       return null;
     }
-
   }
 
   /**
@@ -104,9 +103,8 @@ public class ParserHandlerExample {
 
     Stack<Object> stack = new Stack();
     Object parent = null;
-    String name = null;
 
-    private Object addInner(Object value) {
+    private Object addInner(String name, Object value) {
       if (name == null) {
         ((ArrayList) parent).add(value);
       } else {
@@ -115,27 +113,27 @@ public class ParserHandlerExample {
       return value;
     }
 
-    public JsonValue handleNull(int begin) {
+    public JsonValue handleNull(ParserContext context) {
       return null;
     }
 
-    public JsonValue handleTrue(int begin) {
-      addInner(Boolean.TRUE);
+    public JsonValue handleTrue(ParserContext context) {
+      addInner(context.getFieldName(), Boolean.TRUE);
       return null;
     }
 
-    public JsonValue handleFalse(int begin) {
-      addInner(Boolean.FALSE);
+    public JsonValue handleFalse(ParserContext context) {
+      addInner(context.getFieldName(), Boolean.FALSE);
       return null;
     }
 
-    public JsonValue handleString(int begin, int end, String string) {
-      addInner(string);
+    public JsonValue handleString(String string, int begin, ParserContext context) {
+      addInner(context.getFieldName(), string);
       return null;
     }
 
-    public JsonValue handleNumber(int begin, int end, String string) {
-      addInner(new BigDecimal(string));
+    public JsonValue handleNumber(String number, int begin, ParserContext context) {
+      addInner(context.getFieldName(), new BigDecimal(number));
       return null;
     }
 
@@ -143,38 +141,31 @@ public class ParserHandlerExample {
       if (parent == null) {
         parent = new ArrayList();
       } else {
-        stack.push(parent);
-        parent = addInner(new ArrayList());
+        parent = addInner(context.getFieldName(), new ArrayList());
       }
+      stack.push(parent);
       return null;
     }
 
-    public ElementList handleArrayEnd(int begin, int end, ElementList array) {
+    public ElementList handleArrayEnd(ElementList array, ParserContext context) {
       stack.pop();
       return array;
-    }
-
-    public void handleArrayElement(ElementList array, JsonValue value, ParserContext context) throws IOException {
     }
 
     public MemberSet handleObjectStart(ParserContext context) {
       if (parent == null) {
         parent = new HashMap();
       } else {
-        stack.push(parent);
-        parent = addInner(new HashMap());
+        parent = addInner(context.getFieldName(), new HashMap());
       }
+      stack.push(parent);
       return null;
     }
 
-    public void handleMemberName(int begin, int end, String name) {
-      this.name = name;
+    public void handleMemberName(String name, int begin, ParserContext context) {
     }
 
-    public void handleMemberValue(MemberSet object, String name, JsonValue value, ParserContext context) throws IOException {
-    }
-
-    public MemberSet handleObjectEnd(int begin, int end, MemberSet object) {
+    public MemberSet handleObjectEnd(MemberSet object, ParserContext context) {
       stack.pop();
       return object;
     }

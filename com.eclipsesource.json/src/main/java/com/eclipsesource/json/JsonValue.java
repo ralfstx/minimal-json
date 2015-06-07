@@ -82,31 +82,31 @@ public abstract class JsonValue implements Serializable {
 
   static class DefaultJsonHandler implements JsonHandler {
 
-    public JsonValue handleNull(int begin) {
+    public JsonValue handleNull(ParserContext context) {
       return JsonValue.NULL;
     }
 
-    public JsonValue handleTrue(int begin) {
+    public JsonValue handleTrue(ParserContext context) {
       return JsonValue.TRUE;
     }
 
-    public JsonValue handleFalse(int begin) {
+    public JsonValue handleFalse(ParserContext context) {
       return JsonValue.FALSE;
     }
 
-    public JsonValue handleString(int begin, int end, String string) {
+    public JsonValue handleString(String string, int begin, ParserContext context) {
       return new JsonString(string);
     }
 
-    public JsonValue handleNumber(int begin, int end, String string) {
-      return new JsonNumber(string);
+    public JsonValue handleNumber(String number, int begin, ParserContext context) {
+      return new JsonNumber(number);
     }
 
     public ElementList handleArrayStart(ParserContext context) {
       return new JsonArray();
     }
 
-    public ElementList handleArrayEnd(int begin, int end, ElementList array) {
+    public ElementList handleArrayEnd(ElementList array, ParserContext context) {
       return array;
     }
 
@@ -114,10 +114,10 @@ public abstract class JsonValue implements Serializable {
       return new JsonObject();
     }
 
-    public void handleMemberName(int begin, int end, String name) {
+    public void handleMemberName(String name, int begin, ParserContext context) {
     }
 
-    public MemberSet handleObjectEnd(int begin, int end, MemberSet object) {
+    public MemberSet handleObjectEnd(MemberSet object, ParserContext context) {
       return object;
     }
   }
