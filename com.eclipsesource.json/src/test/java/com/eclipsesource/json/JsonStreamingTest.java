@@ -28,11 +28,11 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import org.junit.Test;
 
 import com.eclipsesource.json.JsonHandler.ElementList;
-import com.eclipsesource.json.JsonHandler.MemberSet;
 
 public class JsonStreamingTest {
 
@@ -113,52 +113,20 @@ public class JsonStreamingTest {
       }
       return false;
     }
-	boolean equals(EditorPosition other) {
-      return other.line == line && other.column == column;
-    }
   }
 
   private static class EditorContent {
-	final static int ATOMIC = 0, ARRAY = 1, OBJECT = 2;
-    int type = ATOMIC;
-    EditorPosition last;
-    EditorContent click(EditorPosition pos) {
-      if (pos.lessThan(last) || pos.equals(last)) {
-    	return this;
-      }
-      return null;
-    }
-  }
-
-  private static class ComplexEditorContent extends EditorContent {
-    final EditorPosition first;
 	final ArrayList<EditorContent> children = new ArrayList<EditorContent>();
-	ComplexEditorContent(int type, EditorPosition first) {
+    final static int ATOMIC = 0, ARRAY = 1, OBJECT = 2, NAME = 3;
+    final int type;
+    EditorPosition first, last;
+	EditorContent(int type, EditorPosition first) {
 	  this.type = type;
 	  this.first = first;
 	}
-	void addChild(JsonValue value, ParserContext context) {
-	  EditorContent entity = null;
-      if (value instanceof ElementList) {
-        entity = ((ArrayAnnotator) value).array;
-      } else if (value instanceof MemberSet) {
-        entity = ((ObjectAnnotator) value).object;
-      } else {
-        entity = new EditorContent();
-      }
-      entity.last = new EditorPosition(context.getLine(), context.getColumn());
-      if (last == null || last.lessThan(entity.last)) {
-        last = entity.last;
-      }
-      children.add(entity);
-	}
-	@Override
 	EditorContent click(EditorPosition pos) {
 	  if (pos.lessThan(first) || last.lessThan(pos)) {
 	    return null;
-	  }
-	  if (pos.equals(first)) {
-        return this;
 	  }
 	  for (EditorContent child : children) {
         EditorContent content = child.click(pos);
@@ -170,47 +138,69 @@ public class JsonStreamingTest {
 	}
   }
 
-  private static class ArrayAnnotator extends ElementList {
-    final ComplexEditorContent array;
-    ArrayAnnotator(int line, int column) {
-	  array = new ComplexEditorContent(EditorContent.ARRAY, new EditorPosition(line, column));
+  static class JsonAnnotator implements JsonHandler {
+    Stack<EditorContent> stack = new Stack<EditorContent>();
+    EditorContent parent = null;
+    void addAtomicChild(int type, ParserContext context, int length) {
+      EditorPosition last = new EditorPosition(context.getLine(), context.getColumn());
+      EditorPosition first = new EditorPosition(last.line, last.column - length + 1);
+      EditorContent content = new EditorContent(type, first);
+      content.last = last;
+      parent.children.add(content);
     }
-    @Override
-    final protected void addElement(JsonValue value, ParserContext context) {
-      array.addChild(value, context);
+    void addComplexChild(int type, ParserContext context) {
+      EditorPosition first = new EditorPosition(context.getLine(), context.getColumn());
+      EditorContent content = new EditorContent(type, first);
+      if (parent != null) {
+        parent.children.add(content);
+        stack.push(parent);
+      }
+      parent = content;
+    }
+    void endCollection(ParserContext context) {
+      parent.last = new EditorPosition(context.getLine(), context.getColumn());
+      if (stack.size() > 0) {
+        parent = stack.pop();
+      }
+    }
+    public JsonValue handleLiteral(JsonValue literal, ParserContext context) {
+      addAtomicChild(EditorContent.ATOMIC, context, 4);
+      return null;
+    }
+    public JsonValue handleString(String string, int begin, ParserContext context) {
+      addAtomicChild(EditorContent.ATOMIC, context, string.length());
+      return null;
+    }
+    public JsonValue handleNumber(String number, int begin, ParserContext context) {
+      addAtomicChild(EditorContent.ATOMIC, context, number.length());
+      return null;
+    }
+    public ElementList handleArrayStart(ParserContext context) {
+      addComplexChild(EditorContent.ARRAY, context);
+      return null;
+    }
+    public ElementList handleArrayEnd(ElementList array, ParserContext context) {
+      endCollection(context);
+      return null;
+    }
+    public MemberSet handleObjectStart(ParserContext context) {
+      addComplexChild(EditorContent.OBJECT, context);
+      return null;
+    }
+    public void handleMemberName(String name, int begin, ParserContext context) {
+      addAtomicChild(EditorContent.NAME, context, name.length() + 2);
+    }
+    public MemberSet handleObjectEnd(MemberSet object, ParserContext context) {
+      endCollection(context);
+      return null;
     }
   }
 
-  private static class ObjectAnnotator extends MemberSet {
-    final ComplexEditorContent object;
-    ObjectAnnotator(int line, int column) {
-	  object = new ComplexEditorContent(EditorContent.OBJECT, new EditorPosition(line, column));
-    }
-    @Override
-    final protected void addMember(String name, JsonValue value, ParserContext context) {
-      object.addChild(value, context);
-    }
-  }
-
-  private static ComplexEditorContent annotateContent(String content) throws IOException {
-    final CollectionFactory factory = new CollectionFactory() {
-      @Override
-      public ElementList handleArrayStart(ParserContext context) {
-        return new ArrayAnnotator(context.getLine(), context.getColumn());
-  	  }
-      @Override
-      public MemberSet handleObjectStart(ParserContext context) {
-  	    return new ObjectAnnotator(context.getLine(), context.getColumn());
-  	  }
-    };
+  private static EditorContent annotateJson(String content) throws IOException {
 	StringReader reader = new StringReader(content);
-	JsonValue json = JsonValue.readFrom(reader, factory);
-	if (json instanceof ArrayAnnotator) {
-      return ((ArrayAnnotator) json).array;
-	} else if (json instanceof ObjectAnnotator) {
-	  return ((ObjectAnnotator) json).object;
-	}
-	return null;
+	JsonAnnotator handler = new JsonAnnotator();
+	JsonValue.readFrom(reader, handler);
+	return handler.parent;
   }
 
   @Test
@@ -218,27 +208,27 @@ public class JsonStreamingTest {
 	String c;
 	c = "{\"id\":15, \"clients\":[4, 17, 10], \"address\":{\n" +
 	    "  \"street\":\"1 Main St.\", \"town\":\"Springfield\"} }";
-	ComplexEditorContent root = annotateContent(c);
+	EditorContent root = annotateJson(c);
 	assertEquals(1, root.first.column);
-	assertEquals(3, root.children.size());
+	assertEquals(6, root.children.size());
 	ArrayList<EditorContent> children = root.children;
-	assertEquals(EditorContent.ATOMIC, children.get(0).type);
-	ComplexEditorContent array = (ComplexEditorContent) children.get(1);
+	assertEquals(EditorContent.ATOMIC, children.get(1).type);
+	EditorContent array = children.get(3);
 	assertEquals(EditorContent.ARRAY, array.type);
 	assertEquals(1, array.first.line);
 	assertEquals(21, array.first.column);
 	assertEquals(1, array.last.line);
 	assertEquals(31, array.last.column);
-	ComplexEditorContent object = (ComplexEditorContent) children.get(2);
+	EditorContent object = children.get(5);
 	assertEquals(EditorContent.OBJECT, object.type);
 	assertEquals(1, object.first.line);
 	assertEquals(44, object.first.column);
 	assertEquals(2, object.last.line);
 	assertEquals(46, object.last.column);
-	assertEquals(EditorContent.ATOMIC, root.click(new EditorPosition(2, 1)).type);
+	assertEquals(EditorContent.NAME, root.click(new EditorPosition(2, 4)).type);
 	assertEquals(EditorContent.ARRAY, root.click(new EditorPosition(1, 21)).type);
-	ComplexEditorContent address = (ComplexEditorContent) root.click(new EditorPosition(2, 46));
-	assertEquals(2, address.children.size());
+	EditorContent address = root.click(new EditorPosition(2, 46));
+	assertEquals(4, address.children.size());
   }
 
   private static class SkippingReaderFactory extends CollectionFactory {
@@ -255,7 +245,7 @@ public class JsonStreamingTest {
 	  idx = 0;
 	}
 	@Override
-  public ElementList handleArrayStart( ParserContext context ) {
+    public ElementList handleArrayStart( ParserContext context ) {
 	  return new JsonArray() {
 		@Override
 		protected void addElement( JsonValue value, ParserContext context ) {
