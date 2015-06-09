@@ -193,7 +193,7 @@ class JsonParser implements ParserContext {
     readRequiredChar('u');
     readRequiredChar('l');
     readRequiredChar('l');
-    return handler.handleNull(this);
+    return handler.handleLiteral(JsonLiteral.NULL, this);
   }
 
   private JsonValue readTrue() throws IOException {
@@ -201,7 +201,7 @@ class JsonParser implements ParserContext {
     readRequiredChar('r');
     readRequiredChar('u');
     readRequiredChar('e');
-    return handler.handleTrue(this);
+    return handler.handleLiteral(JsonLiteral.TRUE, this);
   }
 
   private JsonValue readFalse() throws IOException {
@@ -210,7 +210,7 @@ class JsonParser implements ParserContext {
     readRequiredChar('l');
     readRequiredChar('s');
     readRequiredChar('e');
-    return handler.handleFalse(this);
+    return handler.handleLiteral(JsonLiteral.FALSE, this);
   }
 
   private void readRequiredChar(char ch) throws IOException {

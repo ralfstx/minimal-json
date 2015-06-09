@@ -82,16 +82,8 @@ public abstract class JsonValue implements Serializable {
 
   static class DefaultJsonHandler implements JsonHandler {
 
-    public JsonValue handleNull(ParserContext context) {
-      return JsonValue.NULL;
-    }
-
-    public JsonValue handleTrue(ParserContext context) {
-      return JsonValue.TRUE;
-    }
-
-    public JsonValue handleFalse(ParserContext context) {
-      return JsonValue.FALSE;
+    public JsonValue handleLiteral(JsonValue literal, ParserContext context) {
+      return literal;
     }
 
     public JsonValue handleString(String string, int begin, ParserContext context) {

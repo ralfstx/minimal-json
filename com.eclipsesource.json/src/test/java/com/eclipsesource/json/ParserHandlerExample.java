@@ -41,18 +41,8 @@ public class ParserHandlerExample {
 
     Stack<Integer> start = new Stack<Integer>();
 
-    public JsonValue handleNull(ParserContext context) {
-      log(context.getOffset() - 4, "null");
-      return null;
-    }
-
-    public JsonValue handleTrue(ParserContext context) {
-      log(context.getOffset() - 4, "true");
-      return null;
-    }
-
-    public JsonValue handleFalse(ParserContext context) {
-      log(context.getOffset() - 4, "false");
+    public JsonValue handleLiteral(JsonValue literal, ParserContext context) {
+      log(context.getOffset() - 4, literal.toString());
       return null;
     }
 
@@ -113,17 +103,9 @@ public class ParserHandlerExample {
       return value;
     }
 
-    public JsonValue handleNull(ParserContext context) {
-      return null;
-    }
-
-    public JsonValue handleTrue(ParserContext context) {
-      addInner(context.getFieldName(), Boolean.TRUE);
-      return null;
-    }
-
-    public JsonValue handleFalse(ParserContext context) {
-      addInner(context.getFieldName(), Boolean.FALSE);
+    @SuppressWarnings("boxing")
+    public JsonValue handleLiteral(JsonValue literal, ParserContext context) {
+      addInner(context.getFieldName(), literal.asBoolean());
       return null;
     }
 

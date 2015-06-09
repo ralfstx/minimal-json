@@ -92,28 +92,12 @@ interface JsonHandler {
   }
 
   /**
-   * Handle a JSON <code>null</code> value.
+   * Handle a JSON literal.
+   * @param literal
    * @param context
-   * @param begin the character index of the start position
    * @return An object to pass to the caller, or <code>null</code>
    */
-  JsonValue handleNull(ParserContext context);
-
-  /**
-   * Handle a JSON <code>true</code> value.
-   * @param context
-   * @param begin the character index of the start position
-   * @return An object to pass to the caller, or <code>null</code>
-   */
-  JsonValue handleTrue(ParserContext context);
-
-  /**
-   * Handle a JSON <code>false</code> value.
-   * @param context
-   * @param begin the character index of the start position
-   * @return An object to pass to the caller, or <code>null</code>
-   */
-  JsonValue handleFalse(ParserContext context);
+  JsonValue handleLiteral(JsonValue literal, ParserContext context);
 
   /**
    * Handle a JSON string.
