@@ -10,7 +10,7 @@ It's not an object mapper, but a bare-bones library that aims at being
 
 * **minimal**: no dependencies, single package with just a few classes, small download size (< 25kB)
 * **fast**: high performance comparable with other state-of-the-art parsers (see below)
-* **leightweight**: object representation with minimal memory footprint (e.g. no HashMaps)
+* **lightweight**: object representation with minimal memory footprint (e.g. no HashMaps)
 * **simple**: reading, writing and modifying JSON with minimal code (short names, fluent style)
 
 Minimal-json is fully covered by unit tests, and field-tested by the [Eclipse RAP project](http://eclipse.org/rap) and others (see below). The JAR contains a **valid OSGi** bundle manifest and can be used in OSGi environments without modifications.
@@ -160,7 +160,7 @@ You can include minimal-json from Maven Central by adding this dependency to you
 <dependency>
   <groupId>com.eclipsesource.minimal-json</groupId>
   <artifactId>minimal-json</artifactId>
-  <version>0.9.2</version>
+  <version>0.9.3</version>
 </dependency>
 ```
 
