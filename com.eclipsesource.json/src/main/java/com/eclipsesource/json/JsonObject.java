@@ -31,7 +31,6 @@ import java.util.List;
 
 import com.eclipsesource.json.JsonObject.Member;
 
-
 /**
  * Represents a JSON object, a set of name/value pairs, where the names are strings and the values
  * are JSON values.
@@ -69,8 +68,8 @@ import com.eclipsesource.json.JsonObject.Member;
  * This class is <strong>not supposed to be extended</strong> by clients.
  * </p>
  */
-@SuppressWarnings("serial") // use default serial UID
-public class JsonObject extends JsonValue implements Iterable<Member> {
+@SuppressWarnings( "serial" ) // use default serial UID
+public class JsonObject extends CollectionFactory.MemberSet implements Iterable<Member> {
 
   private final List<String> names;
   private final List<JsonValue> values;
@@ -320,9 +319,9 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value of the member to add, must not be <code>null</code>
    * @return the object itself, to enable method chaining
    */
-  public JsonObject add(String name, JsonValue value) {
-    if (name == null) {
-      throw new NullPointerException("name is null");
+  final public JsonObject add( String name, JsonValue value ) {
+    if( name == null ) {
+      throw new NullPointerException( "name is null" );
     }
     if (value == null) {
       throw new NullPointerException("value is null");
@@ -331,6 +330,11 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     names.add(name);
     values.add(value);
     return this;
+  }
+
+  @Override
+  protected void addMember( String name, JsonValue value, ParserContext context ) {
+	  add( name, value );
   }
 
   /**

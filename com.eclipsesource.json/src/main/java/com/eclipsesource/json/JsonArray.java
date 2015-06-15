@@ -60,7 +60,7 @@ import java.util.List;
  * </p>
  */
 @SuppressWarnings("serial") // use default serial UID
-public class JsonArray extends JsonValue implements Iterable<JsonValue> {
+public class JsonArray extends CollectionFactory.ElementList implements Iterable<JsonValue> {
 
   private final List<JsonValue> values;
 
@@ -229,12 +229,17 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *          the JsonValue to add to the array, must not be <code>null</code>
    * @return the array itself, to enable method chaining
    */
-  public JsonArray add(JsonValue value) {
-    if (value == null) {
-      throw new NullPointerException("value is null");
+  final public JsonArray add( JsonValue value ) {
+    if( value == null ) {
+      throw new NullPointerException( "value is null" );
     }
     values.add(value);
     return this;
+  }
+
+  @Override
+  protected void addElement(JsonValue value, ParserContext context) {
+	add(value);
   }
 
   /**

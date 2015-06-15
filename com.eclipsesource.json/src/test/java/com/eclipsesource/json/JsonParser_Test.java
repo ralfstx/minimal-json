@@ -21,8 +21,11 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import static com.eclipsesource.json.JsonValue.defaultHandler;
 import static com.eclipsesource.json.TestUtil.assertException;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -43,7 +46,7 @@ public class JsonParser_Test {
     ParseException exception = assertException(ParseException.class, new Runnable() {
       public void run() {
         try {
-          new JsonParser(new StringReader("")).parse();
+          new JsonParser(new StringReader("")).parse(defaultHandler);
         } catch (IOException exception) {
           throw new RuntimeException(exception);
         }
@@ -132,7 +135,7 @@ public class JsonParser_Test {
     ParseException exception = assertException(ParseException.class, new Runnable() {
       public void run() {
         try {
-          new JsonParser(new StringReader(input), 3).parse();
+          new JsonParser(new StringReader(input), 3).parse(defaultHandler);
         } catch (IOException e) {
         }
       }
@@ -451,8 +454,8 @@ public class JsonParser_Test {
     assertParseException(5, "Unexpected character", "falsex");
   }
 
-  private static void assertParseException(int offset, String message, final String json) {
-    ParseException exception = assertException(ParseException.class, new Runnable() {
+  private static void assertParseException( int offset, String message, final String json ) {
+    ParseException exception = assertException( ParseException.class, new Runnable() {
       public void run() {
         parse(json);
       }
@@ -474,7 +477,7 @@ public class JsonParser_Test {
 
   private static JsonValue parse(String json) {
     try {
-      return new JsonParser(json).parse();
+      return new JsonParser(json).parse(defaultHandler);
     } catch (IOException exception) {
       throw new RuntimeException(exception);
     }

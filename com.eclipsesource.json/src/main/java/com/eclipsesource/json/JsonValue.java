@@ -78,6 +78,42 @@ public abstract class JsonValue implements Serializable {
    */
   public static final JsonValue NULL = JsonLiteral.NULL;
 
+  static final JsonHandler defaultHandler = new DefaultJsonHandler();
+
+  static class DefaultJsonHandler implements JsonHandler {
+
+    public JsonValue handleLiteral(JsonValue literal, ParserContext context) {
+      return literal;
+    }
+
+    public JsonValue handleString(String string, int begin, ParserContext context) {
+      return new JsonString(string);
+    }
+
+    public JsonValue handleNumber(String number, int begin, ParserContext context) {
+      return new JsonNumber(number);
+    }
+
+    public ElementList handleArrayStart(ParserContext context) {
+      return new JsonArray();
+    }
+
+    public ElementList handleArrayEnd(ElementList array, ParserContext context) {
+      return array;
+    }
+
+    public MemberSet handleObjectStart(ParserContext context) {
+      return new JsonObject();
+    }
+
+    public void handleMemberName(String name, int begin, ParserContext context) {
+    }
+
+    public MemberSet handleObjectEnd(MemberSet object, ParserContext context) {
+      return object;
+    }
+  }
+
   JsonValue() {
     // prevent subclasses outside of this package
   }
@@ -99,7 +135,32 @@ public abstract class JsonValue implements Serializable {
    *           if the input is not valid JSON
    */
   public static JsonValue readFrom(Reader reader) throws IOException {
-    return new JsonParser(reader).parse();
+    return readFrom(reader, defaultHandler);
+  }
+
+  /**
+   * Reads a JSON value from the given reader, using the specified factory for JSON Array and Object
+   * representations.
+   * <p>
+   * The specified {@link CollectionFactory} may provide custom implementations of JSON arrays or
+   * objects, depending on nesting level and/or most recent field name. Such custom implementations
+   * may filter or extract content from object members or array elements, effectively making use of
+   * a streaming API. If the specified CollectionFactory returns <em>null</em> for the outermost
+   * collection, this method returns <em>null</em>.
+   * </p>
+   *
+   * @param reader
+   *          the reader to read the JSON value from
+   * @param handler
+   *          a {@code JsonHandler} to provide implementations of JSON arrays and objects
+   * @return the JSON value that has been read, or null
+   * @throws IOException
+   *           if an I/O error occurs in the reader
+   * @throws ParseException
+   *           if the input is not valid JSON
+   */
+  public static JsonValue readFrom(Reader reader, JsonHandler handler) throws IOException {
+    return new JsonParser(reader).parse(handler);
   }
 
   /**
@@ -113,7 +174,7 @@ public abstract class JsonValue implements Serializable {
    */
   public static JsonValue readFrom(String text) {
     try {
-      return new JsonParser(text).parse();
+      return new JsonParser(text).parse(defaultHandler);
     } catch (IOException exception) {
       // JsonParser does not throw IOException for String
       throw new RuntimeException(exception);

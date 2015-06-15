@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2013, 2015 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,20 +25,25 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
+import com.eclipsesource.json.JsonHandler.ElementList;
+import com.eclipsesource.json.JsonHandler.MemberSet;
 
-class JsonParser {
+class JsonParser implements ParserContext {
 
   private static final int MIN_BUFFER_SIZE = 10;
   private static final int DEFAULT_BUFFER_SIZE = 1024;
 
   private final Reader reader;
   private final char[] buffer;
+  private JsonHandler handler;
   private int bufferOffset;
   private int index;
   private int fill;
   private int line;
   private int lineOffset;
   private int current;
+  private int nesting;
+  private String name;
   private StringBuilder captureBuffer;
   private int captureStart;
 
@@ -62,12 +67,13 @@ class JsonParser {
 
   JsonParser(Reader reader, int buffersize) {
     this.reader = reader;
-    buffer = new char[buffersize];
+    buffer = new char[ buffersize ];
     line = 1;
     captureStart = -1;
   }
 
-  JsonValue parse() throws IOException {
+  JsonValue parse(JsonHandler handler) throws IOException {
+    this.handler = handler;
     read();
     skipWhiteSpace();
     JsonValue result = readValue();
@@ -76,6 +82,10 @@ class JsonParser {
       throw error("Unexpected character");
     }
     return result;
+  }
+
+  JsonValue parse() throws IOException {
+    return parse(JsonValue.defaultHandler);
   }
 
   private JsonValue readValue() throws IOException {
@@ -109,29 +119,41 @@ class JsonParser {
     }
   }
 
-  private JsonArray readArray() throws IOException {
+  private JsonValue readArray() throws IOException {
     read();
-    JsonArray array = new JsonArray();
+    ElementList array = handler.handleArrayStart(this);
+    nesting ++;
+    name = null;
     skipWhiteSpace();
-    if (readChar(']')) {
+    if (readChar( ']')) {
+      array = handler.handleArrayEnd(array, this);
+      nesting --;
       return array;
     }
     do {
       skipWhiteSpace();
-      array.add(readValue());
+      JsonValue value = readValue();
+      name = null;
+      if (value != null && array != null) {
+        array.addElement(value, this);
+      }
       skipWhiteSpace();
     } while (readChar(','));
-    if (!readChar(']')) {
+    if (!readChar( ']')) {
       throw expected("',' or ']'");
     }
-    return array;
+    nesting --;
+    return handler.handleArrayEnd(array, this);
   }
 
-  private JsonObject readObject() throws IOException {
+  private JsonValue readObject() throws IOException {
     read();
-    JsonObject object = new JsonObject();
+    MemberSet object = handler.handleObjectStart(this);
+    nesting ++;
     skipWhiteSpace();
     if (readChar('}')) {
+      object = handler.handleObjectEnd(object, this);
+      nesting --;
       return object;
     }
     do {
@@ -142,20 +164,28 @@ class JsonParser {
         throw expected("':'");
       }
       skipWhiteSpace();
-      object.add(name, readValue());
+      JsonValue value = readValue();
+      this.name = name;
+      if (value != null && object != null) {
+        object.addMember(name, value, this);
+      }
       skipWhiteSpace();
     } while (readChar(','));
     if (!readChar('}')) {
       throw expected("',' or '}'");
     }
-    return object;
+    nesting --;
+    return handler.handleObjectEnd(object, this);
   }
 
   private String readName() throws IOException {
     if (current != '"') {
       throw expected("name");
     }
-    return readStringInternal();
+    int begin = getOffset();
+    name = readStringInternal();
+    handler.handleMemberName(name, begin, this);
+    return name;
   }
 
   private JsonValue readNull() throws IOException {
@@ -163,7 +193,7 @@ class JsonParser {
     readRequiredChar('u');
     readRequiredChar('l');
     readRequiredChar('l');
-    return JsonValue.NULL;
+    return handler.handleLiteral(JsonLiteral.NULL, this);
   }
 
   private JsonValue readTrue() throws IOException {
@@ -171,7 +201,7 @@ class JsonParser {
     readRequiredChar('r');
     readRequiredChar('u');
     readRequiredChar('e');
-    return JsonValue.TRUE;
+    return handler.handleLiteral(JsonLiteral.TRUE, this);
   }
 
   private JsonValue readFalse() throws IOException {
@@ -180,7 +210,7 @@ class JsonParser {
     readRequiredChar('l');
     readRequiredChar('s');
     readRequiredChar('e');
-    return JsonValue.FALSE;
+    return handler.handleLiteral(JsonLiteral.FALSE, this);
   }
 
   private void readRequiredChar(char ch) throws IOException {
@@ -190,7 +220,9 @@ class JsonParser {
   }
 
   private JsonValue readString() throws IOException {
-    return new JsonString(readStringInternal());
+    int begin = getOffset();
+    String string = readStringInternal();
+    return handler.handleString(string, begin, this);
   }
 
   private String readStringInternal() throws IOException {
@@ -253,6 +285,7 @@ class JsonParser {
   }
 
   private JsonValue readNumber() throws IOException {
+    int begin = getOffset();
     startCapture();
     readChar('-');
     int firstDigit = current;
@@ -265,7 +298,8 @@ class JsonParser {
     }
     readFraction();
     readExponent();
-    return new JsonNumber(endCapture());
+    String string = endCapture();
+    return handler.handleNumber(string, begin, this);
   }
 
   private boolean readFraction() throws IOException {
@@ -372,11 +406,86 @@ class JsonParser {
     return error("Expected " + expected);
   }
 
+  private void skipInner() throws IOException {
+    boolean is_quoted = false;
+	int n_level = 0;
+	do {
+	  read();
+	  switch (current) {
+	  case '{':
+      case '[':
+	    n_level ++;
+	    break;
+	  case '}':
+      case ']':
+	    n_level --;
+		break;
+      case '"':
+	    is_quoted = !is_quoted;
+	    break;
+	  case '\\':
+	    read();
+	    break;
+	  default:
+	  }
+	} while (is_quoted || n_level > 0 || current != ',' && current != ']' && current != '}');
+  }
+
+  private int skip(int n_skip) throws IOException {
+	int n_skipped = 0;
+    skipWhiteSpace();
+    if (current != ',' && current != ']' && current != '}') {
+      skipInner();
+      n_skipped = 1;
+    }
+    while (current == ',' && n_skipped++ != n_skip) {
+      skipWhiteSpace();
+      skipInner();
+    }
+	return n_skipped;
+  }
+
+  public int skipAll() throws IOException {
+    return skip(-1);
+  }
+
+  public int skipNext(int n) throws IOException {
+	if (name != null) {
+	  throw new IllegalStateException("Attempted to skip element inside object");
+	}
+	if (n < 1) {
+      throw new IllegalArgumentException("Number of elements to skip must be greater than zero");
+	}
+	return skip(n);
+  }
+
+  public boolean skipNext() throws IOException {
+	return skipNext(1) == 1;
+  }
+
+  public int getNesting() {
+	return nesting;
+  }
+
+  public String getFieldName() {
+	return name;
+  }
+
+  public int getLine() {
+	return line;
+  }
+
+  public int getOffset() {
+	int absIndex = bufferOffset + index;
+    return isEndOfText() ? absIndex : absIndex - 1;
+  }
+
+  public int getColumn() {
+    return bufferOffset + index - lineOffset - 1;
+  }
+
   private ParseException error(String message) {
-    int absIndex = bufferOffset + index;
-    int column = absIndex - lineOffset;
-    int offset = isEndOfText() ? absIndex : absIndex - 1;
-    return new ParseException(message, offset, line, column - 1);
+    return new ParseException(message, getOffset(), line, getColumn());
   }
 
   private boolean isWhiteSpace() {
@@ -396,5 +505,4 @@ class JsonParser {
   private boolean isEndOfText() {
     return current == -1;
   }
-
 }
