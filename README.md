@@ -92,6 +92,8 @@ jsonArray.set( 1, 24 ); // access element by index
 
 jsonObject.remove( "age" );
 jsonArray.remove( 1 );
+
+jsonObject.merge(otherObject); // merges both objects and overwrites with passed value
 ```
 
 ### Write JSON to a Writer or a String
