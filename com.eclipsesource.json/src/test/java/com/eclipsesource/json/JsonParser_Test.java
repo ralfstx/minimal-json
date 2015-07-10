@@ -71,7 +71,7 @@ public class JsonParser_Test {
 
   @Test
   public void parse_acceptsLiterals() {
-    assertSame(JsonValue.NULL, parse("null"));
+    assertSame(Json.NULL, parse("null"));
   }
 
   @Test
@@ -391,7 +391,7 @@ public class JsonParser_Test {
 
   @Test
   public void null_complete() {
-    assertEquals(JsonValue.NULL, parse("null"));
+    assertEquals(Json.NULL, parse("null"));
   }
 
   @Test
@@ -411,7 +411,7 @@ public class JsonParser_Test {
 
   @Test
   public void true_complete() {
-    assertSame(JsonValue.TRUE, parse("true"));
+    assertSame(Json.TRUE, parse("true"));
   }
 
   @Test
@@ -431,7 +431,7 @@ public class JsonParser_Test {
 
   @Test
   public void false_complete() {
-    assertSame(JsonValue.FALSE, parse("false"));
+    assertSame(Json.FALSE, parse("false"));
   }
 
   @Test

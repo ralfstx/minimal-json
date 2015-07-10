@@ -39,10 +39,11 @@ import com.eclipsesource.json.TestUtil.RunnableEx;
 public class JsonValue_Test {
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testConstantsAreLiterals() {
-    assertSame(JsonLiteral.NULL, JsonValue.NULL);
-    assertSame(JsonLiteral.TRUE, JsonValue.TRUE);
-    assertSame(JsonLiteral.FALSE, JsonValue.FALSE);
+    assertSame(Json.NULL, JsonValue.NULL);
+    assertSame(Json.TRUE, JsonValue.TRUE);
+    assertSame(Json.FALSE, JsonValue.FALSE);
   }
 
   @Test
@@ -133,8 +134,8 @@ public class JsonValue_Test {
 
   @Test
   public void valueOf_boolean() {
-    assertSame(JsonValue.TRUE, JsonValue.valueOf(true));
-    assertSame(JsonValue.FALSE, JsonValue.valueOf(false));
+    assertSame(Json.TRUE, JsonValue.valueOf(true));
+    assertSame(Json.FALSE, JsonValue.valueOf(false));
   }
 
   @Test
@@ -146,7 +147,7 @@ public class JsonValue_Test {
 
   @Test
   public void valueOf_string_toleratesNull() {
-    assertSame(JsonValue.NULL, JsonValue.valueOf(null));
+    assertSame(Json.NULL, JsonValue.valueOf(null));
   }
 
   @Test
@@ -155,7 +156,7 @@ public class JsonValue_Test {
     assertEquals(new JsonObject(), JsonValue.readFrom("{}"));
     assertEquals(JsonValue.valueOf("foo"), JsonValue.readFrom("\"foo\""));
     assertEquals(JsonValue.valueOf(23), JsonValue.readFrom("23"));
-    assertSame(JsonValue.NULL, JsonValue.readFrom("null"));
+    assertSame(Json.NULL, JsonValue.readFrom("null"));
   }
 
   @Test
@@ -164,7 +165,7 @@ public class JsonValue_Test {
     assertEquals(new JsonObject(), JsonValue.readFrom(new StringReader("{}")));
     assertEquals(JsonValue.valueOf("foo"), JsonValue.readFrom(new StringReader("\"foo\"")));
     assertEquals(JsonValue.valueOf(23), JsonValue.readFrom(new StringReader("23")));
-    assertSame(JsonValue.NULL, JsonValue.readFrom(new StringReader("null")));
+    assertSame(Json.NULL, JsonValue.readFrom(new StringReader("null")));
   }
 
   @Test
@@ -233,7 +234,7 @@ public class JsonValue_Test {
   public void asObject_failsOnIncompatibleType() {
     assertException(UnsupportedOperationException.class, "Not an object: null", new Runnable() {
       public void run() {
-        JsonValue.NULL.asObject();
+        Json.NULL.asObject();
       }
     });
   }
@@ -242,7 +243,7 @@ public class JsonValue_Test {
   public void asArray_failsOnIncompatibleType() {
     assertException(UnsupportedOperationException.class, "Not an array: null", new Runnable() {
       public void run() {
-        JsonValue.NULL.asArray();
+        Json.NULL.asArray();
       }
     });
   }
@@ -251,7 +252,7 @@ public class JsonValue_Test {
   public void asString_failsOnIncompatibleType() {
     assertException(UnsupportedOperationException.class, "Not a string: null", new Runnable() {
       public void run() {
-        JsonValue.NULL.asString();
+        Json.NULL.asString();
       }
     });
   }
@@ -260,7 +261,7 @@ public class JsonValue_Test {
   public void asInt_failsOnIncompatibleType() {
     assertException(UnsupportedOperationException.class, "Not a number: null", new Runnable() {
       public void run() {
-        JsonValue.NULL.asInt();
+        Json.NULL.asInt();
       }
     });
   }
@@ -269,7 +270,7 @@ public class JsonValue_Test {
   public void asLong_failsOnIncompatibleType() {
     assertException(UnsupportedOperationException.class, "Not a number: null", new Runnable() {
       public void run() {
-        JsonValue.NULL.asLong();
+        Json.NULL.asLong();
       }
     });
   }
@@ -278,7 +279,7 @@ public class JsonValue_Test {
   public void asFloat_failsOnIncompatibleType() {
     assertException(UnsupportedOperationException.class, "Not a number: null", new Runnable() {
       public void run() {
-        JsonValue.NULL.asFloat();
+        Json.NULL.asFloat();
       }
     });
   }
@@ -287,7 +288,7 @@ public class JsonValue_Test {
   public void asDouble_failsOnIncompatibleType() {
     assertException(UnsupportedOperationException.class, "Not a number: null", new Runnable() {
       public void run() {
-        JsonValue.NULL.asDouble();
+        Json.NULL.asDouble();
       }
     });
   }
@@ -296,7 +297,7 @@ public class JsonValue_Test {
   public void asBoolean_failsOnIncompatibleType() {
     assertException(UnsupportedOperationException.class, "Not a boolean: null", new Runnable() {
       public void run() {
-        JsonValue.NULL.asBoolean();
+        Json.NULL.asBoolean();
       }
     });
   }

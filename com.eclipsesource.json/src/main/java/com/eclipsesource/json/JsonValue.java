@@ -65,18 +65,24 @@ public abstract class JsonValue implements Serializable {
 
   /**
    * Represents the JSON literal <code>true</code>.
+   * @deprecated Use <code>Json.TRUE</code> instead
    */
-  public static final JsonValue TRUE = JsonLiteral.TRUE;
+  @Deprecated
+  public static final JsonValue TRUE = Json.TRUE;
 
   /**
    * Represents the JSON literal <code>false</code>.
+   * @deprecated Use <code>Json.FALSE</code> instead
    */
-  public static final JsonValue FALSE = JsonLiteral.FALSE;
+  @Deprecated
+  public static final JsonValue FALSE = Json.FALSE;
 
   /**
    * Represents the JSON literal <code>null</code>.
+   * @deprecated Use <code>Json.NULL</code> instead
    */
-  public static final JsonValue NULL = JsonLiteral.NULL;
+  @Deprecated
+  public static final JsonValue NULL = Json.NULL;
 
   JsonValue() {
     // prevent subclasses outside of this package

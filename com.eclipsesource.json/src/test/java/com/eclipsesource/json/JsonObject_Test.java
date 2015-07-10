@@ -198,7 +198,7 @@ public class JsonObject_Test {
     object.add("a", true);
     Iterator<Member> iterator = object.iterator();
 
-    assertEquals(new Member("a", JsonValue.TRUE), iterator.next());
+    assertEquals(new Member("a", Json.TRUE), iterator.next());
   }
 
   @Test
@@ -209,7 +209,7 @@ public class JsonObject_Test {
 
     iterator.next();
     assertTrue(iterator.hasNext());
-    assertEquals(new Member("b", JsonValue.FALSE), iterator.next());
+    assertEquals(new Member("b", Json.FALSE), iterator.next());
   }
 
   @Test(expected = NoSuchElementException.class)
@@ -253,14 +253,14 @@ public class JsonObject_Test {
   public void get_returnsValueForName() {
     object.add("foo", true);
 
-    assertEquals(JsonValue.TRUE, object.get("foo"));
+    assertEquals(Json.TRUE, object.get("foo"));
   }
 
   @Test
   public void get_returnsLastValueForName() {
     object.add("foo", false).add("foo", true);
 
-    assertEquals(JsonValue.TRUE, object.get("foo"));
+    assertEquals(Json.TRUE, object.get("foo"));
   }
 
   @Test
@@ -425,7 +425,7 @@ public class JsonObject_Test {
 
   @Test
   public void add_jsonNull() {
-    object.add("a", JsonValue.NULL);
+    object.add("a", Json.NULL);
 
     assertEquals("{\"a\":null}", object.toString());
   }
@@ -446,7 +446,7 @@ public class JsonObject_Test {
 
   @Test
   public void add_json_enablesChaining() {
-    assertSame(object, object.add("a", JsonValue.NULL));
+    assertSame(object, object.add("a", Json.NULL));
   }
 
   @Test
@@ -572,7 +572,7 @@ public class JsonObject_Test {
 
   @Test
   public void set_jsonNull() {
-    object.set("a", JsonValue.NULL);
+    object.set("a", Json.NULL);
 
     assertEquals("{\"a\":null}", object.toString());
   }
@@ -593,21 +593,21 @@ public class JsonObject_Test {
 
   @Test
   public void set_json_enablesChaining() {
-    assertSame(object, object.set("a", JsonValue.NULL));
+    assertSame(object, object.set("a", Json.NULL));
   }
 
   @Test
   public void set_addsElementIfMissing() {
-    object.set("a", JsonValue.TRUE);
+    object.set("a", Json.TRUE);
 
     assertEquals("{\"a\":true}", object.toString());
   }
 
   @Test
   public void set_modifiesElementIfExisting() {
-    object.add("a", JsonValue.TRUE);
+    object.add("a", Json.TRUE);
 
-    object.set("a", JsonValue.FALSE);
+    object.set("a", Json.FALSE);
 
     assertEquals("{\"a\":false}", object.toString());
   }
@@ -617,7 +617,7 @@ public class JsonObject_Test {
     object.add("a", 1);
     object.add("a", 2);
 
-    object.set("a", JsonValue.TRUE);
+    object.set("a", Json.TRUE);
 
     assertEquals("{\"a\":1,\"a\":true}", object.toString());
   }
@@ -944,61 +944,61 @@ public class JsonObject_Test {
 
   @Test
   public void member_returnsNameAndValue() {
-    Member member = new Member("a", JsonValue.TRUE);
+    Member member = new Member("a", Json.TRUE);
 
     assertEquals("a", member.getName());
-    assertEquals(JsonValue.TRUE, member.getValue());
+    assertEquals(Json.TRUE, member.getValue());
   }
 
   @Test
   public void member_equals_trueForSameInstance() {
-    Member member = new Member("a", JsonValue.TRUE);
+    Member member = new Member("a", Json.TRUE);
 
     assertTrue(member.equals(member));
   }
 
   @Test
   public void member_equals_trueForEqualObjects() {
-    Member member = new Member("a", JsonValue.TRUE);
+    Member member = new Member("a", Json.TRUE);
 
-    assertTrue(member.equals(new Member("a", JsonValue.TRUE)));
+    assertTrue(member.equals(new Member("a", Json.TRUE)));
   }
 
   @Test
   public void member_equals_falseForDifferingObjects() {
-    Member member = new Member("a", JsonValue.TRUE);
+    Member member = new Member("a", Json.TRUE);
 
-    assertFalse(member.equals(new Member("b", JsonValue.TRUE)));
-    assertFalse(member.equals(new Member("a", JsonValue.FALSE)));
+    assertFalse(member.equals(new Member("b", Json.TRUE)));
+    assertFalse(member.equals(new Member("a", Json.FALSE)));
   }
 
   @Test
   public void member_equals_falseForNull() {
-    Member member = new Member("a", JsonValue.TRUE);
+    Member member = new Member("a", Json.TRUE);
 
     assertFalse(member.equals(null));
   }
 
   @Test
   public void member_equals_falseForSubclass() {
-    Member member = new Member("a", JsonValue.TRUE);
+    Member member = new Member("a", Json.TRUE);
 
-    assertFalse(member.equals(new Member("a", JsonValue.TRUE) {}));
+    assertFalse(member.equals(new Member("a", Json.TRUE) {}));
   }
 
   @Test
   public void member_hashCode_equalsForEqualObjects() {
-    Member member = new Member("a", JsonValue.TRUE);
+    Member member = new Member("a", Json.TRUE);
 
-    assertTrue(member.hashCode() == new Member("a", JsonValue.TRUE).hashCode());
+    assertTrue(member.hashCode() == new Member("a", Json.TRUE).hashCode());
   }
 
   @Test
   public void member_hashCode_differsForDifferingobjects() {
-    Member member = new Member("a", JsonValue.TRUE);
+    Member member = new Member("a", Json.TRUE);
 
-    assertFalse(member.hashCode() == new Member("b", JsonValue.TRUE).hashCode());
-    assertFalse(member.hashCode() == new Member("a", JsonValue.FALSE).hashCode());
+    assertFalse(member.hashCode() == new Member("b", Json.TRUE).hashCode());
+    assertFalse(member.hashCode() == new Member("a", Json.FALSE).hashCode());
   }
 
   private static JsonObject object(String... namesAndValues) {

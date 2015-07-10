@@ -153,7 +153,7 @@ public class JsonArray_Test {
 
     Iterator<JsonValue> iterator = array.iterator();
     assertTrue(iterator.hasNext());
-    assertEquals(JsonValue.TRUE, iterator.next());
+    assertEquals(Json.TRUE, iterator.next());
     assertFalse(iterator.hasNext());
   }
 
@@ -182,7 +182,7 @@ public class JsonArray_Test {
     array.add(true);
 
     assertEquals(1, array.values().size());
-    assertEquals(JsonValue.TRUE, array.values().get(0));
+    assertEquals(Json.TRUE, array.values().get(0));
   }
 
   @Test
@@ -198,7 +198,7 @@ public class JsonArray_Test {
   public void values_preventsModification() {
     List<JsonValue> values = array.values();
 
-    values.add(JsonValue.TRUE);
+    values.add(Json.TRUE);
   }
 
   @Test
@@ -296,7 +296,7 @@ public class JsonArray_Test {
 
   @Test
   public void add_jsonNull() {
-    array.add(JsonValue.NULL);
+    array.add(Json.NULL);
 
     assertEquals("[null]", array.toString());
   }
@@ -317,7 +317,7 @@ public class JsonArray_Test {
 
   @Test
   public void add_json_enablesChaining() {
-    assertSame(array, array.add(JsonValue.NULL));
+    assertSame(array, array.add(Json.NULL));
   }
 
   @Test
@@ -468,7 +468,7 @@ public class JsonArray_Test {
   public void set_jsonNull() {
     array.add(false);
 
-    array.set(0, JsonValue.NULL);
+    array.set(0, Json.NULL);
 
     assertEquals("[null]", array.toString());
   }
@@ -504,14 +504,14 @@ public class JsonArray_Test {
 
   @Test(expected = IndexOutOfBoundsException.class)
   public void set_json_failsWithInvalidIndex() {
-    array.set(0, JsonValue.NULL);
+    array.set(0, Json.NULL);
   }
 
   @Test
   public void set_json_enablesChaining() {
     array.add(false);
 
-    assertSame(array, array.set(0, JsonValue.NULL));
+    assertSame(array, array.set(0, Json.NULL));
   }
 
   @Test
