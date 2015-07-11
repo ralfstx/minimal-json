@@ -21,7 +21,7 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -29,10 +29,10 @@ import org.junit.Test;
 public class Json_Test {
 
   @Test
-  public void testConstantsAreLiterals() {
-    assertSame(JsonLiteral.NULL, Json.NULL);
-    assertSame(JsonLiteral.TRUE, Json.TRUE);
-    assertSame(JsonLiteral.FALSE, Json.FALSE);
+  public void literalConstants() {
+    assertTrue(Json.NULL.isNull());
+    assertTrue(Json.TRUE.isTrue());
+    assertTrue(Json.FALSE.isFalse());
   }
 
 }

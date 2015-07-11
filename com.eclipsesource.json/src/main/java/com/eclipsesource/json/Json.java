@@ -21,7 +21,6 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
-
 /**
  * Utility class that provides JSON constants.
  */
@@ -32,18 +31,18 @@ public abstract class Json {
   }
 
   /**
+   * Represents the JSON literal <code>null</code>.
+   */
+  public static final JsonValue NULL = new JsonLiteral("null");
+
+  /**
    * Represents the JSON literal <code>true</code>.
    */
-  public static final JsonValue TRUE = JsonLiteral.TRUE;
+  public static final JsonValue TRUE = new JsonLiteral("true");
 
   /**
    * Represents the JSON literal <code>false</code>.
    */
-  public static final JsonValue FALSE = JsonLiteral.FALSE;
-
-  /**
-   * Represents the JSON literal <code>null</code>.
-   */
-  public static final JsonValue NULL = JsonLiteral.NULL;
+  public static final JsonValue FALSE = new JsonLiteral("false");
 
 }

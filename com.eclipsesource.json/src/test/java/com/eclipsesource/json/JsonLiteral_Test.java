@@ -21,7 +21,7 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
-import static com.eclipsesource.json.JsonLiteral.*;
+import static com.eclipsesource.json.Json.*;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -117,6 +117,7 @@ public class JsonLiteral_Test {
     assertFalse(NULL.equals(null));
     assertFalse(NULL.equals(TRUE));
     assertFalse(NULL.equals(FALSE));
+    assertFalse(NULL.equals(JsonValue.valueOf("null")));
   }
 
   @Test
@@ -126,6 +127,7 @@ public class JsonLiteral_Test {
     assertFalse(TRUE.equals(null));
     assertFalse(TRUE.equals(FALSE));
     assertFalse(TRUE.equals(Boolean.TRUE));
+    assertFalse(NULL.equals(JsonValue.valueOf("true")));
   }
 
   @Test
@@ -135,6 +137,7 @@ public class JsonLiteral_Test {
     assertFalse(FALSE.equals(null));
     assertFalse(FALSE.equals(TRUE));
     assertFalse(FALSE.equals(Boolean.FALSE));
+    assertFalse(NULL.equals(JsonValue.valueOf("false")));
   }
 
   @Test
