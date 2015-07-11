@@ -140,4 +140,99 @@ public class Json_Test {
     assertSame(Json.NULL, Json.value(null));
   }
 
+  @Test
+  public void array() {
+    assertEquals(new JsonArray(), Json.array());
+  }
+
+  @Test
+  public void array_int() {
+    assertEquals(new JsonArray().add(23), Json.array(23));
+    assertEquals(new JsonArray().add(23).add(42), Json.array(23, 42));
+  }
+
+  @Test
+  public void array_int_failsWithNull() {
+    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
+      public void run() {
+        Json.array((int[])null);
+      }
+    });
+  }
+
+  @Test
+  public void array_long() {
+    assertEquals(new JsonArray().add(23l), Json.array(23l));
+    assertEquals(new JsonArray().add(23l).add(42l), Json.array(23l, 42l));
+  }
+
+  @Test
+  public void array_long_failsWithNull() {
+    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
+      public void run() {
+        Json.array((long[])null);
+      }
+    });
+  }
+
+  @Test
+  public void array_float() {
+    assertEquals(new JsonArray().add(3.14f), Json.array(3.14f));
+    assertEquals(new JsonArray().add(3.14f).add(1.41f), Json.array(3.14f, 1.41f));
+  }
+
+  @Test
+  public void array_float_failsWithNull() {
+    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
+      public void run() {
+        Json.array((float[])null);
+      }
+    });
+  }
+
+  @Test
+  public void array_double() {
+    assertEquals(new JsonArray().add(3.14d), Json.array(3.14d));
+    assertEquals(new JsonArray().add(3.14d).add(1.41d), Json.array(3.14d, 1.41d));
+  }
+
+  @Test
+  public void array_double_failsWithNull() {
+    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
+      public void run() {
+        Json.array((double[])null);
+      }
+    });
+  }
+
+  @Test
+  public void array_boolean() {
+    assertEquals(new JsonArray().add(true), Json.array(true));
+    assertEquals(new JsonArray().add(true).add(false), Json.array(true, false));
+  }
+
+  @Test
+  public void array_boolean_failsWithNull() {
+    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
+      public void run() {
+        Json.array((boolean[])null);
+      }
+    });
+  }
+
+  @Test
+  public void array_string() {
+    assertEquals(new JsonArray().add("foo"), Json.array("foo"));
+    assertEquals(new JsonArray().add("foo").add("bar"), Json.array("foo", "bar"));
+  }
+
+  @Test
+  public void array_string_failsWithNull() {
+    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
+      public void run() {
+        Json.array((String[])null);
+      }
+    });
+  }
+
 }

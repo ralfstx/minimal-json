@@ -117,6 +117,129 @@ public abstract class Json {
     return value ? TRUE : FALSE;
   }
 
+  /**
+   * Creates a new empty JsonArray. This is equivalent to creating a new JsonArray using the
+   * constructor.
+   *
+   * @return a new empty JSON array
+   */
+  public static JsonValue array() {
+    return new JsonArray();
+  }
+
+  /**
+   * Creates a new JsonArray that contains the JSON representations of the given <code>int</code>
+   * values.
+   *
+   * @param values
+   *          the values to be included in the new JSON array
+   * @return a new JSON array that contains the given values
+   */
+  public static JsonArray array(int... values) {
+    if (values == null) {
+      throw new NullPointerException("values is null");
+    }
+    JsonArray array = new JsonArray();
+    for (int value : values) {
+      array.add(value);
+    }
+    return array;
+  }
+
+  /**
+   * Creates a new JsonArray that contains the JSON representations of the given <code>long</code>
+   * values.
+   *
+   * @param values
+   *          the values to be included in the new JSON array
+   * @return a new JSON array that contains the given values
+   */
+  public static JsonArray array(long... values) {
+    if (values == null) {
+      throw new NullPointerException("values is null");
+    }
+    JsonArray array = new JsonArray();
+    for (long value : values) {
+      array.add(value);
+    }
+    return array;
+  }
+
+  /**
+   * Creates a new JsonArray that contains the JSON representations of the given <code>float</code>
+   * values.
+   *
+   * @param values
+   *          the values to be included in the new JSON array
+   * @return a new JSON array that contains the given values
+   */
+  public static JsonArray array(float... values) {
+    if (values == null) {
+      throw new NullPointerException("values is null");
+    }
+    JsonArray array = new JsonArray();
+    for (float value : values) {
+      array.add(value);
+    }
+    return array;
+  }
+
+  /**
+   * Creates a new JsonArray that contains the JSON representations of the given <code>double</code>
+   * values.
+   *
+   * @param values
+   *          the values to be included in the new JSON array
+   * @return a new JSON array that contains the given values
+   */
+  public static JsonArray array(double... values) {
+    if (values == null) {
+      throw new NullPointerException("values is null");
+    }
+    JsonArray array = new JsonArray();
+    for (double value : values) {
+      array.add(value);
+    }
+    return array;
+  }
+
+  /**
+   * Creates a new JsonArray that contains the JSON representations of the given
+   * <code>boolean</code> values.
+   *
+   * @param values
+   *          the values to be included in the new JSON array
+   * @return a new JSON array that contains the given values
+   */
+  public static JsonArray array(boolean... values) {
+    if (values == null) {
+      throw new NullPointerException("values is null");
+    }
+    JsonArray array = new JsonArray();
+    for (boolean value : values) {
+      array.add(value);
+    }
+    return array;
+  }
+
+  /**
+   * Creates a new JsonArray that contains the JSON representations of the given strings.
+   *
+   * @param strings
+   *          the strings to be included in the new JSON array
+   * @return a new JSON array that contains the given strings
+   */
+  public static JsonArray array(String... strings) {
+    if (strings == null) {
+      throw new NullPointerException("values is null");
+    }
+    JsonArray array = new JsonArray();
+    for (String value : strings) {
+      array.add(value);
+    }
+    return array;
+  }
+
   private static String cutOffPointZero(String string) {
     if (string.endsWith(".0")) {
       return string.substring(0, string.length() - 2);
