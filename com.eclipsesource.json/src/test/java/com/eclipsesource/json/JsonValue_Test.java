@@ -47,115 +47,47 @@ public class JsonValue_Test {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void valueOf_int() {
-    assertEquals("0", JsonValue.valueOf(0).toString());
-    assertEquals("23", JsonValue.valueOf(23).toString());
-    assertEquals("-1", JsonValue.valueOf(-1).toString());
-    assertEquals("2147483647", JsonValue.valueOf(Integer.MAX_VALUE).toString());
-    assertEquals("-2147483648", JsonValue.valueOf(Integer.MIN_VALUE).toString());
+    assertEquals(Json.value(23), JsonValue.valueOf(23));
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void valueOf_long() {
-    assertEquals("0", JsonValue.valueOf(0l).toString());
-    assertEquals("9223372036854775807", JsonValue.valueOf(Long.MAX_VALUE).toString());
-    assertEquals("-9223372036854775808", JsonValue.valueOf(Long.MIN_VALUE).toString());
+    assertEquals(Json.value(23l), JsonValue.valueOf(23l));
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void valueOf_float() {
-    assertEquals("23.5", JsonValue.valueOf(23.5f).toString());
-    assertEquals("-3.1416", JsonValue.valueOf(-3.1416f).toString());
-    assertEquals("1.23E-6", JsonValue.valueOf(0.00000123f).toString());
-    assertEquals("-1.23E7", JsonValue.valueOf(-12300000f).toString());
+    assertEquals(Json.value(23.5f), JsonValue.valueOf(23.5f));
   }
 
   @Test
-  public void valueOf_float_cutsOffPointZero() {
-    assertEquals("0", JsonValue.valueOf(0f).toString());
-    assertEquals("-1", JsonValue.valueOf(-1f).toString());
-    assertEquals("10", JsonValue.valueOf(10f).toString());
-  }
-
-  @Test
-  public void valueOf_float_failsWithInfinity() {
-    String message = "Infinite and NaN values not permitted in JSON";
-    assertException(IllegalArgumentException.class, message, new Runnable() {
-      public void run() {
-        JsonValue.valueOf(Float.POSITIVE_INFINITY);
-      }
-    });
-  }
-
-  @Test
-  public void valueOf_float_failsWithNaN() {
-    String message = "Infinite and NaN values not permitted in JSON";
-    assertException(IllegalArgumentException.class, message, new Runnable() {
-      public void run() {
-        JsonValue.valueOf(Float.NaN);
-      }
-    });
-  }
-
-  @Test
+  @SuppressWarnings("deprecation")
   public void valueOf_double() {
-    assertEquals("23.5", JsonValue.valueOf(23.5d).toString());
-    assertEquals("3.1416", JsonValue.valueOf(3.1416d).toString());
-    assertEquals("1.23E-6", JsonValue.valueOf(0.00000123d).toString());
-    assertEquals("1.7976931348623157E308", JsonValue.valueOf(1.7976931348623157E308d).toString());
+    assertEquals(Json.value(23.5d), JsonValue.valueOf(23.5d));
   }
 
   @Test
-  public void valueOf_double_cutsOffPointZero() {
-    assertEquals("0", JsonValue.valueOf(0d).toString());
-    assertEquals("-1", JsonValue.valueOf(-1d).toString());
-    assertEquals("10", JsonValue.valueOf(10d).toString());
-  }
-
-  @Test
-  public void valueOf_double_failsWithInfinity() {
-    String message = "Infinite and NaN values not permitted in JSON";
-    assertException(IllegalArgumentException.class, message, new Runnable() {
-      public void run() {
-        JsonValue.valueOf(Double.POSITIVE_INFINITY);
-      }
-    });
-  }
-
-  @Test
-  public void valueOf_double_failsWithNaN() {
-    String message = "Infinite and NaN values not permitted in JSON";
-    assertException(IllegalArgumentException.class, message, new Runnable() {
-      public void run() {
-        JsonValue.valueOf(Double.NaN);
-      }
-    });
-  }
-
-  @Test
+  @SuppressWarnings("deprecation")
   public void valueOf_boolean() {
-    assertSame(Json.TRUE, JsonValue.valueOf(true));
-    assertSame(Json.FALSE, JsonValue.valueOf(false));
+    assertSame(Json.value(true), JsonValue.valueOf(true));
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void valueOf_string() {
-    assertEquals("", JsonValue.valueOf("").asString());
-    assertEquals("Hello", JsonValue.valueOf("Hello").asString());
-    assertEquals("\"Hello\"", JsonValue.valueOf("\"Hello\"").asString());
-  }
-
-  @Test
-  public void valueOf_string_toleratesNull() {
-    assertSame(Json.NULL, JsonValue.valueOf(null));
+    assertEquals(Json.value("foo"), JsonValue.valueOf("foo"));
   }
 
   @Test
   public void readFrom_string() {
     assertEquals(new JsonArray(), JsonValue.readFrom("[]"));
     assertEquals(new JsonObject(), JsonValue.readFrom("{}"));
-    assertEquals(JsonValue.valueOf("foo"), JsonValue.readFrom("\"foo\""));
-    assertEquals(JsonValue.valueOf(23), JsonValue.readFrom("23"));
+    assertEquals(Json.value("foo"), JsonValue.readFrom("\"foo\""));
+    assertEquals(Json.value(23), JsonValue.readFrom("23"));
     assertSame(Json.NULL, JsonValue.readFrom("null"));
   }
 
@@ -163,8 +95,8 @@ public class JsonValue_Test {
   public void readFrom_reader() throws IOException {
     assertEquals(new JsonArray(), JsonValue.readFrom(new StringReader("[]")));
     assertEquals(new JsonObject(), JsonValue.readFrom(new StringReader("{}")));
-    assertEquals(JsonValue.valueOf("foo"), JsonValue.readFrom(new StringReader("\"foo\"")));
-    assertEquals(JsonValue.valueOf(23), JsonValue.readFrom(new StringReader("23")));
+    assertEquals(Json.value("foo"), JsonValue.readFrom(new StringReader("\"foo\"")));
+    assertEquals(Json.value(23), JsonValue.readFrom(new StringReader("23")));
     assertSame(Json.NULL, JsonValue.readFrom(new StringReader("null")));
   }
 

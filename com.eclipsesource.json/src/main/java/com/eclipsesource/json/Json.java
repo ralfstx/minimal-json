@@ -45,4 +45,83 @@ public abstract class Json {
    */
   public static final JsonValue FALSE = new JsonLiteral("false");
 
+  /**
+   * Returns a JsonValue instance that represents the given <code>int</code> value.
+   *
+   * @param value
+   *          the value to get a JSON representation for
+   * @return a JSON value that represents the given value
+   */
+  public static JsonValue value(int value) {
+    return new JsonNumber(Integer.toString(value, 10));
+  }
+
+  /**
+   * Returns a JsonValue instance that represents the given <code>long</code> value.
+   *
+   * @param value
+   *          the value to get a JSON representation for
+   * @return a JSON value that represents the given value
+   */
+  public static JsonValue value(long value) {
+    return new JsonNumber(Long.toString(value, 10));
+  }
+
+  /**
+   * Returns a JsonValue instance that represents the given <code>float</code> value.
+   *
+   * @param value
+   *          the value to get a JSON representation for
+   * @return a JSON value that represents the given value
+   */
+  public static JsonValue value(float value) {
+    if (Float.isInfinite(value) || Float.isNaN(value)) {
+      throw new IllegalArgumentException("Infinite and NaN values not permitted in JSON");
+    }
+    return new JsonNumber(cutOffPointZero(Float.toString(value)));
+  }
+
+  /**
+   * Returns a JsonValue instance that represents the given <code>double</code> value.
+   *
+   * @param value
+   *          the value to get a JSON representation for
+   * @return a JSON value that represents the given value
+   */
+  public static JsonValue value(double value) {
+    if (Double.isInfinite(value) || Double.isNaN(value)) {
+      throw new IllegalArgumentException("Infinite and NaN values not permitted in JSON");
+    }
+    return new JsonNumber(cutOffPointZero(Double.toString(value)));
+  }
+
+  /**
+   * Returns a JsonValue instance that represents the given string.
+   *
+   * @param string
+   *          the string to get a JSON representation for
+   * @return a JSON value that represents the given string
+   */
+  public static JsonValue value(String string) {
+    return string == null ? NULL : new JsonString(string);
+  }
+
+  /**
+   * Returns a JsonValue instance that represents the given <code>boolean</code> value.
+   *
+   * @param value
+   *          the value to get a JSON representation for
+   * @return a JSON value that represents the given value
+   */
+  public static JsonValue value(boolean value) {
+    return value ? TRUE : FALSE;
+  }
+
+  private static String cutOffPointZero(String string) {
+    if (string.endsWith(".0")) {
+      return string.substring(0, string.length() - 2);
+    }
+    return string;
+  }
+
 }

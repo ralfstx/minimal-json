@@ -23,6 +23,7 @@ package com.eclipsesource.json.performancetest;
 
 import java.io.IOException;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.performancetest.caliper.CaliperRunner;
 import com.google.caliper.SimpleBenchmark;
@@ -32,13 +33,13 @@ public class IntVsLongBenchmark extends SimpleBenchmark {
 
   public void timeValueOfInt(int reps) {
     for (int i = 0; i < reps; i++) {
-      checkValue(JsonValue.valueOf(23));
+      checkValue(Json.value(23));
     }
   }
 
   public void timeValueOfLong(int reps) {
     for (int i = 0; i < reps; i++) {
-      checkValue(JsonValue.valueOf(23l));
+      checkValue(Json.value(23l));
     }
   }
 

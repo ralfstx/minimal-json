@@ -183,7 +183,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject add(String name, int value) {
-    add(name, valueOf(value));
+    add(name, Json.value(value));
     return this;
   }
 
@@ -206,7 +206,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject add(String name, long value) {
-    add(name, valueOf(value));
+    add(name, Json.value(value));
     return this;
   }
 
@@ -229,7 +229,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject add(String name, float value) {
-    add(name, valueOf(value));
+    add(name, Json.value(value));
     return this;
   }
 
@@ -252,7 +252,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject add(String name, double value) {
-    add(name, valueOf(value));
+    add(name, Json.value(value));
     return this;
   }
 
@@ -275,7 +275,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject add(String name, boolean value) {
-    add(name, valueOf(value));
+    add(name, Json.value(value));
     return this;
   }
 
@@ -298,7 +298,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject add(String name, String value) {
-    add(name, valueOf(value));
+    add(name, Json.value(value));
     return this;
   }
 
@@ -351,7 +351,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject set(String name, int value) {
-    set(name, valueOf(value));
+    set(name, Json.value(value));
     return this;
   }
 
@@ -373,7 +373,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject set(String name, long value) {
-    set(name, valueOf(value));
+    set(name, Json.value(value));
     return this;
   }
 
@@ -395,7 +395,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject set(String name, float value) {
-    set(name, valueOf(value));
+    set(name, Json.value(value));
     return this;
   }
 
@@ -417,7 +417,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject set(String name, double value) {
-    set(name, valueOf(value));
+    set(name, Json.value(value));
     return this;
   }
 
@@ -439,7 +439,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject set(String name, boolean value) {
-    set(name, valueOf(value));
+    set(name, Json.value(value));
     return this;
   }
 
@@ -461,7 +461,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * @return the object itself, to enable method chaining
    */
   public JsonObject set(String name, String value) {
-    set(name, valueOf(value));
+    set(name, Json.value(value));
     return this;
   }
 

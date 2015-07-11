@@ -132,9 +132,11 @@ public abstract class JsonValue implements Serializable {
    * @param value
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
+   * @deprecated Use <code>Json.value()</code> instead
    */
+  @Deprecated
   public static JsonValue valueOf(int value) {
-    return new JsonNumber(Integer.toString(value, 10));
+    return Json.value(value);
   }
 
   /**
@@ -143,9 +145,11 @@ public abstract class JsonValue implements Serializable {
    * @param value
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
+   * @deprecated Use <code>Json.value()</code> instead
    */
+  @Deprecated
   public static JsonValue valueOf(long value) {
-    return new JsonNumber(Long.toString(value, 10));
+    return Json.value(value);
   }
 
   /**
@@ -154,12 +158,11 @@ public abstract class JsonValue implements Serializable {
    * @param value
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
+   * @deprecated Use <code>Json.value()</code> instead
    */
+  @Deprecated
   public static JsonValue valueOf(float value) {
-    if (Float.isInfinite(value) || Float.isNaN(value)) {
-      throw new IllegalArgumentException("Infinite and NaN values not permitted in JSON");
-    }
-    return new JsonNumber(cutOffPointZero(Float.toString(value)));
+    return Json.value(value);
   }
 
   /**
@@ -168,12 +171,11 @@ public abstract class JsonValue implements Serializable {
    * @param value
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
+   * @deprecated Use <code>Json.value()</code> instead
    */
+  @Deprecated
   public static JsonValue valueOf(double value) {
-    if (Double.isInfinite(value) || Double.isNaN(value)) {
-      throw new IllegalArgumentException("Infinite and NaN values not permitted in JSON");
-    }
-    return new JsonNumber(cutOffPointZero(Double.toString(value)));
+    return Json.value(value);
   }
 
   /**
@@ -182,9 +184,11 @@ public abstract class JsonValue implements Serializable {
    * @param string
    *          the string to get a JSON representation for
    * @return a JSON value that represents the given string
+   * @deprecated Use <code>Json.value()</code> instead
    */
+  @Deprecated
   public static JsonValue valueOf(String string) {
-    return string == null ? NULL : new JsonString(string);
+    return Json.value(string);
   }
 
   /**
@@ -193,9 +197,11 @@ public abstract class JsonValue implements Serializable {
    * @param value
    *          the value to get a JSON representation for
    * @return a JSON value that represents the given value
+   * @deprecated Use <code>Json.value()</code> instead
    */
+  @Deprecated
   public static JsonValue valueOf(boolean value) {
-    return value ? TRUE : FALSE;
+    return Json.value(value);
   }
 
   /**
@@ -486,12 +492,5 @@ public abstract class JsonValue implements Serializable {
   }
 
   abstract void write(JsonWriter writer) throws IOException;
-
-  private static String cutOffPointZero(String string) {
-    if (string.endsWith(".0")) {
-      return string.substring(0, string.length() - 2);
-    }
-    return string;
-  }
 
 }

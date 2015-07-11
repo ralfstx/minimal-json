@@ -207,7 +207,7 @@ public class JsonArray_Test {
 
     JsonValue value = array.get(0);
 
-    assertEquals(JsonValue.valueOf(23), value);
+    assertEquals(Json.value(23), value);
   }
 
   @Test(expected = IndexOutOfBoundsException.class)

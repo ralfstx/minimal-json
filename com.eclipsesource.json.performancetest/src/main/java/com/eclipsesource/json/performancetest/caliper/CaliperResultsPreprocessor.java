@@ -21,6 +21,7 @@
  ******************************************************************************/
 package com.eclipsesource.json.performancetest.caliper;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -147,7 +148,7 @@ class CaliperResultsPreprocessor {
 
   private static JsonValue extractSimpleName(JsonObject caliperResults) {
     String name = caliperResults.get("run").asObject().get("benchmarkName").asString();
-    return JsonValue.valueOf(name.replaceFirst(".*\\.", ""));
+    return Json.value(name.replaceFirst(".*\\.", ""));
   }
 
   private static JsonValue extractTimestamp(JsonObject caliperResults) {

@@ -117,7 +117,7 @@ public class JsonLiteral_Test {
     assertFalse(NULL.equals(null));
     assertFalse(NULL.equals(TRUE));
     assertFalse(NULL.equals(FALSE));
-    assertFalse(NULL.equals(JsonValue.valueOf("null")));
+    assertFalse(NULL.equals(Json.value("null")));
   }
 
   @Test
@@ -127,7 +127,7 @@ public class JsonLiteral_Test {
     assertFalse(TRUE.equals(null));
     assertFalse(TRUE.equals(FALSE));
     assertFalse(TRUE.equals(Boolean.TRUE));
-    assertFalse(NULL.equals(JsonValue.valueOf("true")));
+    assertFalse(NULL.equals(Json.value("true")));
   }
 
   @Test
@@ -137,7 +137,7 @@ public class JsonLiteral_Test {
     assertFalse(FALSE.equals(null));
     assertFalse(FALSE.equals(TRUE));
     assertFalse(FALSE.equals(Boolean.FALSE));
-    assertFalse(NULL.equals(JsonValue.valueOf("false")));
+    assertFalse(NULL.equals(Json.value("false")));
   }
 
   @Test
