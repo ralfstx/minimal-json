@@ -240,6 +240,16 @@ public abstract class Json {
     return array;
   }
 
+  /**
+   * Creates a new empty JsonObject. This is equivalent to creating a new JsonObject using the
+   * constructor.
+   *
+   * @return a new empty JSON object
+   */
+  public static JsonObject object() {
+    return new JsonObject();
+  }
+
   private static String cutOffPointZero(String string) {
     if (string.endsWith(".0")) {
       return string.substring(0, string.length() - 2);

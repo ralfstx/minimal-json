@@ -235,4 +235,9 @@ public class Json_Test {
     });
   }
 
+  @Test
+  public void object() {
+    assertEquals(new JsonObject(), Json.object());
+  }
+
 }
