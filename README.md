@@ -8,7 +8,7 @@ minimal-json
 A fast and minimal JSON parser and writer for Java.
 It's not an object mapper, but a bare-bones library that aims at being
 
-* **minimal**: no dependencies, single package with just a few classes, small download size (< 25kB)
+* **minimal**: no dependencies, single package with just a few classes, small download size (< 35kB)
 * **fast**: high performance comparable with other state-of-the-art parsers (see below)
 * **lightweight**: object representation with minimal memory footprint (e.g. no HashMaps)
 * **simple**: reading, writing and modifying JSON with minimal code (short names, fluent style)
@@ -78,7 +78,7 @@ int age = friends.get( 0 ).asObject().get( "age" ).asInt();
 
 ```java
 JsonObject jsonObject = new JsonObject().add( "name", "John" ).add( "age", 23 );
-// -> { "name": "John", "age", 23 }
+// -> { "name": "John", "age": 23 }
 
 JsonArray jsonArray = new JsonArray().add( "John" ).add( 23 );
 // -> [ "John", 23 ]
