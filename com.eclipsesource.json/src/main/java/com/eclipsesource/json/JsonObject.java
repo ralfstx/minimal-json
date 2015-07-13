@@ -127,7 +127,9 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *           if the input is not valid JSON
    * @throws UnsupportedOperationException
    *           if the input does not contain a JSON object
+   * @deprecated Use {@link Json#parse(Reader)}{@link JsonValue#asObject() .asObject()} instead
    */
+  @Deprecated
   public static JsonObject readFrom(Reader reader) throws IOException {
     return JsonValue.readFrom(reader).asObject();
   }
@@ -142,7 +144,9 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *           if the input is not valid JSON
    * @throws UnsupportedOperationException
    *           if the input does not contain a JSON object
+   * @deprecated Use {@link Json#parse(String)}{@link JsonValue#asObject() .asObject()} instead
    */
+  @Deprecated
   public static JsonObject readFrom(String string) {
     return JsonValue.readFrom(string).asObject();
   }

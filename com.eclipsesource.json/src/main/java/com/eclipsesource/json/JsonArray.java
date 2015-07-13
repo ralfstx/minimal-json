@@ -109,7 +109,9 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *           if the input is not valid JSON
    * @throws UnsupportedOperationException
    *           if the input does not contain a JSON array
+   * @deprecated Use {@link Json#parse(Reader)}{@link JsonValue#asArray() .asArray()} instead
    */
+  @Deprecated
   public static JsonArray readFrom(Reader reader) throws IOException {
     return JsonValue.readFrom(reader).asArray();
   }
@@ -124,7 +126,9 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
    *           if the input is not valid JSON
    * @throws UnsupportedOperationException
    *           if the input does not contain a JSON array
+   * @deprecated Use {@link Json#parse(String)}{@link JsonValue#asArray() .asArray()} instead
    */
+  @Deprecated
   public static JsonArray readFrom(String string) {
     return JsonValue.readFrom(string).asArray();
   }

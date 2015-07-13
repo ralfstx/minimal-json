@@ -24,7 +24,13 @@ package com.eclipsesource.json;
 import static com.eclipsesource.json.TestUtil.assertException;
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+
 import org.junit.Test;
+
+import com.eclipsesource.json.TestUtil.RunnableEx;
 
 
 public class Json_Test {
@@ -238,6 +244,36 @@ public class Json_Test {
   @Test
   public void object() {
     assertEquals(new JsonObject(), Json.object());
+  }
+
+  @Test
+  public void parse_string() {
+    assertEquals(Json.value(23), Json.parse("23"));
+  }
+
+  @Test
+  public void parse_string_failsWithNull() {
+    TestUtil.assertException(NullPointerException.class, "string is null", new Runnable() {
+      public void run() {
+        Json.parse((String)null);
+      }
+    });
+  }
+
+  @Test
+  public void parse_reader() throws IOException {
+    Reader reader = new StringReader("23");
+
+    assertEquals(Json.value(23), Json.parse(reader));
+  }
+
+  @Test
+  public void parse_reader_failsWithNull() {
+    TestUtil.assertException(NullPointerException.class, "reader is null", new RunnableEx() {
+      public void run() throws IOException {
+        Json.parse((Reader)null);
+      }
+    });
   }
 
 }

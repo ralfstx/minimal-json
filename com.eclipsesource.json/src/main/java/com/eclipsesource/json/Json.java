@@ -21,8 +21,35 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
+import java.io.IOException;
+import java.io.Reader;
+
+
 /**
- * Utility class that provides JSON constants.
+ * This class serves as the entry point to the minimal-json API.
+ * <p>
+ * To <strong>parse</strong> a given JSON input, use the <code>parse()</code> methods like in this
+ * example:
+ * </p>
+ * <pre>
+ * JsonObject object = Json.parse(string).asObject();
+ * </pre>
+ * <p>
+ * To <strong>create</strong> a JSON data structure to be serialized, use the methods
+ * <code>value()</code>, <code>array()</code>, and <code>object()</code>. For example, the following
+ * snippet will produce the JSON string <em>{"foo": 23, "bar": true}</em>:
+ * </p>
+ * <pre>
+ * String string = Json.object().add("foo", 23).add("bar", true).toString();
+ * </pre>
+ * <p>
+ * To create a JSON array from a given Java array, you can use one of the <code>array()</code>
+ * methods with varargs parameters:
+ * </p>
+ * <pre>
+ * String[] names = ...
+ * JsonArray array = Json.array(names);
+ * </pre>
  */
 public abstract class Json {
 
@@ -248,6 +275,52 @@ public abstract class Json {
    */
   public static JsonObject object() {
     return new JsonObject();
+  }
+
+  /**
+   * Parses the given input string as JSON. The input must contain a valid JSON value, optionally
+   * padded with whitespace.
+   *
+   * @param string
+   *          the input string, must be valid JSON
+   * @return a value that represents the parsed JSON
+   * @throws ParseException
+   *           if the input is not valid JSON
+   */
+  public static JsonValue parse(String string) {
+    if (string == null) {
+      throw new NullPointerException("string is null");
+    }
+    try {
+      return new JsonParser(string).parse();
+    } catch (IOException exception) {
+      // JsonParser does not throw IOException for String
+      throw new RuntimeException(exception);
+    }
+  }
+
+  /**
+   * Reads the entire input stream from the given reader and parses it as JSON. The input must
+   * contain a valid JSON value, optionally padded with whitespace.
+   * <p>
+   * Characters are read in chunks and buffered internally, therefore wrapping an existing reader in
+   * an additional <code>BufferedReader</code> does <strong>not</strong> improve reading
+   * performance.
+   * </p>
+   *
+   * @param reader
+   *          the reader to read the JSON value from
+   * @return a value that represents the parsed JSON
+   * @throws IOException
+   *           if an I/O error occurs in the reader
+   * @throws ParseException
+   *           if the input is not valid JSON
+   */
+  public static JsonValue parse(Reader reader) throws IOException {
+    if (reader == null) {
+      throw new NullPointerException("reader is null");
+    }
+    return new JsonParser( reader ).parse();
   }
 
   private static String cutOffPointZero(String string) {

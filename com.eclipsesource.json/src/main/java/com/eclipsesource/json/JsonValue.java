@@ -103,7 +103,9 @@ public abstract class JsonValue implements Serializable {
    *           if an I/O error occurs in the reader
    * @throws ParseException
    *           if the input is not valid JSON
+   * @deprecated Use {@link Json#parse(Reader)} instead
    */
+  @Deprecated
   public static JsonValue readFrom(Reader reader) throws IOException {
     return new JsonParser(reader).parse();
   }
@@ -116,7 +118,9 @@ public abstract class JsonValue implements Serializable {
    * @return the JSON value that has been read
    * @throws ParseException
    *           if the input is not valid JSON
+   * @deprecated Use {@link Json#parse(String)} instead
    */
+  @Deprecated
   public static JsonValue readFrom(String text) {
     try {
       return new JsonParser(text).parse();
