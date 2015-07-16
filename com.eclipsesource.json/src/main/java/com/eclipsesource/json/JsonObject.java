@@ -526,6 +526,24 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
+   * Merges this `object` with value of object. If both contain two keys with same names, the value
+   * from `object` will be chosen.
+   *
+   * @param object
+   *          the object from which to merge from
+   * @return the object itself, to enable method chaining
+   */
+  public JsonObject merge(JsonObject object) {
+    if (object == null) {
+      throw new NullPointerException("object is null");
+    }
+    for (Member member : object) {
+      this.set(member.name, member.value);
+    }
+    return this;
+  }
+
+  /**
    * Returns the value of the member with the specified name in this object. If this object contains
    * multiple members with the given name, this method will return the last one.
    *
