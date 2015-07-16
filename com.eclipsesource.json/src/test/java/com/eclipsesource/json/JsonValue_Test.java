@@ -83,24 +83,25 @@ public class JsonValue_Test {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void readFrom_string() {
     assertEquals(new JsonArray(), JsonValue.readFrom("[]"));
     assertEquals(new JsonObject(), JsonValue.readFrom("{}"));
-    assertEquals(Json.value("foo"), JsonValue.readFrom("\"foo\""));
     assertEquals(Json.value(23), JsonValue.readFrom("23"));
     assertSame(Json.NULL, JsonValue.readFrom("null"));
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void readFrom_reader() throws IOException {
     assertEquals(new JsonArray(), JsonValue.readFrom(new StringReader("[]")));
     assertEquals(new JsonObject(), JsonValue.readFrom(new StringReader("{}")));
-    assertEquals(Json.value("foo"), JsonValue.readFrom(new StringReader("\"foo\"")));
     assertEquals(Json.value(23), JsonValue.readFrom(new StringReader("23")));
     assertSame(Json.NULL, JsonValue.readFrom(new StringReader("null")));
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void readFrom_reader_doesNotCloseReader() throws IOException {
     Reader reader = spy(new StringReader("{}"));
 

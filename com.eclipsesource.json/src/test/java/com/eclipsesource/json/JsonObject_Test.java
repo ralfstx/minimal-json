@@ -103,6 +103,7 @@ public class JsonObject_Test {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void readFrom_reader() throws IOException {
     assertEquals(new JsonObject(), JsonObject.readFrom(new StringReader("{}")));
     assertEquals(new JsonObject().add("a", 23),
@@ -110,17 +111,20 @@ public class JsonObject_Test {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void readFrom_string() {
     assertEquals(new JsonObject(), JsonObject.readFrom("{}"));
     assertEquals(new JsonObject().add("a", 23), JsonObject.readFrom("{ \"a\": 23 }"));
   }
 
   @Test(expected = ParseException.class)
+  @SuppressWarnings("deprecation")
   public void readFrom_illegalJson() {
     JsonObject.readFrom("This is not JSON");
   }
 
   @Test(expected = UnsupportedOperationException.class)
+  @SuppressWarnings("deprecation")
   public void readFrom_wrongJsonType() {
     JsonObject.readFrom("\"This is not a JSON object\"");
   }
