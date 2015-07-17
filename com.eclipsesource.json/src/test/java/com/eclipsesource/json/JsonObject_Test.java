@@ -687,6 +687,31 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void merge_failsWithNull() {
+    assertException(NullPointerException.class, "object is null", new Runnable() {
+      public void run() {
+        object.merge(null);
+      }
+    });
+  }
+
+  @Test
+  public void merge_appendsMembers() {
+    object.add("a", 1).add("b", 1);
+    object.merge(Json.object().add("c", 2).add("d", 2));
+
+    assertEquals(Json.object().add("a", 1).add("b", 1).add("c", 2).add("d", 2), object);
+  }
+
+  @Test
+  public void merge_replacesMembers() {
+    object.add("a", 1).add("b", 1).add("c", 1);
+    object.merge(Json.object().add("b", 2).add("d", 2));
+
+    assertEquals(Json.object().add("a", 1).add("b", 2).add("c", 1).add("d", 2), object);
+  }
+
+  @Test
   public void write_empty() throws IOException {
     JsonWriter writer = mock(JsonWriter.class);
     object.write(writer);

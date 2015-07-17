@@ -526,11 +526,12 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
-   * Merges this `object` with value of object. If both contain two keys with same names, the value
-   * from `object` will be chosen.
+   * Copies all members of the specified object into this object. When the specified object contains
+   * members with names that also exist in this object, the existing values in this object will be
+   * replaced by the corresponding values in the specified object.
    *
    * @param object
-   *          the object from which to merge from
+   *          the object to merge
    * @return the object itself, to enable method chaining
    */
   public JsonObject merge(JsonObject object) {
