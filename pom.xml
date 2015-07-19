@@ -3,62 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.eclipsesource.minimal-json</groupId>
-  <artifactId>parent</artifactId>
+  <artifactId>build</artifactId>
   <version>0.9.4-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>parent</name>
 
   <modules>
     <module>com.eclipsesource.json</module>
     <module>com.eclipsesource.json.performancetest</module>
   </modules>
-
-  <scm>
-    <url>https://github.com/ralfstx/minimal-json</url>
-    <connection>scm:git:git@github.com:ralfstx/minimal-json.git</connection>
-    <developerConnection>scm:git:git@github.com:ralfstx/minimal-json.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-    </snapshotRepository>
-    <repository>
-      <id>sonatype-nexus-staging</id>
-      <name>Nexus Release Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-    </plugins>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.4</version>
-          <configuration>
-            <!-- needed to enable make gpg signing -->
-            <mavenExecutorId>forked-path</mavenExecutorId>
-            <tagNameFormat>@{project.version}</tagNameFormat>
-            <arguments>-Duser.name="@{user.name}"</arguments>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
 
 </project>
