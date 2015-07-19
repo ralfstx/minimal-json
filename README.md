@@ -15,107 +15,185 @@ It's not an object mapper, but a bare-bones library that aims at being
 
 Minimal-json is fully covered by unit tests, and field-tested by the [Eclipse RAP project](http://eclipse.org/rap) and others (see below). The JAR contains a **valid OSGi** bundle manifest and can be used in OSGi environments without modifications.
 
-Code Examples
--------------
+Usage
+-----
 
-### Read JSON from a String or a Reader
+The class `Json` is the entrypoint to the minimal-json API, use it to parse and to create JSON.
 
-Reading is buffered already, so you *don't* need to wrap your reader in a BufferedReader.
+### Parse JSON
+
+You can parse JSON from a `String` or from a `java.io.Reader`. You *don't* need to wrap your reader in a BufferedReader, as the parse method uses a reading buffer.
 
 ```java
-JsonObject jsonObject = JsonObject.readFrom( string );
-JsonArray jsonArray = JsonArray.readFrom( reader );
+JsonValue value = Json.parse(string);
 ```
 
-### Access the contents of a JSON object
+### JSON values
 
-The `get` method returns a `JsonValue` if the element exists. Depending on the type, you can get corresponding Java values using the methods `asString`, `asBoolean`, etc.
+JSON values are represented by the type `JsonValue`. A `JsonValue` can contain a JSON array, object, string, number, or one of the literals `true`, `false`, and `null`.
+To transform a `JsonValue` into a Java type, use the methods `asString`, `asInt`, `asFloat`, `asArray` etc., depending on the expected type.
+To query the actual type, use one of the methods `isString`, `isNumber`, `isArray`, `isObject`, `isBoolean`, and `isNull`, for example:
 
 ```java
-String name = jsonObject.get( "name" ).asString();
-int age = jsonObject.get( "age" ).asInt(); // asLong(), asFloat(), asDouble(), ...
+if (value.isString()) {
+  String string = value.asString();
+  // ...
+} else if (value.isArray()) {
+  JsonArray array = value.asArray();
+  // ...
+}
 ```
 
-you can use a default value if the element does not exist:
+### JSON arrays
+
+The method `asArray` returns an instance of `JsonArray`. This subtype of `JsonValue` provides a `get` method to access the elements of a JSON array:
 
 ```java
-String name = jsonObject.getString( "name", "unknown" );
-int age = jsonObject.getInt( "age", -1 );
+JsonArray array = Json.parse(reader).asArray();
+String name = array.get(0).asString();
+int quantity = array.get(1).asInt();
 ```
 
-you can also iterate over the members:
+You can also iterate over the elements of a `JsonArray`, which are again also JSON values:
 
 ```java
-for( Member member : jsonObject ) {
+for (JsonValue value : jsonArray) {
+  // ...
+}
+```
+
+### JSON objects
+
+Similar to `JsonArray`, the type `JsonObject` represents JSON objects, the map type in JSON. Members of a JSON object can be accessed by name using the `get` method.
+
+```java
+JsonObject object = Json.parse(input).asObject();
+String name = object.get("name").asString();
+int quantity = object.get("quantity").asInt();
+```
+
+There are also shorthand methods like `getString`, `getInt`, `getDouble`, etc. that directly return the expected type. These methods require a default value that is returned when the member is not found:
+
+```java
+String name = object.getString("name", "Unknown");
+int age = object.getInt("quantity", 1);
+```
+
+You can also iterate over the members of a JSON object:
+
+```java
+for (Member member : jsonObject) {
   String name = member.getName();
   JsonValue value = member.getValue();
   // ...
 }
 ```
 
-### Access the contents of a JSON array
+### Example: Extract nested contents
 
-```java
-String name = jsonArray.get( 0 ).asString();
-int age = jsonArray.get( 1 ).asInt(); // asLong(), asFloat(), asDouble(), ...
+Let's take the following JSON as an example:
 
-// or iterate over the values:
-for( JsonValue value : jsonArray ) {
-  // ...
+```json
+{
+  "order": 4711,
+  "items": [
+    {
+      "name": "NE555 Timer IC",
+      "cat-id": "645723",
+      "quantity": 10,
+    },
+    {
+      "name": "LM358N OpAmp IC",
+      "cat-id": "764525",
+      "quantity": 2
+    }
+  ]
 }
 ```
 
-### Access nested contents
+The following snippet extracts the names and quantities of all items:
 
 ```java
-// Example: { "friends": [ { "name": "John", "age": 23 }, ... ], ... }
-JsonArray friends = jsonObject.get( "friends" ).asArray();
-String name = friends.get( 0 ).asObject().get( "name" ).asString();
-int age = friends.get( 0 ).asObject().get( "age" ).asInt();
+JsonArray items = Json.parse(json).asObject().get("items").asArray();
+for (JsonValue item : items) {
+  String name = item.asObject().getString("name", "Unknown Item");
+  int quantity = item.asObject().getInt("quantity", 1);
+  ...  
+}
 ```
 
-### Create JSON objects and arrays
+### Create JSON values
+
+The entrypoint class `Json` also has methods to create instances of `JsonValue` from Java strings, numbers, and boolean values, for example:
 
 ```java
-JsonObject jsonObject = new JsonObject().add( "name", "John" ).add( "age", 23 );
-// -> { "name": "John", "age": 23 }
-
-JsonArray jsonArray = new JsonArray().add( "John" ).add( 23 );
-// -> [ "John", 23 ]
+JsonValue name = Json.value("Alice");
+JsonValue points = Json.value(23);
 ```
 
-### Modify JSON objects and arrays
+And there are methods for creating empty arrays and objects as well.
+Use these together with `add` to create data structures:
 
 ```java
-jsonObject.set( "age", 24 );
-jsonArray.set( 1, 24 ); // access element by index
+JsonObject user = Json.object().add("name", "Alice").add("points", 23);
+// -> {"name": "Alice", "points": 23}
 
-jsonObject.remove( "age" );
-jsonArray.remove( 1 );
-
-jsonObject.merge(otherObject); // merges both objects and overwrites with passed value
+JsonArray user = Json.array().add("Bob").add(42);
+// -> ["Bob", 42]
 ```
 
-### Write JSON to a Writer or a String
-
-These methods can be used on all JsonValues:
+You can also create JSON arrays conveniently from Java arrays such as `String[]`, `int[]`, `boolean[]`, etc.:
 
 ```java
-jsonValue.writeTo( writer );
+String[] javaNames = {"Alice", "Bob"};
+JsonArray jsonNames = Json.array(names);
+```
+
+### Modify JSON arrays and objects
+
+You can replace or remove array elements based on their index. The index must be valid.
+
+```java
+jsonArray.set(1, 24);
+jsonArray.remove(1);
+```
+
+Likewise, members of JSON objects can be modified by their name. If the name does not exist, `set` will append a new member.
+
+```java
+jsonObject.set("quantity", 24);
+jsonObject.remove("quantity");
+```
+
+`JsonObject` also provides a `merge` method that copies all members from a given JSON object.
+
+```java
+jsonObject.merge(otherObject);
+```
+
+### Output JSON
+
+The `toString` method of a `JsonValue` returns valid JSON strings.
+You can also write to a `java.io.Writer` using `writeTo`:
+
+```java
 String json = jsonValue.toString();
+jsonValue.writeTo(writer);
 ```
 
-Enable formatted output:
+Both methods accept an additonal parameter to enable formatted output:
 
 ```java
-jsonValue.writeTo( writer, WriterConfig.PRETTY_PRINT );
-String json = jsonValue.toString( WriterConfig.PRETTY_PRINT );
+String json = jsonValue.toString(WriterConfig.PRETTY_PRINT);
+jsonValue.writeTo(writer, WriterConfig.PRETTY_PRINT);
 ```
+
+For more details, have a look at the [JavaDoc](http://www.javadoc.io/doc/com.eclipsesource.minimal-json/minimal-json/).
 
 Concurrency
 -----------
 
-The JSON structures in this library (`JsonObject` and `JsonArray`) are deliberately **not thread-safe** to keep them fast and simple. In the rare case that JSON data structures must be accessed from multiple threads, while at least one of these threads modifies the contents, the application must ensure proper synchronization.
+The JSON structures in this library (`JsonObject` and `JsonArray`) are deliberately **not thread-safe** to keep them fast and simple. In the rare case that JSON data structures must be accessed from multiple threads, while at least one of these threads modifies their contents, the application must ensure proper synchronization.
 
 Iterators will throw a `ConcurrentModificationException` when the contents of
 a JSON structure have been modified after the creation of the iterator.
@@ -162,7 +240,7 @@ You can include minimal-json from Maven Central by adding this dependency to you
 <dependency>
   <groupId>com.eclipsesource.minimal-json</groupId>
   <artifactId>minimal-json</artifactId>
-  <version>0.9.3</version>
+  <version>0.9.4</version>
 </dependency>
 ```
 
