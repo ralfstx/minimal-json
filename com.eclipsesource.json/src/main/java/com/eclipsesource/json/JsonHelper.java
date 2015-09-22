@@ -50,19 +50,19 @@ public class JsonHelper {
 		else return null;
 	}
 	public static Set<Object> jsonArrayAsSet(JsonArray array) {
-		Set<Object> set = new HashSet<>();
+		Set<Object> set = new HashSet<Object>();
 		for(JsonValue value:array)
 			set.add(jsonValueAsObject(value));
 		return set;
 	}
 	public static List<Object> jsonArrayAsList(JsonArray array) {
-		List<Object> list = new ArrayList<>();
+		List<Object> list = new ArrayList<Object>();
 		for(JsonValue element:array)
 			list.add(jsonValueAsObject(element));
 		return list;
 	}
 	public static Map<String,Object> jsonObjectAsMap(JsonObject object) {
-		Map<String,Object> map = new HashMap<>();
+		Map<String,Object> map = new HashMap<String,Object>();
 		for(JsonObject.Member member:object)
 			map.put(member.getName(), jsonValueAsObject(member.getValue()));
 		return map;		
