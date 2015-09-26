@@ -56,13 +56,13 @@ public class JsonHelper {
 		return set;
 	}
 	public static List<Object> jsonArrayAsList(JsonArray array) {
-		List<Object> list = new ArrayList<Object>();
+		List<Object> list = new ArrayList<Object>(array.size());
 		for(JsonValue element:array)
 			list.add(jsonValueAsObject(element));
 		return list;
 	}
 	public static Map<String,Object> jsonObjectAsMap(JsonObject object) {
-		Map<String,Object> map = new HashMap<String,Object>();
+		Map<String,Object> map = new HashMap<String,Object>(object.size(), 1.f);
 		for(JsonObject.Member member:object)
 			map.put(member.getName(), jsonValueAsObject(member.getValue()));
 		return map;		
