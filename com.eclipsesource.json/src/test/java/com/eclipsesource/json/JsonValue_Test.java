@@ -41,9 +41,9 @@ public class JsonValue_Test {
   @Test
   @SuppressWarnings("deprecation")
   public void testConstantsAreLiterals() {
-    assertSame(Json.NULL, JsonValue.NULL);
-    assertSame(Json.TRUE, JsonValue.TRUE);
-    assertSame(Json.FALSE, JsonValue.FALSE);
+    assertEquals(Json.NULL, JsonValue.NULL);
+    assertEquals(Json.TRUE, JsonValue.TRUE);
+    assertEquals(Json.FALSE, JsonValue.FALSE);
   }
 
   @Test
