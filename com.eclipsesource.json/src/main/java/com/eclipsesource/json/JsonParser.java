@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2013, 2016 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import java.io.StringReader;
 
 class JsonParser {
 
+  private static final int MAX_NESTING_LEVEL = 1000;
   private static final int MIN_BUFFER_SIZE = 10;
   private static final int DEFAULT_BUFFER_SIZE = 1024;
 
@@ -41,6 +42,7 @@ class JsonParser {
   private int current;
   private StringBuilder captureBuffer;
   private int captureStart;
+  private int nestingLevel;
 
   /*
    * |                      bufferOffset
@@ -111,9 +113,13 @@ class JsonParser {
 
   private JsonArray readArray() throws IOException {
     read();
+    if (nestingLevel++ >= MAX_NESTING_LEVEL) {
+      throw error("Nesting too deep");
+    }
     JsonArray array = new JsonArray();
     skipWhiteSpace();
     if (readChar(']')) {
+      nestingLevel--;
       return array;
     }
     do {
@@ -124,14 +130,19 @@ class JsonParser {
     if (!readChar(']')) {
       throw expected("',' or ']'");
     }
+    nestingLevel--;
     return array;
   }
 
   private JsonObject readObject() throws IOException {
     read();
+    if (nestingLevel++ >= 1000) {
+      throw error("Nesting too deep");
+    }
     JsonObject object = new JsonObject();
     skipWhiteSpace();
     if (readChar('}')) {
+      nestingLevel--;
       return object;
     }
     do {
@@ -148,6 +159,7 @@ class JsonParser {
     if (!readChar('}')) {
       throw expected("',' or '}'");
     }
+    nestingLevel--;
     return object;
   }
 

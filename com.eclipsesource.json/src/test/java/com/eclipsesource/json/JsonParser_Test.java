@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2013, 2016 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,8 @@ import java.io.StringReader;
 import org.hamcrest.core.StringStartsWith;
 import org.junit.Test;
 
+import com.eclipsesource.json.TestUtil.RunnableEx;
+
 
 public class JsonParser_Test {
 
@@ -40,13 +42,9 @@ public class JsonParser_Test {
 
   @Test
   public void parse_rejectsEmptyReader() {
-    ParseException exception = assertException(ParseException.class, new Runnable() {
-      public void run() {
-        try {
-          new JsonParser(new StringReader("")).parse();
-        } catch (IOException exception) {
-          throw new RuntimeException(exception);
-        }
+    ParseException exception = assertException(ParseException.class, new RunnableEx() {
+      public void run() throws IOException {
+        new JsonParser(new StringReader("")).parse();
       }
     });
 
@@ -129,18 +127,118 @@ public class JsonParser_Test {
   public void parse_handlesPositionsCorrectlyWhenInputExceedsBufferSize() {
     final String input = "{\n  \"a\": 23,\n  \"b\": 42,\n}";
 
-    ParseException exception = assertException(ParseException.class, new Runnable() {
-      public void run() {
-        try {
-          new JsonParser(new StringReader(input), 3).parse();
-        } catch (IOException e) {
-        }
+    ParseException exception = assertException(ParseException.class, new RunnableEx() {
+      public void run() throws IOException {
+        new JsonParser(new StringReader(input), 3).parse();
       }
     });
 
     assertEquals(4, exception.getLine());
     assertEquals(0, exception.getColumn());
     assertEquals(24, exception.getOffset());
+  }
+
+  @Test
+  public void parse_failsOnTooDeeplyNestedArray() {
+    JsonArray array = new JsonArray();
+    for (int i = 0; i < 1001; i++) {
+      array = new JsonArray().add(array);
+    }
+    final String input = array.toString();
+
+    ParseException exception = assertException(ParseException.class, new RunnableEx() {
+      public void run() throws IOException {
+        new JsonParser(input).parse();
+      }
+    });
+
+    assertEquals("Nesting too deep at 1:1001", exception.getMessage());
+  }
+
+  @Test
+  public void parse_failsOnTooDeeplyNestedObject() {
+    JsonObject object = new JsonObject();
+    for (int i = 0; i < 1001; i++) {
+      object = new JsonObject().add("foo", object);
+    }
+    final String input = object.toString();
+
+    ParseException exception = assertException(ParseException.class, new RunnableEx() {
+      public void run() throws IOException {
+        new JsonParser(input).parse();
+      }
+    });
+
+    assertEquals("Nesting too deep at 1:7001", exception.getMessage());
+  }
+
+  @Test
+  public void parse_failsOnTooDeeplyNestedMixedObject() {
+    JsonValue value = new JsonObject();
+    for (int i = 0; i < 1001; i++) {
+      value = i % 2 == 0 ? new JsonArray().add(value) : new JsonObject().add("foo", value);
+    }
+    final String input = value.toString();
+
+    ParseException exception = assertException(ParseException.class, new RunnableEx() {
+      public void run() throws IOException {
+        new JsonParser(input).parse();
+      }
+    });
+
+    assertEquals("Nesting too deep at 1:4001", exception.getMessage());
+  }
+
+  @Test
+  public void parse_doesNotFailWithManyArrays() throws IOException {
+    JsonArray array = new JsonArray();
+    for (int i = 0; i < 1001; i++) {
+      array.add(new JsonArray().add(7));
+    }
+    final String input = array.toString();
+
+    JsonValue result = new JsonParser(input).parse();
+
+    assertTrue(result.isArray());
+  }
+
+  @Test
+  public void parse_doesNotFailWithManyEmptyArrays() throws IOException {
+    JsonArray array = new JsonArray();
+    for (int i = 0; i < 1001; i++) {
+      array.add(new JsonArray());
+    }
+    final String input = array.toString();
+
+    JsonValue result = new JsonParser(input).parse();
+
+    assertTrue(result.isArray());
+  }
+
+  @Test
+  public void parse_doesNotFailWithManyObjects() throws IOException {
+    JsonArray array = new JsonArray();
+    for (int i = 0; i < 1001; i++) {
+      array.add(new JsonObject().add("a", 7));
+    }
+    final String input = array.toString();
+
+    JsonValue result = new JsonParser(input).parse();
+
+    assertTrue(result.isArray());
+  }
+
+  @Test
+  public void parse_doesNotFailWithManyEmptyObjects() throws IOException {
+    JsonArray array = new JsonArray();
+    for (int i = 0; i < 1001; i++) {
+      array.add(new JsonObject());
+    }
+    final String input = array.toString();
+
+    JsonValue result = new JsonParser(input).parse();
+
+    assertTrue(result.isArray());
   }
 
   @Test
