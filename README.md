@@ -244,6 +244,8 @@ You can include minimal-json from Maven Central by adding this dependency to you
 </dependency>
 ```
 
+Development snapshots are available on [oss.sonatype.org](https://oss.sonatype.org/content/repositories/snapshots/com/eclipsesource/minimal-json/minimal-json/).
+
 Build
 -----
 
