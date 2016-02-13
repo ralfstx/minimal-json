@@ -263,7 +263,13 @@ public class JsonParser_Test {
 
   @Test
   public void arrays_nested() {
+    assertEquals("[[23]]", parse("[[23]]").toString());
+    assertEquals("[[[]]]", parse("[[[]]]").toString());
     assertEquals("[[23],42]", parse("[[23],42]").toString());
+    assertEquals("[[23],[42]]", parse("[[23],[42]]").toString());
+    assertEquals("[[23],[42]]", parse("[[23],[42]]").toString());
+    assertEquals("[{\"foo\":[23]},{\"bar\":[42]}]",
+                 parse("[{\"foo\":[23]},{\"bar\":[42]}]").toString());
   }
 
   @Test
@@ -305,7 +311,12 @@ public class JsonParser_Test {
 
   @Test
   public void objects_nested() {
-    assertEquals("{\"foo\":{\"bar\":42}}", parse("{\"foo\":{\"bar\":42}}").toString());
+    assertEquals("{\"foo\":{}}", parse("{\"foo\":{}}").toString());
+    assertEquals("{\"foo\":{\"bar\":42}}", parse("{\"foo\":{\"bar\": 42}}").toString());
+    assertEquals("{\"foo\":{\"bar\":{\"baz\":42}}}",
+                 parse("{\"foo\":{\"bar\": {\"baz\": 42}}}").toString());
+    assertEquals("{\"foo\":[{\"bar\":{\"baz\":[[42]]}}]}",
+                 parse("{\"foo\":[{\"bar\": {\"baz\": [[42]]}}]}").toString());
   }
 
   @Test
