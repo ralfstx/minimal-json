@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2013, 2016 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -107,7 +107,7 @@ public abstract class JsonValue implements Serializable {
    */
   @Deprecated
   public static JsonValue readFrom(Reader reader) throws IOException {
-    return new JsonParser(reader).parse();
+    return Json.parse(reader);
   }
 
   /**
@@ -122,12 +122,7 @@ public abstract class JsonValue implements Serializable {
    */
   @Deprecated
   public static JsonValue readFrom(String text) {
-    try {
-      return new JsonParser(text).parse();
-    } catch (IOException exception) {
-      // JsonParser does not throw IOException for String
-      throw new RuntimeException(exception);
-    }
+    return Json.parse(text);
   }
 
   /**
