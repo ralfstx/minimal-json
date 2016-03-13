@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 EclipseSource.
+ * Copyright (c) 2015, 2016 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -291,21 +291,17 @@ public final class Json {
     if (string == null) {
       throw new NullPointerException("string is null");
     }
-    try {
-      return new JsonParser(string).parse();
-    } catch (IOException exception) {
-      // JsonParser does not throw IOException for String
-      throw new RuntimeException(exception);
-    }
+    DefaultHandler handler = new DefaultHandler();
+    new JsonParser(handler).parse(string);
+    return handler.getValue();
   }
 
   /**
-   * Reads the entire input stream from the given reader and parses it as JSON. The input must
-   * contain a valid JSON value, optionally padded with whitespace.
+   * Reads the entire input from the given reader and parses it as JSON. The input must contain a
+   * valid JSON value, optionally padded with whitespace.
    * <p>
-   * Characters are read in chunks and buffered internally, therefore wrapping an existing reader in
-   * an additional <code>BufferedReader</code> does <strong>not</strong> improve reading
-   * performance.
+   * Characters are read in chunks into an input buffer. Hence, wrapping a reader in an additional
+   * <code>BufferedReader</code> likely won't improve reading performance.
    * </p>
    *
    * @param reader
@@ -320,7 +316,9 @@ public final class Json {
     if (reader == null) {
       throw new NullPointerException("reader is null");
     }
-    return new JsonParser( reader ).parse();
+    DefaultHandler handler = new DefaultHandler();
+    new JsonParser(handler).parse(reader);
+    return handler.getValue();
   }
 
   private static String cutOffPointZero(String string) {
@@ -328,6 +326,71 @@ public final class Json {
       return string.substring(0, string.length() - 2);
     }
     return string;
+  }
+
+  static class DefaultHandler extends JsonHandler<JsonArray, JsonObject> {
+
+    protected JsonValue value;
+
+    @Override
+    public JsonArray startArray() {
+      return new JsonArray();
+    }
+
+    @Override
+    public JsonObject startObject() {
+      return new JsonObject();
+    }
+
+    @Override
+    public void endNull() {
+      value = NULL;
+    }
+
+    @Override
+    public void endTrue() {
+      value = TRUE;
+    }
+
+    @Override
+    public void endFalse() {
+      value = FALSE;
+    }
+
+    @Override
+    public void endString(String string) {
+      value = new JsonString(string);
+    }
+
+    @Override
+    public void endNumber(String string) {
+      value = new JsonNumber(string);
+    }
+
+    @Override
+    public void endArray(JsonArray array) {
+      value = array;
+    }
+
+    @Override
+    public void endObject(JsonObject object) {
+      value = object;
+    }
+
+    @Override
+    public void endArrayValue(JsonArray array) {
+      array.add(value);
+    }
+
+    @Override
+    public void endObjectValue(JsonObject object, String name) {
+      object.add(name, value);
+    }
+
+    JsonValue getValue() {
+      return value;
+    }
+
   }
 
 }
