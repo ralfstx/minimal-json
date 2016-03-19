@@ -34,6 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.eclipsesource.json.Json.DefaultHandler;
+import com.eclipsesource.json.JsonParser.Location;
 import com.eclipsesource.json.TestUtil.RunnableEx;
 
 
@@ -219,12 +220,31 @@ public class JsonParser_Test {
   }
 
   @Test
-  public void parse_handlesLineBreaksAndColumnsCorrectly() {
-    assertParseException(0, 1, 0, "!");
-    assertParseException(2, 2, 0, "[\n!");
-    assertParseException(3, 2, 0, "[\r\n!");
-    assertParseException(6, 3, 1, "[ \n \n !");
-    assertParseException(7, 2, 3, "[ \r\n \r !");
+  public void parse_lineAndColumn_onFirstLine() {
+    parser.parse("[]");
+
+    assertEquals("1:3", handler.lastLocation.toString());
+  }
+
+  @Test
+  public void parse_lineAndColumn_afterLF() {
+    parser.parse("[\n]");
+
+    assertEquals("2:2", handler.lastLocation.toString());
+  }
+
+  @Test
+  public void parse_lineAndColumn_afterCRLF() {
+    parser.parse("[\r\n]");
+
+    assertEquals("2:2", handler.lastLocation.toString());
+  }
+
+  @Test
+  public void parse_lineAndColumn_afterCR() {
+    parser.parse("[\r]");
+
+    assertEquals("1:4", handler.lastLocation.toString());
   }
 
   @Test
@@ -271,7 +291,7 @@ public class JsonParser_Test {
     });
 
     assertEquals(4, exception.getLine());
-    assertEquals(0, exception.getColumn());
+    assertEquals(1, exception.getColumn());
     assertEquals(24, exception.getOffset());
   }
 
@@ -289,7 +309,7 @@ public class JsonParser_Test {
       }
     });
 
-    assertEquals("Nesting too deep at 1:1001", exception.getMessage());
+    assertEquals("Nesting too deep at 1:1002", exception.getMessage());
   }
 
   @Test
@@ -306,7 +326,7 @@ public class JsonParser_Test {
       }
     });
 
-    assertEquals("Nesting too deep at 1:7001", exception.getMessage());
+    assertEquals("Nesting too deep at 1:7002", exception.getMessage());
   }
 
   @Test
@@ -323,7 +343,7 @@ public class JsonParser_Test {
       }
     });
 
-    assertEquals("Nesting too deep at 1:4001", exception.getMessage());
+    assertEquals("Nesting too deep at 1:4002", exception.getMessage());
   }
 
   @Test
@@ -730,17 +750,6 @@ public class JsonParser_Test {
     assertThat(exception.getMessage(), startsWith(message + " at"));
   }
 
-  private void assertParseException(int offset, int line, int column, final String json) {
-    ParseException exception = assertException(ParseException.class, new Runnable() {
-      public void run() {
-        parser.parse(json);
-      }
-    });
-    assertEquals("offset", offset, exception.getOffset());
-    assertEquals("line", line, exception.getLine());
-    assertEquals("column", column, exception.getColumn());
-  }
-
   private static String join(String... strings) {
     StringBuilder builder = new StringBuilder();
     for (String string : strings) {
@@ -751,6 +760,7 @@ public class JsonParser_Test {
 
   static class TestHandler extends JsonHandler<Object, Object> {
 
+    Location lastLocation;
     StringBuilder log = new StringBuilder();
     int sequence = 0;
 
@@ -857,11 +867,12 @@ public class JsonParser_Test {
     }
 
     private void record(String event, Object... args) {
+      lastLocation = getLocation();
       log.append(event);
       for (Object arg : args) {
         log.append(' ').append(arg);
       }
-      log.append(' ').append(getLocation().offset).append('\n');
+      log.append(' ').append(lastLocation.offset).append('\n');
     }
 
     String getLog() {

@@ -475,8 +475,8 @@ public class JsonParser {
 
   Location getLocation() {
     int offset = bufferOffset + index - 1;
-    int column = offset - lineOffset;
-    return new Location(offset, column, line);
+    int column = offset - lineOffset + 1;
+    return new Location(offset, line, column);
   }
 
   private ParseException expected(String expected) {
@@ -520,16 +520,16 @@ public class JsonParser {
     public final int offset;
 
     /**
-     * The column number, starting at 0.
-     */
-    public final int column;
-
-    /**
      * The line number, starting at 1.
      */
     public final int line;
 
-    Location(int offset, int column, int line) {
+    /**
+     * The column number, starting at 1.
+     */
+    public final int column;
+
+    Location(int offset, int line, int column) {
       this.offset = offset;
       this.column = column;
       this.line = line;

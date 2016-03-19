@@ -39,7 +39,7 @@ public class ParseException extends RuntimeException {
   }
 
   /**
-   * Returns the absolute index of the character at which the error occurred. The index of the first
+   * Returns the absolute character index at which the error occurred. The offset of the first
    * character of a document is 0.
    *
    * @return the character offset at which the error occurred, will be &gt;= 0
@@ -49,7 +49,7 @@ public class ParseException extends RuntimeException {
   }
 
   /**
-   * Returns the number of the line in which the error occurred. The first line counts as 1.
+   * Returns the line number in which the error occurred. The number of the first line is 1.
    *
    * @return the line in which the error occurred, will be &gt;= 1
    */
@@ -58,10 +58,10 @@ public class ParseException extends RuntimeException {
   }
 
   /**
-   * Returns the index of the character at which the error occurred, relative to the line. The index
-   * of the first character of a line is 0.
+   * Returns the column number at which the error occurred, i.e. the number of the character in its
+   * line. The number of the first character of a line is 1.
    *
-   * @return the column in which the error occurred, will be &gt;= 0
+   * @return the column in which the error occurred, will be &gt;= 1
    */
   public int getColumn() {
     return column;
