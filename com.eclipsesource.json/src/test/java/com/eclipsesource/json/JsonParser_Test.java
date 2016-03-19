@@ -89,8 +89,8 @@ public class JsonParser_Test {
   public void parse_null() {
     parser.parse("null");
 
-    assertEquals(join("startNull 1:0",
-                      "endNull 1:3"),
+    assertEquals(join("startNull 0",
+                      "endNull 4"),
                  handler.getLog());
   }
 
@@ -98,8 +98,8 @@ public class JsonParser_Test {
   public void parse_true() {
     parser.parse("true");
 
-    assertEquals(join("startTrue 1:0",
-                      "endTrue 1:3"),
+    assertEquals(join("startTrue 0",
+                      "endTrue 4"),
                  handler.getLog());
   }
 
@@ -107,8 +107,8 @@ public class JsonParser_Test {
   public void parse_false() {
     parser.parse("false");
 
-    assertEquals(join("startFalse 1:0",
-                      "endFalse 1:4"),
+    assertEquals(join("startFalse 0",
+                      "endFalse 5"),
                  handler.getLog());
   }
 
@@ -116,8 +116,8 @@ public class JsonParser_Test {
   public void parse_string() {
     parser.parse("\"foo\"");
 
-    assertEquals(join("startString 1:0",
-                      "endString foo 1:4"),
+    assertEquals(join("startString 0",
+                      "endString foo 5"),
                  handler.getLog());
   }
 
@@ -125,8 +125,8 @@ public class JsonParser_Test {
   public void parse_string_empty() {
     parser.parse("\"\"");
 
-    assertEquals(join("startString 1:0",
-                      "endString  1:1"),
+    assertEquals(join("startString 0",
+                      "endString  2"),
                  handler.getLog());
   }
 
@@ -134,8 +134,26 @@ public class JsonParser_Test {
   public void parse_number() {
     parser.parse("23");
 
-    assertEquals(join("startNumber 1:0",
-                      "endNumber 23 1:1"),
+    assertEquals(join("startNumber 0",
+                      "endNumber 23 2"),
+                 handler.getLog());
+  }
+
+  @Test
+  public void parse_number_negative() {
+    parser.parse("-23");
+
+    assertEquals(join("startNumber 0",
+        "endNumber -23 3"),
+                 handler.getLog());
+  }
+
+  @Test
+  public void parse_number_negative_exponent() {
+    parser.parse("-2.3e-12");
+
+    assertEquals(join("startNumber 0",
+        "endNumber -2.3e-12 8"),
                  handler.getLog());
   }
 
@@ -143,12 +161,12 @@ public class JsonParser_Test {
   public void parse_array() {
     parser.parse("[23]");
 
-    assertEquals(join("startArray 1:0",
-                      "startArrayValue a1 1:1",
-                      "startNumber 1:1",
-                      "endNumber 23 1:3",
-                      "endArrayValue a1 1:3",
-                      "endArray a1 1:3"),
+    assertEquals(join("startArray 0",
+                      "startArrayValue a1 1",
+                      "startNumber 1",
+                      "endNumber 23 3",
+                      "endArrayValue a1 3",
+                      "endArray a1 4"),
                  handler.getLog());
   }
 
@@ -156,8 +174,8 @@ public class JsonParser_Test {
   public void parse_array_empty() {
     parser.parse("[]");
 
-    assertEquals(join("startArray 1:0",
-                      "endArray a1 1:1"),
+    assertEquals(join("startArray 0",
+                      "endArray a1 2"),
                  handler.getLog());
   }
 
@@ -165,14 +183,14 @@ public class JsonParser_Test {
   public void parse_object() {
     parser.parse("{\"foo\": 23}");
 
-    assertEquals(join("startObject 1:0",
-                      "startObjectName o1 1:1",
-                      "endObjectName o1 foo 1:6",
-                      "startObjectValue o1 foo 1:8",
-                      "startNumber 1:8",
-                      "endNumber 23 1:10",
-                      "endObjectValue o1 foo 1:10",
-                      "endObject o1 1:10"),
+    assertEquals(join("startObject 0",
+                      "startObjectName o1 1",
+                      "endObjectName o1 foo 6",
+                      "startObjectValue o1 foo 8",
+                      "startNumber 8",
+                      "endNumber 23 10",
+                      "endObjectValue o1 foo 10",
+                      "endObject o1 11"),
                  handler.getLog());
   }
 
@@ -180,8 +198,8 @@ public class JsonParser_Test {
   public void parse_object_empty() {
     parser.parse("{}");
 
-    assertEquals(join("startObject 1:0",
-                      "endObject o1 1:1"),
+    assertEquals(join("startObject 0",
+                      "endObject o1 2"),
                  handler.getLog());
   }
 
@@ -366,19 +384,20 @@ public class JsonParser_Test {
 
     parser.parse("[42]");
 
-    assertEquals(join("startArray 1:0",
-                      "startArrayValue a1 1:1",
-                      "startNumber 1:1",
-                      "endNumber 23 1:3",
-                      "endArrayValue a1 1:3",
-                      "endArray a1 1:3",
+    assertEquals(join(// first run
+                      "startArray 0",
+                      "startArrayValue a1 1",
+                      "startNumber 1",
+                      "endNumber 23 3",
+                      "endArrayValue a1 3",
+                      "endArray a1 4",
                       // second run
-                      "startArray 1:0",
-                      "startArrayValue a2 1:1",
-                      "startNumber 1:1",
-                      "endNumber 42 1:3",
-                      "endArrayValue a2 1:3",
-                      "endArray a2 1:3"),
+                      "startArray 0",
+                      "startArrayValue a2 1",
+                      "startNumber 1",
+                      "endNumber 42 3",
+                      "endArrayValue a2 3",
+                      "endArray a2 4"),
                  handler.getLog());
   }
 
@@ -842,7 +861,7 @@ public class JsonParser_Test {
       for (Object arg : args) {
         log.append(' ').append(arg);
       }
-      log.append(' ').append(getLocation()).append('\n');
+      log.append(' ').append(getLocation().offset).append('\n');
     }
 
     String getLog() {

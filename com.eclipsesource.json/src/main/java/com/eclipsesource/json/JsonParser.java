@@ -436,6 +436,7 @@ public class JsonParser {
       index = 0;
       if (fill == -1) {
         current = -1;
+        index++;
         return;
       }
     }
@@ -460,23 +461,21 @@ public class JsonParser {
   }
 
   private String endCapture() {
-    int end = current == -1 ? index : index - 1;
-    String captured;
-    if (captureBuffer.length() > 0) {
-      captureBuffer.append(buffer, captureStart, end - captureStart);
-      captured = captureBuffer.toString();
-      captureBuffer.setLength(0);
-    } else {
-      captured = new String(buffer, captureStart, end - captureStart);
-    }
+    int start = captureStart;
+    int end = index - 1;
     captureStart = -1;
-    return captured;
+    if (captureBuffer.length() > 0) {
+      captureBuffer.append(buffer, start, end - start);
+      String captured = captureBuffer.toString();
+      captureBuffer.setLength(0);
+      return captured;
+    }
+    return new String(buffer, start, end - start);
   }
 
   Location getLocation() {
-    int absIndex = bufferOffset + index;
-    int offset = isEndOfText() ? absIndex : absIndex - 1;
-    int column = absIndex - lineOffset - 1;
+    int offset = bufferOffset + index - 1;
+    int column = offset - lineOffset;
     return new Location(offset, column, line);
   }
 
