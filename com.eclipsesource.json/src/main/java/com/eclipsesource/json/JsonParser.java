@@ -271,22 +271,22 @@ public class JsonParser {
   }
 
   private void readTrue() throws IOException {
-    handler.startTrue();
+    handler.startBoolean();
     read();
     readRequiredChar('r');
     readRequiredChar('u');
     readRequiredChar('e');
-    handler.endTrue();
+    handler.endBoolean(true);
   }
 
   private void readFalse() throws IOException {
-    handler.startFalse();
+    handler.startBoolean();
     read();
     readRequiredChar('a');
     readRequiredChar('l');
     readRequiredChar('s');
     readRequiredChar('e');
-    handler.endFalse();
+    handler.endBoolean(false);
   }
 
   private void readRequiredChar(char ch) throws IOException {

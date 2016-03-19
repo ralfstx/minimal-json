@@ -99,8 +99,8 @@ public class JsonParser_Test {
   public void parse_true() {
     parser.parse("true");
 
-    assertEquals(join("startTrue 0",
-                      "endTrue 4"),
+    assertEquals(join("startBoolean 0",
+                      "endBoolean true 4"),
                  handler.getLog());
   }
 
@@ -108,8 +108,8 @@ public class JsonParser_Test {
   public void parse_false() {
     parser.parse("false");
 
-    assertEquals(join("startFalse 0",
-                      "endFalse 5"),
+    assertEquals(join("startBoolean 0",
+                      "endBoolean false 5"),
                  handler.getLog());
   }
 
@@ -775,23 +775,13 @@ public class JsonParser_Test {
     }
 
     @Override
-    public void startTrue() {
-      record("startTrue");
+    public void startBoolean() {
+      record("startBoolean");
     }
 
     @Override
-    public void endTrue() {
-      record("endTrue");
-    }
-
-    @Override
-    public void startFalse() {
-      record("startFalse");
-    }
-
-    @Override
-    public void endFalse() {
-      record("endFalse");
+    public void endBoolean(boolean value) {
+      record("endBoolean", Boolean.valueOf(value));
     }
 
     @Override

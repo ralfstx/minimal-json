@@ -348,13 +348,8 @@ public final class Json {
     }
 
     @Override
-    public void endTrue() {
-      value = TRUE;
-    }
-
-    @Override
-    public void endFalse() {
-      value = FALSE;
+    public void endBoolean(boolean bool) {
+      value = bool ? TRUE : FALSE;
     }
 
     @Override
