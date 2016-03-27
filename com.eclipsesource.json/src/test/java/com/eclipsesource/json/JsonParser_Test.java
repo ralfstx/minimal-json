@@ -34,7 +34,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.eclipsesource.json.Json.DefaultHandler;
-import com.eclipsesource.json.JsonParser.Location;
 import com.eclipsesource.json.TestUtil.RunnableEx;
 
 
@@ -82,7 +81,7 @@ public class JsonParser_Test {
       }
     });
 
-    assertEquals(0, exception.getOffset());
+    assertEquals(0, exception.getLocation().offset);
     assertThat(exception.getMessage(), startsWith("Unexpected end of input at"));
   }
 
@@ -290,9 +289,7 @@ public class JsonParser_Test {
       }
     });
 
-    assertEquals(4, exception.getLine());
-    assertEquals(1, exception.getColumn());
-    assertEquals(24, exception.getOffset());
+    assertEquals(new Location(24, 4, 1), exception.getLocation());
   }
 
   @Test
@@ -746,7 +743,7 @@ public class JsonParser_Test {
         parser.parse(json);
       }
     });
-    assertEquals(offset, exception.getOffset());
+    assertEquals(offset, exception.getLocation().offset);
     assertThat(exception.getMessage(), startsWith(message + " at"));
   }
 

@@ -21,8 +21,6 @@
  ******************************************************************************/
 package com.eclipsesource.json;
 
-import com.eclipsesource.json.JsonParser.Location;
-
 
 /**
  * A handler for parser events. Instances of this class can be given to a {@link JsonParser}. The
