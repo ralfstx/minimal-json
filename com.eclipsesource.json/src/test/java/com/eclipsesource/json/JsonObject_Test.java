@@ -154,6 +154,22 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void allowsMultipleEntriesWithRepeatedNames() {
+    object.add("a", true);
+    object.add("a", "value");
+
+    assertEquals(2, object.size());
+  }
+
+  @Test
+  public void getsLastEntryWithRepeatedNames() {
+    object.add("a", true);
+    object.add("a", "value");
+
+    assertEquals("value", object.getString("a", "missing"));
+  }
+
+  @Test
   public void names_emptyAfterCreation() {
     assertTrue(object.names().isEmpty());
   }
