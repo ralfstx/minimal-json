@@ -154,7 +154,7 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void allowsMultipleEntriesWithRepeatedNames() {
+  public void keyRepetition_allowsMultipleEntries() {
     object.add("a", true);
     object.add("a", "value");
 
@@ -162,11 +162,26 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void getsLastEntryWithRepeatedNames() {
+  public void keyRepetition_getsLastEntry() {
     object.add("a", true);
     object.add("a", "value");
 
     assertEquals("value", object.getString("a", "missing"));
+  }
+
+  @Test
+  public void keyRepetition_equalityConsidersRepetitions() {
+    object.add("a", true);
+    object.add("a", "value");
+
+    JsonObject onlyFirstProperty = new JsonObject();
+    onlyFirstProperty.add("a", true);
+    assertNotEquals(onlyFirstProperty, object);
+
+    JsonObject bothProperties = new JsonObject();
+    bothProperties.add("a", true);
+    bothProperties.add("a", "value");
+    assertEquals(bothProperties, object);
   }
 
   @Test
