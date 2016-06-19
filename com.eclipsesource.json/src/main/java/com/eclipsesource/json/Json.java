@@ -150,7 +150,7 @@ public final class Json {
    *
    * @return a new empty JSON array
    */
-  public static JsonValue array() {
+  public static JsonArray array() {
     return new JsonArray();
   }
 
