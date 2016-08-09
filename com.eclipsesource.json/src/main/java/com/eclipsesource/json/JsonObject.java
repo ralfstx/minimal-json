@@ -736,15 +736,18 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     writer.writeObjectOpen();
     Iterator<String> namesIterator = names.iterator();
     Iterator<JsonValue> valuesIterator = values.iterator();
-    boolean first = true;
-    while (namesIterator.hasNext()) {
-      if (!first) {
-        writer.writeObjectSeparator();
-      }
+
+    if(namesIterator.hasNext()){
       writer.writeMemberName(namesIterator.next());
       writer.writeMemberSeparator();
       valuesIterator.next().write(writer);
-      first = false;
+
+      while (namesIterator.hasNext()) {
+        writer.writeObjectSeparator();
+        writer.writeMemberName(namesIterator.next());
+        writer.writeMemberSeparator();
+        valuesIterator.next().write(writer);
+      }
     }
     writer.writeObjectClose();
   }
