@@ -455,10 +455,8 @@ public class JsonArray extends JsonValue implements Iterable<JsonValue> {
   void write(JsonWriter writer) throws IOException {
     writer.writeArrayOpen();
     Iterator<JsonValue> iterator = iterator();
-
-    if(iterator.hasNext()){
+    if (iterator.hasNext()) {
       iterator.next().write(writer);
-
       while (iterator.hasNext()) {
         writer.writeArraySeparator();
         iterator.next().write(writer);

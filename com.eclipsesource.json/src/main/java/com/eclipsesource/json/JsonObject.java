@@ -736,12 +736,10 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     writer.writeObjectOpen();
     Iterator<String> namesIterator = names.iterator();
     Iterator<JsonValue> valuesIterator = values.iterator();
-
-    if(namesIterator.hasNext()){
+    if (namesIterator.hasNext()) {
       writer.writeMemberName(namesIterator.next());
       writer.writeMemberSeparator();
       valuesIterator.next().write(writer);
-
       while (namesIterator.hasNext()) {
         writer.writeObjectSeparator();
         writer.writeMemberName(namesIterator.next());
