@@ -100,7 +100,7 @@ Let's take the following JSON as an example:
     {
       "name": "NE555 Timer IC",
       "cat-id": "645723",
-      "quantity": 10,
+      "quantity": 10
     },
     {
       "name": "LM358N OpAmp IC",
