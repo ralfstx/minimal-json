@@ -53,8 +53,8 @@ import java.io.Reader;
  */
 public final class Json {
 
-  private Json() {
-    // not meant to be instantiated
+  private Json() { // not meant to be instantiated
+    throw new AssertionError();
   }
 
   /**
