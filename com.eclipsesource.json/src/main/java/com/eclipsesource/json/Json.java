@@ -50,6 +50,14 @@ import java.io.Reader;
  * String[] names = ...
  * JsonArray array = Json.array(names);
  * </pre>
+ * <p>
+ * To create a JSON array from any given Java object, you can use the <code>value(object)</code>
+ * method:
+ * </p>
+ * <pre>
+ * Object object = ...
+ * JsonValue json = Json.value(object);
+ * </pre>
  */
 public final class Json {
 
@@ -142,6 +150,18 @@ public final class Json {
    */
   public static JsonValue value(boolean value) {
     return value ? TRUE : FALSE;
+  }
+
+  /**
+   * Returns a JsonValue instance that represents the given object.
+   * <p>
+   *  Converts null values to null literals and non-trivial objects to their string representation.
+   * @param object
+   *          the object to get a JSON representation for
+   * @return a JSON value that represents the given object
+   */
+  public static JsonValue value(Object object) {
+    return JsonBuilder.toJsonValue(object);
   }
 
   /**
