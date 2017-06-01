@@ -141,10 +141,12 @@ javaValues.add(new Date());
 JsonValue jsonValues = Json.value(javaValues);
 ```
 
-Any object, which cannot be directly mapped to a JSON value is converted to a string using the
+If you want to control the serialization of your own objects, implement the
+`JsonSerializable` interface, which is respected by the `value()` method. 
+Any other object, which cannot be directly mapped to a JSON value is converted to a string using the
 `toString()`method of the object. Circular references are not resolved.
 
-And there are methods for creating empty arrays and objects as well.
+There are methods for creating empty arrays and objects as well.
 Use these together with `add` to create data structures:
 
 ```java
