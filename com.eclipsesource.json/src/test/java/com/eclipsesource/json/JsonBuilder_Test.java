@@ -1,6 +1,7 @@
 package com.eclipsesource.json;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,6 +109,18 @@ public class JsonBuilder_Test {
       }
     });
     assertEquals("\"toString\"", value.toString());
+  }
+
+  @Test
+  public void callsAsJsonValueOfAJsonSerializeableObject() {
+    final JsonValue expected = Json.value(123);
+    JsonValue value = JsonBuilder.toJsonValue(new JsonSerializable() {
+
+      public JsonValue asJsonValue() {
+        return expected;
+      }
+    });
+    assertSame(expected, value);
   }
 
   @Test

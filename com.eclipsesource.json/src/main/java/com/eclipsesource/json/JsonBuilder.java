@@ -37,16 +37,20 @@ import java.util.Map.Entry;
  */
 public class JsonBuilder {
   /**
-   * Creates a JsonValue from a Java object. Converts null values to null literals and non-trivial
-   * objects to their string representation.
+   * Creates a JsonValue from a Java object. If the object implements {@link JsonSerializable}, its
+   * {@link JsonSerializable#asJsonValue()} method is called and the result returned.
+   * <p>
+   * Converts null values to null literals and non-trivial objects to their string representation.
    *
-   * @param object The object to convert to json
-   *
+   * @param object
+   *          The object to convert to json
    * @return The Java object as {@link JsonValue}
    */
   public static JsonValue toJsonValue(final Object object) {
     if (object == null) {
       return Json.NULL;
+    } else if (object instanceof JsonSerializable) {
+      return ((JsonSerializable)object).asJsonValue();
     } else if (object instanceof Boolean) {
       return Json.value(((Boolean)object).booleanValue());
     } else if (object instanceof Byte) {
