@@ -67,8 +67,6 @@ public class JsonBuilder {
       return Json.value(((Float)object).floatValue());
     } else if (object instanceof Double) {
       return Json.value(((Double)object).doubleValue());
-    } else if (object instanceof char[]) {
-      return Json.value(String.valueOf((char[])object));
     } else if (object.getClass().isArray()) {
       return arrayToJsonValue(object);
     } else if (object instanceof Iterable) {

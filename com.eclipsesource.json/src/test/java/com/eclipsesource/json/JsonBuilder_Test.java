@@ -90,13 +90,16 @@ public class JsonBuilder_Test {
 
   @Test
   public void convertsCharArray() {
-    JsonValue value = JsonBuilder.toJsonValue("bla".toCharArray());
-    assertEquals("\"bla\"", value.toString());
+    final char[] charArray = "bla".toCharArray();
+    JsonValue value = JsonBuilder.toJsonValue(charArray);
+
+    JsonArray expected = Json.array("b","l","a");
+    assertEquals(expected, value);
   }
 
   @Test
   public void convertsString() {
-    JsonValue value = JsonBuilder.toJsonValue("blubber\"Schnitzel\nmit\nPommes\"".toCharArray());
+    JsonValue value = JsonBuilder.toJsonValue("blubber\"Schnitzel\nmit\nPommes\"");
     assertEquals("\"blubber\\\"Schnitzel\\nmit\\nPommes\\\"\"", value.toString());
   }
 
