@@ -112,6 +112,13 @@ public class JsonBuilder_Test {
   }
 
   @Test
+  public void passesJsonValuesTrough() {
+    final JsonValue expected = Json.value(123);
+    JsonValue value = JsonBuilder.toJsonValue(expected);
+    assertSame(expected, value);
+  }
+
+  @Test
   public void callsAsJsonValueOfAJsonSerializeableObject() {
     final JsonValue expected = Json.value(123);
     JsonValue value = JsonBuilder.toJsonValue(new JsonSerializable() {

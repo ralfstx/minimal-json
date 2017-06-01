@@ -49,6 +49,8 @@ public class JsonBuilder {
   public static JsonValue toJsonValue(final Object object) {
     if (object == null) {
       return Json.NULL;
+    } else if (object instanceof JsonValue) {
+      return (JsonValue) object;
     } else if (object instanceof JsonSerializable) {
       return ((JsonSerializable)object).asJsonValue();
     } else if (object instanceof Boolean) {
