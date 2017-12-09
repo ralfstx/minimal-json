@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource and others.
+ * Copyright (c) 2013, 2017 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.google.caliper.Arguments;
 import com.google.caliper.Benchmark;
@@ -95,7 +96,7 @@ public class CaliperRunner {
   }
 
   private void createJsonFile() throws IOException {
-    JsonObject caliperJson = JsonObject.readFrom(readFromFile(resultsFile));
+    JsonObject caliperJson = Json.parse(readFromFile(resultsFile)).asObject();
     String resultsJson = new CaliperResultsPreprocessor(caliperJson).getResults().toString();
     writeToFile(resultsJson, resultsFile);
   }

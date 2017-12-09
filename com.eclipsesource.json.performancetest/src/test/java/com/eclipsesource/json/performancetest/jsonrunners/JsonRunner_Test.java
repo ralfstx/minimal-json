@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource and others.
+ * Copyright (c) 2013, 2017 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,9 @@ package com.eclipsesource.json.performancetest.jsonrunners;
 
 import static com.eclipsesource.json.performancetest.resources.Resources.readResource;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,6 +43,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -73,11 +76,11 @@ public class JsonRunner_Test {
     runner = JsonRunnerFactory.findByName(name);
     json = readResource("input/test.json");
     jsonBytes = json.getBytes(JsonRunner.UTF8);
-    minimalJsonModel = JsonValue.readFrom(json);
+    minimalJsonModel = Json.parse(json);
   }
 
   private void assertJsonCorrect(String s) {
-    assertTrue(equalsIgnoreOrder(minimalJsonModel, JsonValue.readFrom(s)));
+    assertTrue(equalsIgnoreOrder(minimalJsonModel, Json.parse(s)));
   }
 
   private void assertJsonCorrect(byte[] ba) {
