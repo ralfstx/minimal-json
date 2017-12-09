@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource and others.
+ * Copyright (c) 2013, 2017 EclipseSource and others.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
 
 
@@ -32,12 +33,12 @@ public class MinimalJsonRunner extends JsonRunner {
 
   @Override
   public Object readFromString(String string) throws IOException {
-    return JsonValue.readFrom(string);
+    return Json.parse(string);
   }
 
   @Override
   public Object readFromReader(Reader reader) throws IOException {
-    return JsonValue.readFrom(reader);
+    return Json.parse(reader);
   }
 
   @Override

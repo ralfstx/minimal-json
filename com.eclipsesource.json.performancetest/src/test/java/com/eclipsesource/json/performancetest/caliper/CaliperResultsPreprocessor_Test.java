@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2013, 2017 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,16 @@
 package com.eclipsesource.json.performancetest.caliper;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.performancetest.resources.Resources;
 
@@ -39,7 +42,7 @@ public class CaliperResultsPreprocessor_Test {
 
   @BeforeClass
   public static void loadCaliperJson() throws IOException {
-    caliperJson = JsonObject.readFrom(Resources.readResource("input/caliper.json"));
+    caliperJson = Json.parse(Resources.readResource("input/caliper.json")).asObject();
   }
 
   @Test
