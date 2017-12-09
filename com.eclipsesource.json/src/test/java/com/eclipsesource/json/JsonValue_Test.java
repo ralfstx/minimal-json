@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2013, 2017 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,13 @@
 package com.eclipsesource.json;
 
 import static com.eclipsesource.json.TestUtil.assertException;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -37,78 +38,6 @@ import com.eclipsesource.json.TestUtil.RunnableEx;
 
 
 public class JsonValue_Test {
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void testConstantsAreLiterals() {
-    assertEquals(Json.NULL, JsonValue.NULL);
-    assertEquals(Json.TRUE, JsonValue.TRUE);
-    assertEquals(Json.FALSE, JsonValue.FALSE);
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void valueOf_int() {
-    assertEquals(Json.value(23), JsonValue.valueOf(23));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void valueOf_long() {
-    assertEquals(Json.value(23l), JsonValue.valueOf(23l));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void valueOf_float() {
-    assertEquals(Json.value(23.5f), JsonValue.valueOf(23.5f));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void valueOf_double() {
-    assertEquals(Json.value(23.5d), JsonValue.valueOf(23.5d));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void valueOf_boolean() {
-    assertSame(Json.value(true), JsonValue.valueOf(true));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void valueOf_string() {
-    assertEquals(Json.value("foo"), JsonValue.valueOf("foo"));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void readFrom_string() {
-    assertEquals(new JsonArray(), JsonValue.readFrom("[]"));
-    assertEquals(new JsonObject(), JsonValue.readFrom("{}"));
-    assertEquals(Json.value(23), JsonValue.readFrom("23"));
-    assertSame(Json.NULL, JsonValue.readFrom("null"));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void readFrom_reader() throws IOException {
-    assertEquals(new JsonArray(), JsonValue.readFrom(new StringReader("[]")));
-    assertEquals(new JsonObject(), JsonValue.readFrom(new StringReader("{}")));
-    assertEquals(Json.value(23), JsonValue.readFrom(new StringReader("23")));
-    assertSame(Json.NULL, JsonValue.readFrom(new StringReader("null")));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void readFrom_reader_doesNotCloseReader() throws IOException {
-    Reader reader = spy(new StringReader("{}"));
-
-    JsonValue.readFrom(reader);
-
-    verify(reader, never()).close();
-  }
 
   @Test
   public void writeTo() throws IOException {

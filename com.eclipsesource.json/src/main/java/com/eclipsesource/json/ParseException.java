@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 EclipseSource.
+ * Copyright (c) 2013, 2017 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,41 +41,6 @@ public class ParseException extends RuntimeException {
    */
   public Location getLocation() {
     return location;
-  }
-
-  /**
-   * Returns the absolute character index at which the error occurred. The offset of the first
-   * character of a document is 0.
-   *
-   * @return the character offset at which the error occurred, will be &gt;= 0
-   * @deprecated Use {@link #getLocation()} instead
-   */
-  @Deprecated
-  public int getOffset() {
-    return location.offset;
-  }
-
-  /**
-   * Returns the line number in which the error occurred. The number of the first line is 1.
-   *
-   * @return the line in which the error occurred, will be &gt;= 1
-   * @deprecated Use {@link #getLocation()} instead
-   */
-  @Deprecated
-  public int getLine() {
-    return location.line;
-  }
-
-  /**
-   * Returns the column number at which the error occurred, i.e. the number of the character in its
-   * line. The number of the first character of a line is 1.
-   *
-   * @return the column in which the error occurred, will be &gt;= 1
-   * @deprecated Use {@link #getLocation()} instead
-   */
-  @Deprecated
-  public int getColumn() {
-    return location.column;
   }
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2015 EclipseSource.
+ * Copyright (c) 2013, 2017 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,14 @@ package com.eclipsesource.json;
 
 import static com.eclipsesource.json.TestUtil.assertException;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
@@ -93,33 +95,6 @@ public class JsonArray_Test {
     JsonArray unmodifiableArray = JsonArray.unmodifiableArray(array);
 
     unmodifiableArray.add(23);
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void readFrom_reader() throws IOException {
-    assertEquals(new JsonArray(), JsonArray.readFrom(new StringReader("[]")));
-    assertEquals(new JsonArray().add("a").add(23),
-                 JsonArray.readFrom(new StringReader("[ \"a\", 23 ]")));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  public void readFrom_string() {
-    assertEquals(new JsonArray(), JsonArray.readFrom("[]"));
-    assertEquals(new JsonArray().add("a").add(23), JsonArray.readFrom("[ \"a\", 23 ]"));
-  }
-
-  @Test(expected = ParseException.class)
-  @SuppressWarnings("deprecation")
-  public void readFrom_illegalJson() {
-    JsonArray.readFrom("This is not JSON");
-  }
-
-  @Test(expected = UnsupportedOperationException.class)
-  @SuppressWarnings("deprecation")
-  public void readFrom_wrongJsonType() {
-    JsonArray.readFrom("\"This is not a JSON object\"");
   }
 
   @Test
