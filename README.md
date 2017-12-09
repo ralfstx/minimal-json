@@ -118,7 +118,7 @@ JsonArray items = Json.parse(json).asObject().get("items").asArray();
 for (JsonValue item : items) {
   String name = item.asObject().getString("name", "Unknown Item");
   int quantity = item.asObject().getInt("quantity", 1);
-  ...  
+  ...
 }
 ```
 
@@ -240,7 +240,7 @@ You can include minimal-json from Maven Central by adding this dependency to you
 <dependency>
   <groupId>com.eclipsesource.minimal-json</groupId>
   <artifactId>minimal-json</artifactId>
-  <version>0.9.4</version>
+  <version>0.9.5</version>
 </dependency>
 ```
 
