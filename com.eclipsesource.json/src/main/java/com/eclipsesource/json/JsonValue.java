@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2016 EclipseSource.
+ * Copyright (c) 2013, 2017 EclipseSource.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ import java.io.Writer;
  * <strong>true</strong>, <strong>false</strong>, and <strong>null</strong>.
  * <p>
  * The literals <strong>true</strong>, <strong>false</strong>, and <strong>null</strong> are
- * represented by the constants {@link #TRUE}, {@link #FALSE}, and {@link #NULL}.
+ * represented by the constants {@link Json#TRUE}, {@link Json#FALSE}, and {@link Json#NULL}.
  * </p>
  * <p>
  * JSON <strong>objects</strong> and <strong>arrays</strong> are represented by the subtypes
@@ -44,7 +44,7 @@ import java.io.Writer;
  * <p>
  * Instances that represent JSON <strong>numbers</strong>, <strong>strings</strong> and
  * <strong>boolean</strong> values can be created using the static factory methods
- * {@link #valueOf(String)}, {@link #valueOf(long)}, {@link #valueOf(double)}, etc.
+ * {@link Json#value(String)}, {@link Json#value(long)}, {@link Json#value(double)}, etc.
  * </p>
  * <p>
  * In order to find out whether an instance of this class is of a certain type, the methods
@@ -439,7 +439,7 @@ public abstract class JsonValue implements Serializable {
 
   /**
    * Returns the JSON string for this value in its minimal form, without any additional whitespace.
-   * The result is guaranteed to be a valid input for the method {@link #readFrom(String)} and to
+   * The result is guaranteed to be a valid input for the method {@link Json#parse(String)} and to
    * create a value that is <em>equal</em> to this object.
    *
    * @return a JSON string that represents this value
