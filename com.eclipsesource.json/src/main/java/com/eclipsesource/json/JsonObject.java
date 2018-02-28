@@ -526,6 +526,19 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
   }
 
   /**
+   * Checks if a specified member is present as a child of this object. This will not test if
+   * this object contains the literal <code>null</code>, {@link JsonValue#isNull()} should be used
+   * for this purpose.
+   *
+   * @param name
+   *          the name of the member to check for
+   * @return whether or not the member is present
+   */
+  public boolean contains(String name) {
+    return names.contains(name);
+  }
+
+  /**
    * Copies all members of the specified object into this object. When the specified object contains
    * members with names that also exist in this object, the existing values in this object will be
    * replaced by the corresponding values in the specified object.
