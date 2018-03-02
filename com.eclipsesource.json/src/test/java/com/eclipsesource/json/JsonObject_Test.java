@@ -718,6 +718,27 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void contains_findsAddedMembers(){
+    object.add("f", 15f);
+
+    assertTrue(object.contains("f"));
+  }
+
+  @Test
+  public void contains_doesNotFindAbsentMembers(){
+    assertFalse(object.contains("a"));
+  }
+
+  @Test
+  public void contains_doesNotFindDeletedMembers(){
+    object.add("a", "foo");
+
+    object.remove("a");
+
+    assertFalse(object.contains("a"));
+  }
+
+  @Test
   public void merge_failsWithNull() {
     assertException(NullPointerException.class, "object is null", new Runnable() {
       public void run() {
