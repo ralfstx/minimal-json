@@ -230,6 +230,7 @@ Here are some projects that use minimal-json:
 * [jshint-eclipse](https://github.com/eclipsesource/jshint-eclipse)
 * [tern.java](https://github.com/angelozerr/tern.java)
 * [Human JSON](https://github.com/laktak/hjson-java)
+* [therapi-runtime-javadoc](https://github.com/dnault/therapi-runtime-javadoc)
 
 Include
 -------
