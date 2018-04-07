@@ -231,6 +231,7 @@ Here are some projects that use minimal-json:
 * [tern.java](https://github.com/angelozerr/tern.java)
 * [Human JSON](https://github.com/laktak/hjson-java)
 * [therapi-runtime-javadoc](https://github.com/dnault/therapi-runtime-javadoc)
+* [RestFB](https://github.com/restfb/restfb)
 
 Include
 -------
