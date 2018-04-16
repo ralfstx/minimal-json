@@ -712,7 +712,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    */
   public Optional<Float> getFloat(String name) {
     JsonValue value = get(name);
-    return value != null ? Optional.of(value.asFloat()) : Optional.empty();
+    return value != null ? Optional.of(value.asFloat()) : Optional.<Float>empty();
   }
 
   /**
@@ -792,7 +792,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    */
   public Optional<Boolean> getBoolean(String name) {
     JsonValue value = get(name);
-    return value != null ? Optional.of(value.asBoolean()) : Optional.empty();
+    return value != null ? Optional.of(value.asBoolean()) : Optional.<Boolean>empty();
   }
 
   /**
@@ -831,7 +831,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    */
   public Optional<String> getString(String name) {
     JsonValue value = get(name);
-    return value != null ? Optional.of(value.asString()) : Optional.empty();
+    return value != null ? Optional.of(value.asString()) : Optional.<String>empty();
   }
   
   /**
