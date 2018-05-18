@@ -23,7 +23,12 @@ package com.eclipsesource.json;
 
 import static com.eclipsesource.json.TestUtil.assertException;
 import static com.eclipsesource.json.TestUtil.serializeAndDeserialize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
@@ -976,11 +981,21 @@ public class JsonObject_Test {
   }
 
   @Test
-  public void hashIndexTable_remove() {
+  public void hashIndexTable_remove_deletesMapping() {
     HashIndexTable indexTable = new HashIndexTable();
 
     indexTable.add("name", 23);
     indexTable.remove(23);
+
+    assertEquals(-1, indexTable.get("name"));
+  }
+
+  @Test
+  public void hashIndexTable_remove_deletesMapping_withIndexAbove127() {
+    HashIndexTable indexTable = new HashIndexTable();
+
+    indexTable.add("name", 142);
+    indexTable.remove(142);
 
     assertEquals(-1, indexTable.get("name"));
   }
@@ -997,12 +1012,23 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void hashIndexTable_remove_updatesSubsequentElements_withIndexAbove127() {
+    HashIndexTable indexTable = new HashIndexTable();
+
+    indexTable.add("foo", 128);
+    indexTable.add("bar", 142);
+    indexTable.remove(128);
+
+    assertEquals(141, indexTable.get("bar"));
+  }
+
+  @Test
   public void hashIndexTable_remove_doesNotChangePrecedingElements() {
     HashIndexTable indexTable = new HashIndexTable();
 
     indexTable.add("foo", 23);
-    indexTable.add("bar", 42);
-    indexTable.remove(42);
+    indexTable.add("bar", 128);
+    indexTable.remove(128);
 
     assertEquals(23, indexTable.get("foo"));
   }
