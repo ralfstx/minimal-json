@@ -304,6 +304,22 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void get_object_returnsValueFromMember() {
+    JsonObject member = new JsonObject();
+    member.add("foo", "bar");
+    
+    object.add("foo", member);
+
+    assertEquals("bar", object.getObject("foo").getString("foo",null));
+  }
+
+  @Test
+  public void get_object_returnsNullForMissingMember() {
+    assertNull(object.getObject("foo"));
+  }
+
+
+  @Test
   public void get_int_returnsValueFromMember() {
     object.add("foo", 23);
 
