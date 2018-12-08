@@ -22,10 +22,13 @@
 package com.eclipsesource.json;
 
 
+import java.io.Serializable;
+
 /**
  * An immutable object that represents a location in the parsed text.
  */
-public class Location {
+@SuppressWarnings("serial") // use default serial UID
+public class Location implements Serializable {
 
   /**
    * The absolute character index, starting at 0.
