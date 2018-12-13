@@ -82,7 +82,7 @@
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
-            <Bundle-RequiredExecutionEnvironment>J2SE-1.8</Bundle-RequiredExecutionEnvironment>
+            <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
             <Import-Package><!-- without this empty statement, a package import is added --></Import-Package>
             <Export-Package>com.eclipsesource.json;version="${project.version}"</Export-Package>
           </instructions>
