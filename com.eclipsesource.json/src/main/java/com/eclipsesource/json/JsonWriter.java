@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 
-class JsonWriter {
+public class JsonWriter {
 
   private static final int CONTROL_CHARACTERS_END = 0x001f;
 
@@ -39,11 +39,13 @@ class JsonWriter {
   private static final char[] UNICODE_2028_CHARS = {'\\', 'u', '2', '0', '2', '8'};
   private static final char[] UNICODE_2029_CHARS = {'\\', 'u', '2', '0', '2', '9'};
   private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                                            'a', 'b', 'c', 'd', 'e', 'f'};
+          'a', 'b', 'c', 'd', 'e', 'f'};
 
-  protected final Writer writer;
+  protected Writer writer;
 
-  JsonWriter(Writer writer) {
+  public JsonWriter(){}
+
+  public JsonWriter(Writer writer) {
     this.writer = writer;
   }
 
