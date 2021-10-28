@@ -26,7 +26,7 @@ git diff
 echo "POM rewritten, okay?"
 read
 
-mvn -Duser.name="${USER_NAME}" clean package || exit 1
+mvn -T 1C -Duser.name="${USER_NAME}" clean package || exit 1
 
 echo "Ready, okay to tag and upload?"
 read
@@ -35,9 +35,9 @@ git tag -a -s -m "${VERSION} release" ${VERSION} || exit 1
 
 cp pom.xml ${ID}-${VERSION}.pom
 
-mvn gpg:sign-and-deploy-file -Durl=${NEXUS_URL} -DrepositoryId=${NEXUS_REPO} -DpomFile=${ID}-${VERSION}.pom -Dfile=target/${ID}-${VERSION}.jar || exit 1
-mvn gpg:sign-and-deploy-file -Durl=${NEXUS_URL} -DrepositoryId=${NEXUS_REPO} -DpomFile=${ID}-${VERSION}.pom -Dfile=target/${ID}-${VERSION}-sources.jar -Dclassifier=sources || exit 1
-mvn gpg:sign-and-deploy-file -Durl=${NEXUS_URL} -DrepositoryId=${NEXUS_REPO} -DpomFile=${ID}-${VERSION}.pom -Dfile=target/${ID}-${VERSION}-javadoc.jar -Dclassifier=javadoc || exit 1
+mvn -T 1C gpg:sign-and-deploy-file -Durl=${NEXUS_URL} -DrepositoryId=${NEXUS_REPO} -DpomFile=${ID}-${VERSION}.pom -Dfile=target/${ID}-${VERSION}.jar || exit 1
+mvn -T 1C gpg:sign-and-deploy-file -Durl=${NEXUS_URL} -DrepositoryId=${NEXUS_REPO} -DpomFile=${ID}-${VERSION}.pom -Dfile=target/${ID}-${VERSION}-sources.jar -Dclassifier=sources || exit 1
+mvn -T 1C gpg:sign-and-deploy-file -Durl=${NEXUS_URL} -DrepositoryId=${NEXUS_REPO} -DpomFile=${ID}-${VERSION}.pom -Dfile=target/${ID}-${VERSION}-javadoc.jar -Dclassifier=javadoc || exit 1
 
 rm ${ID}-${VERSION}.pom ${ID}-${VERSION}.pom.asc
 
