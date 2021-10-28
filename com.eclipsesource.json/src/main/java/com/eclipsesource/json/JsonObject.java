@@ -72,6 +72,11 @@ import com.eclipsesource.json.JsonObject.Member;
 @SuppressWarnings("serial") // use default serial UID
 public class JsonObject extends JsonValue implements Iterable<Member> {
 
+  // String constants
+  private static final String OBJECT_IS_NULL = "object is null";
+  private static final String NAME_IS_NULL = "name is null";
+  private static final String VALUE_IS_NULL = "value is null";
+
   private final List<String> names;
   private final List<JsonValue> values;
   private transient HashIndexTable table;
@@ -97,7 +102,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
 
   private JsonObject(JsonObject object, boolean unmodifiable) {
     if (object == null) {
-      throw new NullPointerException("object is null");
+      throw new NullPointerException(OBJECT_IS_NULL);
     }
     if (unmodifiable) {
       names = Collections.unmodifiableList(object.names);
@@ -326,10 +331,10 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    */
   public JsonObject add(String name, JsonValue value) {
     if (name == null) {
-      throw new NullPointerException("name is null");
+      throw new NullPointerException(NAME_IS_NULL);
     }
     if (value == null) {
-      throw new NullPointerException("value is null");
+      throw new NullPointerException(VALUE_IS_NULL);
     }
     table.add(name, names.size());
     names.add(name);
@@ -487,10 +492,10 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    */
   public JsonObject set(String name, JsonValue value) {
     if (name == null) {
-      throw new NullPointerException("name is null");
+      throw new NullPointerException(NAME_IS_NULL);
     }
     if (value == null) {
-      throw new NullPointerException("value is null");
+      throw new NullPointerException(VALUE_IS_NULL);
     }
     int index = indexOf(name);
     if (index != -1) {
@@ -514,7 +519,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    */
   public JsonObject remove(String name) {
     if (name == null) {
-      throw new NullPointerException("name is null");
+      throw new NullPointerException(NAME_IS_NULL);
     }
     int index = indexOf(name);
     if (index != -1) {
@@ -549,7 +554,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    */
   public JsonObject merge(JsonObject object) {
     if (object == null) {
-      throw new NullPointerException("object is null");
+      throw new NullPointerException(OBJECT_IS_NULL);
     }
     for (Member member : object) {
       this.set(member.name, member.value);
@@ -568,7 +573,7 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    */
   public JsonValue get(String name) {
     if (name == null) {
-      throw new NullPointerException("name is null");
+      throw new NullPointerException(NAME_IS_NULL);
     }
     int index = indexOf(name);
     return index != -1 ? values.get(index) : null;
