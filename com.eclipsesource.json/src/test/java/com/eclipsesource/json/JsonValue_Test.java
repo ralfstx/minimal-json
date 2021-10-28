@@ -40,14 +40,6 @@ public class JsonValue_Test {
 
   @Test
   @SuppressWarnings("deprecation")
-  public void testConstantsAreLiterals() {
-    assertEquals(Json.NULL, JsonValue.NULL);
-    assertEquals(Json.TRUE, JsonValue.TRUE);
-    assertEquals(Json.FALSE, JsonValue.FALSE);
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
   public void valueOf_int() {
     assertEquals(Json.value(23), JsonValue.valueOf(23));
   }
