@@ -167,10 +167,11 @@ jsonObject.set("quantity", 24);
 jsonObject.remove("quantity");
 ```
 
-`JsonObject` also provides a `merge` method that copies all members from a given JSON object.
+`JsonObject` also provides a `merge` and a `deepMerge` method that copies all members from a given JSON object.
 
 ```java
 jsonObject.merge(otherObject);
+jsonObject.deepMerge(otherObject); // merges common object members recursively
 ```
 
 ### Output JSON

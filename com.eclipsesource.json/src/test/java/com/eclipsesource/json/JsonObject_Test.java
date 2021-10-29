@@ -769,6 +769,41 @@ public class JsonObject_Test {
   }
 
   @Test
+  public void deepMerge_failsWithNull() {
+    assertException(NullPointerException.class, "object is null", new Runnable() {
+      public void run() {
+        object.deepMerge(null);
+      }
+    });
+  }
+
+  @Test
+  public void deepMerge_appendsMembers() {
+    object.add("a", 1).add("b", 1);
+    object.deepMerge(Json.object().add("c", 2).add("d", 2));
+
+    assertEquals(Json.object().add("a", 1).add("b", 1).add("c", 2).add("d", 2), object);
+  }
+
+  @Test
+  public void deepMerge_replacesMembers() {
+    object.add("a", 1).add("b", 1).add("c", 1);
+    object.deepMerge(Json.object().add("b", 2).add("d", 2));
+
+    assertEquals(Json.object().add("a", 1).add("b", 2).add("c", 1).add("d", 2), object);
+  }
+
+  @Test
+  public void deepMerge_mergesMemberObject() {
+    object.add("a", 1).add("b", Json.object().add("x", 1).add("y", 1)).add("c", Json.object().add("A", 1));
+    object.deepMerge(Json.object().add("b", Json.object().add("y", 2).add("z", 1)).add("c", 1)
+            .add("d", Json.object().add("B", 1)));
+
+    assertEquals(Json.object().add("a", 1).add("b", Json.object().add("x", 1).add("y", 2).add("z", 1)).add("c", 1)
+            .add("d", Json.object().add("B", 1)), object);
+  }
+
+  @Test
   public void write_empty() throws IOException {
     JsonWriter writer = mock(JsonWriter.class);
     object.write(writer);
