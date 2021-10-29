@@ -30,6 +30,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.eclipsesource.json.JsonObject.Member;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 
 
 /**
@@ -565,6 +569,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the name of the member whose value is to be returned
    * @return the value of the last member with the specified name, or <code>null</code> if this
    *         object does not contain a member with that name
+   * @see #getOptional(java.lang.String)
+   *      equivalent using an Optional
    */
   public JsonValue get(String name) {
     if (name == null) {
@@ -572,6 +578,21 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
     }
     int index = indexOf(name);
     return index != -1 ? values.get(index) : null;
+  }
+  
+  /**
+   * Returns the value of the member with the specified name in this object. If this object contains
+   * multiple members with the given name, this method will return the last one.
+   * 
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @return the value of the last member with the specified name, or an empty optional if this
+   *         object does not contain a member with that name
+   * @see #get(java.lang.String)
+   *      equivalent without Optional instantiation
+   */
+  public Optional<JsonValue> getOptional(String name) {
+    return Optional.ofNullable(get(name));
   }
 
   /**
@@ -587,10 +608,31 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value to be returned if the requested member is missing
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
+   * @see #getInt(java.lang.String)
+   *      equivalent using an OptionalInt
    */
   public int getInt(String name, int defaultValue) {
     JsonValue value = get(name);
     return value != null ? value.asInt() : defaultValue;
+  }
+  
+  /**
+   * Returns the <code>int</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, an empty Optional is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>int</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @return the value of the last member with the specified name, or an empty Optional if
+   *         this object does not contain a member with that name
+   * @see #getInt(java.lang.String, int)
+   *      equivalent without Optional instantiation
+   */
+  public OptionalInt getInt(String name) {
+    JsonValue value = get(name);
+    return value != null ? OptionalInt.of(value.asInt()) : OptionalInt.empty();
   }
 
   /**
@@ -606,12 +648,33 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value to be returned if the requested member is missing
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
+   * @see #getLong(java.lang.String)
+   *      equivalent using an OptionalLong
    */
   public long getLong(String name, long defaultValue) {
     JsonValue value = get(name);
     return value != null ? value.asLong() : defaultValue;
   }
 
+  /**
+   * Returns the <code>long</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, an empty Optional is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>long</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @return the value of the last member with the specified name, or an empty Optional if
+   *         this object does not contain a member with that name
+   * @see #getLong(java.lang.String, long)
+   *      equivalent without Optional instantiation
+   */
+  public OptionalLong getLong(String name) {
+    JsonValue value = get(name);
+    return value != null ? OptionalLong.of(value.asLong()) : OptionalLong.empty();
+  }
+  
   /**
    * Returns the <code>float</code> value of the member with the specified name in this object. If
    * this object does not contain a member with this name, the given default value is returned. If
@@ -625,10 +688,31 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value to be returned if the requested member is missing
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
+   * @see #getFloat(java.lang.String)
+   *      equivalent using an Optional
    */
   public float getFloat(String name, float defaultValue) {
     JsonValue value = get(name);
     return value != null ? value.asFloat() : defaultValue;
+  }
+  
+  /**
+   * Returns the <code>float</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, an empty Optional is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>float</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @return the value of the last member with the specified name, or an empty Optional if
+   *         this object does not contain a member with that name
+   * @see #getFloat(java.lang.String, float)
+   *      equivalent without Optional instantiation
+   */
+  public Optional<Float> getFloat(String name) {
+    JsonValue value = get(name);
+    return value != null ? Optional.of(value.asFloat()) : Optional.<Float>empty();
   }
 
   /**
@@ -644,10 +728,31 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value to be returned if the requested member is missing
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
+   * @see #getDouble(java.lang.String)
+   *      equivalent using an OptionalDouble
    */
   public double getDouble(String name, double defaultValue) {
     JsonValue value = get(name);
     return value != null ? value.asDouble() : defaultValue;
+  }
+  
+  /**
+   * Returns the <code>double</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, an empty Optional is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>double</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @return the value of the last member with the specified name, or an empty Optional if
+   *         this object does not contain a member with that name
+   * @see #getDouble(java.lang.String, double)
+   *      equivalent without Optional instantiation
+   */
+  public OptionalDouble getDouble(String name) {
+    JsonValue value = get(name);
+    return value != null ? OptionalDouble.of(value.asDouble()) : OptionalDouble.empty();
   }
 
   /**
@@ -663,10 +768,31 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value to be returned if the requested member is missing
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
+   * @see #getBoolean(java.lang.String)
+   *      equivalent using an Optional
    */
   public boolean getBoolean(String name, boolean defaultValue) {
     JsonValue value = get(name);
     return value != null ? value.asBoolean() : defaultValue;
+  }
+  
+  /**
+   * Returns the <code>boolean</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, an empty Optional is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>boolean</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @return the value of the last member with the specified name, or an empty Optional if
+   *         this object does not contain a member with that name
+   * @see #getBoolean(java.lang.String, boolean)
+   *      equivalent without Optional instantiation
+   */
+  public Optional<Boolean> getBoolean(String name) {
+    JsonValue value = get(name);
+    return value != null ? Optional.of(value.asBoolean()) : Optional.<Boolean>empty();
   }
 
   /**
@@ -681,12 +807,33 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *          the value to be returned if the requested member is missing
    * @return the value of the last member with the specified name, or the given default value if
    *         this object does not contain a member with that name
+   * @see #getString(java.lang.String)
+   *      equivalent using an Optional
    */
   public String getString(String name, String defaultValue) {
     JsonValue value = get(name);
     return value != null ? value.asString() : defaultValue;
   }
 
+  /**
+   * Returns the <code>String</code> value of the member with the specified name in this object. If
+   * this object does not contain a member with this name, an empty Optional is returned. If
+   * this object contains multiple members with the given name, the last one will be picked. If this
+   * member's value does not represent a JSON number or if it cannot be interpreted as Java
+   * <code>String</code>, an exception is thrown.
+   *
+   * @param name
+   *          the name of the member whose value is to be returned
+   * @return the value of the last member with the specified name, or an empty Optional if
+   *         this object does not contain a member with that name
+   * @see #getString(java.lang.String, String)
+   *      equivalent without Optional instantiation
+   */
+  public Optional<String> getString(String name) {
+    JsonValue value = get(name);
+    return value != null ? Optional.of(value.asString()) : Optional.<String>empty();
+  }
+  
   /**
    * Returns the number of members (name/value pairs) in this object.
    *
