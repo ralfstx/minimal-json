@@ -133,7 +133,22 @@ JsonValue name = Json.value("Alice");
 JsonValue points = Json.value(23);
 ```
 
-And there are methods for creating empty arrays and objects as well.
+There is also a variant of `value()` to create JSON values directly form any Java object:
+
+```java
+Set<Object> javaValues = new HashSet<Object>();
+javaValues.add("me");
+javaValues.add(3.141);
+javaValues.add(new Date());
+JsonValue jsonValues = Json.value(javaValues);
+```
+
+If you want to control the serialization of your own objects, implement the
+`JsonSerializable` interface, which is respected by the `value()` method. 
+Any other object, which cannot be directly mapped to a JSON value is converted to a string using the
+`toString()`method of the object. Circular references are not resolved.
+
+There are methods for creating empty arrays and objects as well.
 Use these together with `add` to create data structures:
 
 ```java
@@ -148,7 +163,7 @@ You can also create JSON arrays conveniently from Java arrays such as `String[]`
 
 ```java
 String[] javaNames = {"Alice", "Bob"};
-JsonArray jsonNames = Json.array(names);
+JsonArray jsonNames = Json.array(javaNames);
 ```
 
 ### Modify JSON arrays and objects

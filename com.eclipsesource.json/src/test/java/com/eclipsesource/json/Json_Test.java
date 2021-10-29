@@ -22,15 +22,22 @@
 package com.eclipsesource.json;
 
 import static com.eclipsesource.json.TestUtil.assertException;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.junit.Test;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.eclipsesource.json.TestUtil.RunnableEx;
+
+import org.junit.Test;
 
 
 public class Json_Test {
@@ -144,6 +151,21 @@ public class Json_Test {
   @Test
   public void value_string_toleratesNull() {
     assertSame(Json.NULL, Json.value(null));
+  }
+
+  @Test
+  public void value_complexObject_callsJsonBuilder() throws Exception
+  {
+      final Map<String, Set<String>> map = new LinkedHashMap<String, Set<String>>();
+      final Set<String> set = new TreeSet<String>();
+      set.add("A");
+      set.add("B");
+      set.add("C");
+      map.put("ALL_TAGS", set);
+      map.put("NO_TAG", null);
+
+      JsonValue value = Json.value(map);
+      assertEquals("{\"ALL_TAGS\":[\"A\",\"B\",\"C\"],\"NO_TAG\":null}", value.toString());
   }
 
   @Test
