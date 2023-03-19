@@ -49,10 +49,8 @@ public class JsonArray_Test {
 
   @Test
   public void copyConstructor_failsWithNull() {
-    assertException(NullPointerException.class, "array is null", new Runnable() {
-      public void run() {
-        new JsonArray(null);
-      }
+    assertException(NullPointerException.class, "array is null", () -> {
+      new JsonArray(null);
     });
   }
 
@@ -326,10 +324,8 @@ public class JsonArray_Test {
 
   @Test
   public void add_json_failsWithNull() {
-    assertException(NullPointerException.class, "value is null", new Runnable() {
-      public void run() {
-        array.add((JsonValue)null);
-      }
+    assertException(NullPointerException.class, "value is null", () -> {
+      array.add((JsonValue)null);
     });
   }
 
@@ -499,10 +495,8 @@ public class JsonArray_Test {
   public void set_json_failsWithNull() {
     array.add(false);
 
-    assertException(NullPointerException.class, "value is null", new Runnable() {
-      public void run() {
-        array.set(0, (JsonValue)null);
-      }
+    assertException(NullPointerException.class, "value is null", () -> {
+      array.set(0, (JsonValue)null);
     });
   }
 

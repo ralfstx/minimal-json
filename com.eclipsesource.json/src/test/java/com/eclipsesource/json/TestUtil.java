@@ -35,23 +35,12 @@ public class TestUtil {
 
   public static <T extends Exception> T assertException(Class<T> type,
                                                         String message,
-                                                        Runnable runnable)
-  {
-    return assertException(type, message, adapt(runnable));
-  }
-
-  public static <T extends Exception> T assertException(Class<T> type,
-                                                        String message,
                                                         RunnableEx runnable)
 
   {
     T exception = assertException(type, runnable);
     assertEquals("exception message", message, exception.getMessage());
     return exception;
-  }
-
-  public static <T extends Exception> T assertException(Class<T> type, Runnable runnable) {
-    return assertException(type, adapt(runnable));
   }
 
   public static <T extends Exception> T assertException(Class<T> type, RunnableEx runnable) {
@@ -88,14 +77,6 @@ public class TestUtil {
   public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
     ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
     return new ObjectInputStream(inputStream).readObject();
-  }
-
-  private static RunnableEx adapt(final Runnable runnable) {
-    return new RunnableEx() {
-      public void run() {
-        runnable.run();
-      }
-    };
   }
 
   public static interface RunnableEx {

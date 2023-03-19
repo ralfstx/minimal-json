@@ -80,8 +80,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    * Creates a new empty JsonObject.
    */
   public JsonObject() {
-    names = new ArrayList<String>();
-    values = new ArrayList<JsonValue>();
+    names = new ArrayList<>();
+    values = new ArrayList<>();
     table = new HashIndexTable();
   }
 
@@ -103,8 +103,8 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
       names = Collections.unmodifiableList(object.names);
       values = Collections.unmodifiableList(object.values);
     } else {
-      names = new ArrayList<String>(object.names);
-      values = new ArrayList<JsonValue>(object.values);
+      names = new ArrayList<>(object.names);
+      values = new ArrayList<>(object.values);
     }
     table = new HashIndexTable();
     updateHashIndex();
@@ -722,21 +722,25 @@ public class JsonObject extends JsonValue implements Iterable<Member> {
    *
    * @return an iterator over the members of this object
    */
+  @Override
   public Iterator<Member> iterator() {
     final Iterator<String> namesIterator = names.iterator();
     final Iterator<JsonValue> valuesIterator = values.iterator();
     return new Iterator<JsonObject.Member>() {
 
+      @Override
       public boolean hasNext() {
         return namesIterator.hasNext();
       }
 
+      @Override
       public Member next() {
         String name = namesIterator.next();
         JsonValue value = valuesIterator.next();
         return new Member(name, value);
       }
 
+      @Override
       public void remove() {
         throw new UnsupportedOperationException();
       }

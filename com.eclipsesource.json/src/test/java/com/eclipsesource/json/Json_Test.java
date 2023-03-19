@@ -30,8 +30,6 @@ import java.io.StringReader;
 
 import org.junit.Test;
 
-import com.eclipsesource.json.TestUtil.RunnableEx;
-
 
 public class Json_Test {
 
@@ -76,20 +74,16 @@ public class Json_Test {
   @Test
   public void value_float_failsWithInfinity() {
     String message = "Infinite and NaN values not permitted in JSON";
-    assertException(IllegalArgumentException.class, message, new Runnable() {
-      public void run() {
-        Json.value(Float.POSITIVE_INFINITY);
-      }
+    assertException(IllegalArgumentException.class, message, () -> {
+      Json.value(Float.POSITIVE_INFINITY);
     });
   }
 
   @Test
   public void value_float_failsWithNaN() {
     String message = "Infinite and NaN values not permitted in JSON";
-    assertException(IllegalArgumentException.class, message, new Runnable() {
-      public void run() {
-        Json.value(Float.NaN);
-      }
+    assertException(IllegalArgumentException.class, message, () -> {
+      Json.value(Float.NaN);
     });
   }
 
@@ -111,20 +105,16 @@ public class Json_Test {
   @Test
   public void value_double_failsWithInfinity() {
     String message = "Infinite and NaN values not permitted in JSON";
-    assertException(IllegalArgumentException.class, message, new Runnable() {
-      public void run() {
-        Json.value(Double.POSITIVE_INFINITY);
-      }
+    assertException(IllegalArgumentException.class, message, () -> {
+      Json.value(Double.POSITIVE_INFINITY);
     });
   }
 
   @Test
   public void value_double_failsWithNaN() {
     String message = "Infinite and NaN values not permitted in JSON";
-    assertException(IllegalArgumentException.class, message, new Runnable() {
-      public void run() {
-        Json.value(Double.NaN);
-      }
+    assertException(IllegalArgumentException.class, message, () -> {
+      Json.value(Double.NaN);
     });
   }
 
@@ -159,10 +149,8 @@ public class Json_Test {
 
   @Test
   public void array_int_failsWithNull() {
-    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
-      public void run() {
-        Json.array((int[])null);
-      }
+    TestUtil.assertException(NullPointerException.class, "values is null", () -> {
+      Json.array((int[])null);
     });
   }
 
@@ -174,10 +162,8 @@ public class Json_Test {
 
   @Test
   public void array_long_failsWithNull() {
-    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
-      public void run() {
-        Json.array((long[])null);
-      }
+    TestUtil.assertException(NullPointerException.class, "values is null", () -> {
+      Json.array((long[])null);
     });
   }
 
@@ -189,10 +175,8 @@ public class Json_Test {
 
   @Test
   public void array_float_failsWithNull() {
-    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
-      public void run() {
-        Json.array((float[])null);
-      }
+    TestUtil.assertException(NullPointerException.class, "values is null", () -> {
+      Json.array((float[])null);
     });
   }
 
@@ -204,10 +188,8 @@ public class Json_Test {
 
   @Test
   public void array_double_failsWithNull() {
-    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
-      public void run() {
-        Json.array((double[])null);
-      }
+    TestUtil.assertException(NullPointerException.class, "values is null", () -> {
+      Json.array((double[])null);
     });
   }
 
@@ -219,10 +201,8 @@ public class Json_Test {
 
   @Test
   public void array_boolean_failsWithNull() {
-    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
-      public void run() {
-        Json.array((boolean[])null);
-      }
+    TestUtil.assertException(NullPointerException.class, "values is null", () -> {
+      Json.array((boolean[])null);
     });
   }
 
@@ -234,10 +214,8 @@ public class Json_Test {
 
   @Test
   public void array_string_failsWithNull() {
-    TestUtil.assertException(NullPointerException.class, "values is null", new Runnable() {
-      public void run() {
-        Json.array((String[])null);
-      }
+    TestUtil.assertException(NullPointerException.class, "values is null", () -> {
+      Json.array((String[])null);
     });
   }
 
@@ -253,10 +231,8 @@ public class Json_Test {
 
   @Test
   public void parse_string_failsWithNull() {
-    TestUtil.assertException(NullPointerException.class, "string is null", new Runnable() {
-      public void run() {
-        Json.parse((String)null);
-      }
+    TestUtil.assertException(NullPointerException.class, "string is null", () -> {
+      Json.parse((String)null);
     });
   }
 
@@ -269,10 +245,8 @@ public class Json_Test {
 
   @Test
   public void parse_reader_failsWithNull() {
-    TestUtil.assertException(NullPointerException.class, "reader is null", new RunnableEx() {
-      public void run() throws IOException {
-        Json.parse((Reader)null);
-      }
+    TestUtil.assertException(NullPointerException.class, "reader is null", () -> {
+      Json.parse((Reader)null);
     });
   }
 

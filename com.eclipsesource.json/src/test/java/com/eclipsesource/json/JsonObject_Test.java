@@ -58,10 +58,8 @@ public class JsonObject_Test {
 
   @Test
   public void copyConstructor_failsWithNull() {
-    assertException(NullPointerException.class, "object is null", new Runnable() {
-      public void run() {
-        new JsonObject(null);
-      }
+    assertException(NullPointerException.class, "object is null", () -> {
+      new JsonObject(null);
     });
   }
 
@@ -277,10 +275,8 @@ public class JsonObject_Test {
 
   @Test
   public void get_failsWithNullName() {
-    assertException(NullPointerException.class, "name is null", new Runnable() {
-      public void run() {
-        object.get(null);
-      }
+    assertException(NullPointerException.class, "name is null", () -> {
+      object.get(null);
     });
   }
 
@@ -377,10 +373,8 @@ public class JsonObject_Test {
 
   @Test
   public void add_failsWithNullName() {
-    assertException(NullPointerException.class, "name is null", new Runnable() {
-      public void run() {
-        object.add(null, 23);
-      }
+    assertException(NullPointerException.class, "name is null", () -> {
+      object.add(null, 23);
     });
   }
 
@@ -491,10 +485,8 @@ public class JsonObject_Test {
 
   @Test
   public void add_json_failsWithNull() {
-    assertException(NullPointerException.class, "value is null", new Runnable() {
-      public void run() {
-        object.add("a", (JsonValue)null);
-      }
+    assertException(NullPointerException.class, "value is null", () -> {
+      object.add("a", (JsonValue)null);
     });
   }
 
@@ -664,10 +656,8 @@ public class JsonObject_Test {
 
   @Test
   public void remove_failsWithNullName() {
-    assertException(NullPointerException.class, "name is null", new Runnable() {
-      public void run() {
-        object.remove(null);
-      }
+    assertException(NullPointerException.class, "name is null", () -> {
+      object.remove(null);
     });
   }
 
@@ -745,10 +735,8 @@ public class JsonObject_Test {
 
   @Test
   public void merge_failsWithNull() {
-    assertException(NullPointerException.class, "object is null", new Runnable() {
-      public void run() {
-        object.merge(null);
-      }
+    assertException(NullPointerException.class, "object is null", () -> {
+      object.merge(null);
     });
   }
 

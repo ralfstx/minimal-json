@@ -34,7 +34,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.eclipsesource.json.Json.DefaultHandler;
-import com.eclipsesource.json.TestUtil.RunnableEx;
 
 
 public class JsonParser_Test {
@@ -75,10 +74,8 @@ public class JsonParser_Test {
 
   @Test
   public void parse_reader_rejectsEmpty() {
-    ParseException exception = assertException(ParseException.class, new RunnableEx() {
-      public void run() throws IOException {
-        parser.parse(new StringReader(""));
-      }
+    ParseException exception = assertException(ParseException.class, () -> {
+      parser.parse(new StringReader(""));
     });
 
     assertEquals(0, exception.getLocation().offset);
@@ -283,10 +280,8 @@ public class JsonParser_Test {
   public void parse_handlesPositionsCorrectlyWhenInputExceedsBufferSize() {
     final String input = "{\n  \"a\": 23,\n  \"b\": 42,\n}";
 
-    ParseException exception = assertException(ParseException.class, new RunnableEx() {
-      public void run() throws IOException {
-        parser.parse(new StringReader(input), 3);
-      }
+    ParseException exception = assertException(ParseException.class, () -> {
+      parser.parse(new StringReader(input), 3);
     });
 
     assertEquals(new Location(24, 4, 1), exception.getLocation());
@@ -300,10 +295,8 @@ public class JsonParser_Test {
     }
     final String input = array.toString();
 
-    ParseException exception = assertException(ParseException.class, new RunnableEx() {
-      public void run() throws IOException {
-        parser.parse(input);
-      }
+    ParseException exception = assertException(ParseException.class, () -> {
+      parser.parse(input);
     });
 
     assertEquals("Nesting too deep at 1:1002", exception.getMessage());
@@ -317,10 +310,8 @@ public class JsonParser_Test {
     }
     final String input = object.toString();
 
-    ParseException exception = assertException(ParseException.class, new RunnableEx() {
-      public void run() throws IOException {
-        parser.parse(input);
-      }
+    ParseException exception = assertException(ParseException.class, () -> {
+      parser.parse(input);
     });
 
     assertEquals("Nesting too deep at 1:7002", exception.getMessage());
@@ -334,10 +325,8 @@ public class JsonParser_Test {
     }
     final String input = value.toString();
 
-    ParseException exception = assertException(ParseException.class, new RunnableEx() {
-      public void run() throws IOException {
-        parser.parse(input);
-      }
+    ParseException exception = assertException(ParseException.class, () -> {
+      parser.parse(input);
     });
 
     assertEquals("Nesting too deep at 1:4002", exception.getMessage());
@@ -738,10 +727,8 @@ public class JsonParser_Test {
   }
 
   private void assertParseException(int offset, String message, final String json) {
-    ParseException exception = assertException(ParseException.class, new Runnable() {
-      public void run() {
-        parser.parse(json);
-      }
+    ParseException exception = assertException(ParseException.class, () -> {
+      parser.parse(json);
     });
     assertEquals(offset, exception.getLocation().offset);
     assertThat(exception.getMessage(), startsWith(message + " at"));
