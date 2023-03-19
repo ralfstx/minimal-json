@@ -45,7 +45,7 @@
       <plugin>
         <groupId>com.googlecode.maven-download-plugin</groupId>
         <artifactId>download-maven-plugin</artifactId>
-        <version>1.2.1</version>
+        <version>1.6.8</version>
         <executions>
           <execution>
             <id>fetch-d3</id>
@@ -56,7 +56,7 @@
             <configuration>
               <url>http://d3js.org/d3.v3.min.js</url>
               <outputDirectory>${project.basedir}/lib</outputDirectory>
-              <md5>81897cbac8496a55abbef47f0a615669</md5>
+              <md5>5bc245068b1b70d4c3eaef79045023e4</md5>
             </configuration>
           </execution>
         </executions>
